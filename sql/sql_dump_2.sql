@@ -29,10 +29,13 @@ insert into Matchfield (PK_Matchfield) values (1);
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `volleytrain`.`Team` (
   `PK_Team` INT NOT NULL,
-  `name` VARCHAR(45) NULL,
+  `name` VARCHAR(45) NULL DEFAULT NULL,
   PRIMARY KEY (`PK_Team`))
-ENGINE = InnoDB;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 
+insert into Team (PK_Team, name) values (1, "HSV");
 insert into Team (PK_Team, name) values (2, "BVB");
 
 -- -----------------------------------------------------
@@ -62,12 +65,21 @@ insert into Player (PK_Player, surname, name, Team_PK_Team) values (4,"Marius", 
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `volleytrain`.`Training` (
   `PK_Training` INT NOT NULL,
-  `name` VARCHAR(45) NULL,
-  `datetime` DATETIME(6) NULL,
-  PRIMARY KEY (`PK_Training`))
-ENGINE = InnoDB;
+  `name` VARCHAR(45) NULL DEFAULT NULL,
+  `datetime` DATETIME(6) NULL DEFAULT NULL,
+  `Team_PK_Team` INT NOT NULL,
+  PRIMARY KEY (`PK_Training`, `Team_PK_Team`),
+  INDEX `fk_Training_Team1_idx` (`Team_PK_Team` ASC) VISIBLE,
+  CONSTRAINT `fk_Training_Team1`
+    FOREIGN KEY (`Team_PK_Team`)
+    REFERENCES `volleytrain`.`Team` (`PK_Team`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 
-insert into Training (PK_Training, name, datetime) values (1,"Test1","2021-05-13 13:45:12");
+insert into Training (PK_Training, name, datetime, Team_PK_Team) values (1,"Test1","2021-05-13 13:45:12", 1);
 
 
 -- -----------------------------------------------------
