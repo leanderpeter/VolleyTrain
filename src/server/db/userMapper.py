@@ -1,5 +1,5 @@
-from server.db.Mapper import Mapper
-from server.bo.Person import User
+from server.db.mapper import Mapper
+from server.bo.userBO import User
 
 
 class UserMapper(Mapper):
@@ -18,15 +18,16 @@ class UserMapper(Mapper):
 
         cursor = self._connection.cursor()
 
-        command = "SELECT id, name, email, googleUserId FROM users"
+        command = "SELECT PK_User, surname, name, email, googleUserId FROM users"
 
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        for (id, name, email, googleUserId, rolle) in tuples:
+        for (id,surname, name, email, googleUserId) in tuples:
             user = User()
             user.setId(id)
             user.setName(name)
+            user.setSurname(surname)
             user.setEmail(email)
             user.setGoogleUserId(google_user_id)
 
@@ -49,21 +50,17 @@ class UserMapper(Mapper):
         """
         result = None
         cursor = self._connection.cursor()
-        command = "SELECT id, name, email, google_user_id, rolle FROM users WHERE id='{}'".format(id)
+        command = "SELECT PK_User, surname, name, email, google_user_id FROM users WHERE PK_User='{}'".format(id)
         cursor.execute(command)
         tuples = cursor.fetchall()
-
         try:
-            (id, name, email, google_user_id, rolle) = tuples[0]
+            (id, surname, name, email, google_user_id) = tuples[0]
             user = User()
             user.setId(id)
+            user.setSurname(surname)
             user.setName(name)
             user.setEmail(email)
             user.setGoogleUserId(google_user_id)
-            if rolle == "Dozent":
-                user.set_rolle(user.ROLLE_DOZENT)
-            elif rolle == "Admin":
-                user.set_rolle(user.ROLLE_ADMIN) 
             result = user
 
         except IndexError:
@@ -85,22 +82,19 @@ class UserMapper(Mapper):
         result = None
 
         cursor = self._connection.cursor()
-        command = "SELECT id, name, email, google_user_id, rolle FROM users WHERE google_user_id='{}'".format(
+        command = "SELECT PK_User, surname, name, email, google_user_id FROM users WHERE google_user_id='{}'".format(
                 google_user_id)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, name, email, google_user_id, rolle) = tuples[0]
+            (id,surname, name, email, google_user_id) = tuples[0]
             user = User()
             user.setId(id)
+            user.setSurname(surname)
             user.setName(name)
             user.setEmail(email)
             user.setGoogleUserId(google_user_id)
-            if rolle == "Dozent":
-                user.set_rolle(user.ROLLE_DOZENT)
-            elif rolle == "Admin":
-                user.set_rolle(user.ROLLE_ADMIN) 
             result = user
         except IndexError:
             """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
@@ -117,7 +111,7 @@ class UserMapper(Mapper):
         :return das bereits übergebene user Objekt mit aktualisierten Daten (id)
         """
         cursor = self._connection.cursor()
-        cursor.execute("SELECT MAX(id) AS maxid FROM users ")
+        cursor.execute("SELECT MAX(PK_User) AS maxid FROM users ")
         tuples = cursor.fetchall()
 
         for (maxid) in tuples:
@@ -130,8 +124,8 @@ class UserMapper(Mapper):
                 davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
                 user.setId(1)
 
-        command = "INSERT INTO users (id, name, email, google_user_id, rolle) VALUES (%s,%s,%s,%s,%s)"
-        data = (user.get_id(), user.get_name(), user.get_email(), user.get_google_user_id(), str(user.get_rolle()))
+        command = "INSERT INTO users (PK_User, surname, name, email, google_user_id) VALUES (%s,%s,%s,%s,%s)"
+        data = (user.getId(), user.getSurname(), user.getName(), user.getEmail(), user.getGoogleUserId())
         cursor.execute(command, data)
 
         self._connection.commit()
@@ -147,13 +141,14 @@ class UserMapper(Mapper):
         """
         cursor = self._connection.cursor()
 
-        command = "UPDATE users " + "SET name=%s, email=%s, rolle=%s WHERE google_user_id=%s"
-        data = (user.get_name(), user.get_email(), str(user.get_rolle()), user.get_google_user_id())
+        command = "UPDATE users " + "SET surname=%s, name=%s, email=%s WHERE google_user_id=%s"
+        data = (user.getSurname(), user.getName(), user.getEmail(), user.getGoogleUserId())
 
         cursor.execute(command, data)
 
         self._connection.commit()
         cursor.close()
+        return user
 
     def update_by_id(self, user):
         """Überschreiben / Aktualisieren eines user-Objekts in der DB
@@ -163,8 +158,8 @@ class UserMapper(Mapper):
         """
         cursor = self._connection.cursor()
 
-        command = "UPDATE users " + "SET name=%s, email=%s, rolle=%s WHERE id=%s"
-        data = (user.get_name(), user.get_email(), str(user.get_rolle()), user.get_id())
+        command = "UPDATE users " + "SET surname=%s, name=%s, email=%s WHERE id=%s"
+        data = (user.getSurname(), user.getName(), user.getEmail(), user.getId())
 
         cursor.execute(command, data)
 
@@ -178,22 +173,13 @@ class UserMapper(Mapper):
         """
         cursor = self._connection.cursor()
 
-        command = "DELETE FROM users WHERE id={}".format(user.get_id())
+        command = "DELETE FROM users WHERE PK_User={}".format(user.getId())
         cursor.execute(command)
 
         self._connection.commit()
         cursor.close()
+        return user
 
-    def find_by_rolle(self, rolle):
-        '''Finde alle useren mit gegebener Rolle
-        :param rolle -> Rolle-String
-        '''
-        cursor = self._connection.cursor()
-        command = "SELECT id, name, email, google_user_id, rolle FROM users WHERE rolle={}".format(str(rolle))
-        cursor.execute(command)
-
-        self._connection.commit()
-        cursor.close()
 
 
 '''Only for testing purpose'''

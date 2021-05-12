@@ -12,7 +12,7 @@ class BusinessObject(ABC):
         self._creationDate = datetime.datetime()
 
     def getId(self):
-        return _id
+        return self._id
     
     def setId(self, id):
         self._id = id

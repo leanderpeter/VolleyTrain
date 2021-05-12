@@ -5,50 +5,21 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 -- -----------------------------------------------------
--- Schema mydb
--- -----------------------------------------------------
-
--- -----------------------------------------------------
--- Schema mydb
--- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
--- -----------------------------------------------------
 -- Schema volleytrain
 -- -----------------------------------------------------
 
 -- -----------------------------------------------------
 -- Schema volleytrain
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `volleytrain` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
-USE `mydb` ;
-
--- -----------------------------------------------------
--- Table `mydb`.`User`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`User` (
-  `PK_User` INT NOT NULL,
-  `surname` VARCHAR(128) NULL,
-  `name` VARCHAR(128) NULL,
-  `email` VARCHAR(128) NULL,
-  `google_user_id` VARCHAR(128) NULL,
-  PRIMARY KEY (`PK_User`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`Arrows`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Arrows` (
-  `PK_Arrows` INT NOT NULL,
-  PRIMARY KEY (`PK_Arrows`))
-ENGINE = InnoDB;
-
+CREATE SCHEMA IF NOT EXISTS `volleytrain` ;
 USE `volleytrain` ;
 
 -- -----------------------------------------------------
--- Table `volleytrain`.`Equipment`
+-- Table `volleytrain`.`equipment`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `volleytrain`.`Equipment` (
+DROP TABLE IF EXISTS `volleytrain`.`equipment` ;
+
+CREATE TABLE IF NOT EXISTS `volleytrain`.`equipment` (
   `PK_Equipment` INT NOT NULL,
   `name` VARCHAR(45) NULL DEFAULT NULL,
   `asset` VARCHAR(45) NULL DEFAULT NULL,
@@ -59,9 +30,11 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `volleytrain`.`Team`
+-- Table `volleytrain`.`team`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `volleytrain`.`Team` (
+DROP TABLE IF EXISTS `volleytrain`.`team` ;
+
+CREATE TABLE IF NOT EXISTS `volleytrain`.`team` (
   `PK_Team` INT NOT NULL,
   `name` VARCHAR(45) NULL DEFAULT NULL,
   PRIMARY KEY (`PK_Team`))
@@ -71,23 +44,47 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `volleytrain`.`Training`
+-- Table `volleytrain`.`users`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `volleytrain`.`Training` (
+DROP TABLE IF EXISTS `volleytrain`.`users` ;
+
+CREATE TABLE IF NOT EXISTS `volleytrain`.`users` (
+  `PK_User` INT NOT NULL,
+  `surname` VARCHAR(45) NULL,
+  `name` VARCHAR(45) NULL,
+  `email` VARCHAR(45) NULL,
+  `google_user_id` VARCHAR(45) NULL,
+  PRIMARY KEY (`PK_User`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `volleytrain`.`training`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `volleytrain`.`training` ;
+
+CREATE TABLE IF NOT EXISTS `volleytrain`.`training` (
   `PK_Training` INT NOT NULL,
   `name` VARCHAR(45) NULL DEFAULT NULL,
   `datetime` DATETIME(6) NULL DEFAULT NULL,
   `Team_PK_Team` INT NOT NULL,
   `User_PK_User` INT NOT NULL,
-  PRIMARY KEY (`PK_Training`, `Team_PK_Team`, `User_PK_User`),
+  `users_PK_User` INT NOT NULL,
+  PRIMARY KEY (`PK_Training`, `Team_PK_Team`, `User_PK_User`, `users_PK_User`),
   INDEX `fk_Training_Team1_idx` (`Team_PK_Team` ASC) VISIBLE,
   INDEX `fk_Training_User1_idx` (`User_PK_User` ASC) VISIBLE,
+  INDEX `fk_training_users1_idx` (`users_PK_User` ASC) VISIBLE,
   CONSTRAINT `fk_Training_Team1`
     FOREIGN KEY (`Team_PK_Team`)
-    REFERENCES `volleytrain`.`Team` (`PK_Team`),
+    REFERENCES `volleytrain`.`team` (`PK_Team`),
   CONSTRAINT `fk_Training_User1`
     FOREIGN KEY (`User_PK_User`)
-    REFERENCES `mydb`.`User` (`PK_User`)
+    REFERENCES `mydb`.`users` (`PK_User`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_training_users1`
+    FOREIGN KEY (`users_PK_User`)
+    REFERENCES `volleytrain`.`users` (`PK_User`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -96,9 +93,11 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `volleytrain`.`Exercise`
+-- Table `volleytrain`.`exercise`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `volleytrain`.`Exercise` (
+DROP TABLE IF EXISTS `volleytrain`.`exercise` ;
+
+CREATE TABLE IF NOT EXISTS `volleytrain`.`exercise` (
   `PK_Exercise` INT NOT NULL,
   `tag` VARCHAR(45) NULL DEFAULT NULL,
   `duration` TIME NULL DEFAULT NULL,
@@ -107,23 +106,25 @@ CREATE TABLE IF NOT EXISTS `volleytrain`.`Exercise` (
   INDEX `fk_Exercise_Training1_idx` (`Training_PK_Training` ASC) VISIBLE,
   CONSTRAINT `fk_Exercise_Training1`
     FOREIGN KEY (`Training_PK_Training`)
-    REFERENCES `volleytrain`.`Training` (`PK_Training`))
+    REFERENCES `volleytrain`.`training` (`PK_Training`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `volleytrain`.`Matchfield`
+-- Table `volleytrain`.`matchfield`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `volleytrain`.`Matchfield` (
+DROP TABLE IF EXISTS `volleytrain`.`matchfield` ;
+
+CREATE TABLE IF NOT EXISTS `volleytrain`.`matchfield` (
   `PK_Matchfield` INT NOT NULL,
   `Exercise_PK_Exercise` INT NOT NULL,
   PRIMARY KEY (`PK_Matchfield`, `Exercise_PK_Exercise`),
   INDEX `fk_Matchfield_Exercise1_idx` (`Exercise_PK_Exercise` ASC) VISIBLE,
   CONSTRAINT `fk_Matchfield_Exercise1`
     FOREIGN KEY (`Exercise_PK_Exercise`)
-    REFERENCES `volleytrain`.`Exercise` (`PK_Exercise`)
+    REFERENCES `volleytrain`.`exercise` (`PK_Exercise`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -132,9 +133,11 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `volleytrain`.`Position`
+-- Table `volleytrain`.`position`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `volleytrain`.`Position` (
+DROP TABLE IF EXISTS `volleytrain`.`position` ;
+
+CREATE TABLE IF NOT EXISTS `volleytrain`.`position` (
   `PK_Position` INT NOT NULL,
   `x` FLOAT NULL DEFAULT NULL,
   `y` FLOAT NULL DEFAULT NULL,
@@ -145,9 +148,11 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `volleytrain`.`Matchfield_has_Equipment`
+-- Table `volleytrain`.`matchfield_has_equipment`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `volleytrain`.`Matchfield_has_Equipment` (
+DROP TABLE IF EXISTS `volleytrain`.`matchfield_has_equipment` ;
+
+CREATE TABLE IF NOT EXISTS `volleytrain`.`matchfield_has_equipment` (
   `Matchfield_PK_Matchfield` INT NOT NULL,
   `Equipment_PK_Equipment` INT NOT NULL,
   `Position_PK_Position` INT NOT NULL,
@@ -157,22 +162,24 @@ CREATE TABLE IF NOT EXISTS `volleytrain`.`Matchfield_has_Equipment` (
   INDEX `fk_Matchfield_has_Equipment_Position1_idx` (`Position_PK_Position` ASC) VISIBLE,
   CONSTRAINT `fk_Matchfield_has_Equipment_Equipment1`
     FOREIGN KEY (`Equipment_PK_Equipment`)
-    REFERENCES `volleytrain`.`Equipment` (`PK_Equipment`),
+    REFERENCES `volleytrain`.`equipment` (`PK_Equipment`),
   CONSTRAINT `fk_Matchfield_has_Equipment_Matchfield1`
     FOREIGN KEY (`Matchfield_PK_Matchfield`)
-    REFERENCES `volleytrain`.`Matchfield` (`PK_Matchfield`),
+    REFERENCES `volleytrain`.`matchfield` (`PK_Matchfield`),
   CONSTRAINT `fk_Matchfield_has_Equipment_Position1`
     FOREIGN KEY (`Position_PK_Position`)
-    REFERENCES `volleytrain`.`Position` (`PK_Position`))
+    REFERENCES `volleytrain`.`position` (`PK_Position`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `volleytrain`.`Player`
+-- Table `volleytrain`.`player`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `volleytrain`.`Player` (
+DROP TABLE IF EXISTS `volleytrain`.`player` ;
+
+CREATE TABLE IF NOT EXISTS `volleytrain`.`player` (
   `PK_Player` INT NOT NULL,
   `surname` VARCHAR(45) NULL DEFAULT NULL,
   `name` VARCHAR(45) NULL DEFAULT NULL,
@@ -181,16 +188,18 @@ CREATE TABLE IF NOT EXISTS `volleytrain`.`Player` (
   INDEX `fk_Player_Team1_idx` (`Team_PK_Team` ASC) VISIBLE,
   CONSTRAINT `fk_Player_Team1`
     FOREIGN KEY (`Team_PK_Team`)
-    REFERENCES `volleytrain`.`Team` (`PK_Team`))
+    REFERENCES `volleytrain`.`team` (`PK_Team`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `volleytrain`.`Matchfield_has_Player`
+-- Table `volleytrain`.`matchfield_has_player`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `volleytrain`.`Matchfield_has_Player` (
+DROP TABLE IF EXISTS `volleytrain`.`matchfield_has_player` ;
+
+CREATE TABLE IF NOT EXISTS `volleytrain`.`matchfield_has_player` (
   `Matchfield_PK_Matchfield` INT NOT NULL,
   `Player_PK_Player` INT NOT NULL,
   `Position_PK_Position` INT NOT NULL,
@@ -200,22 +209,24 @@ CREATE TABLE IF NOT EXISTS `volleytrain`.`Matchfield_has_Player` (
   INDEX `fk_Matchfield_has_Player_Position1_idx` (`Position_PK_Position` ASC) VISIBLE,
   CONSTRAINT `fk_Matchfield_has_Player_Matchfield1`
     FOREIGN KEY (`Matchfield_PK_Matchfield`)
-    REFERENCES `volleytrain`.`Matchfield` (`PK_Matchfield`),
+    REFERENCES `volleytrain`.`matchfield` (`PK_Matchfield`),
   CONSTRAINT `fk_Matchfield_has_Player_Player1`
     FOREIGN KEY (`Player_PK_Player`)
-    REFERENCES `volleytrain`.`Player` (`PK_Player`),
+    REFERENCES `volleytrain`.`player` (`PK_Player`),
   CONSTRAINT `fk_Matchfield_has_Player_Position1`
     FOREIGN KEY (`Position_PK_Position`)
-    REFERENCES `volleytrain`.`Position` (`PK_Position`))
+    REFERENCES `volleytrain`.`position` (`PK_Position`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `volleytrain`.`Matchfield_has_Arrows`
+-- Table `volleytrain`.`matchfield_has_arrows`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `volleytrain`.`Matchfield_has_Arrows` (
+DROP TABLE IF EXISTS `volleytrain`.`matchfield_has_arrows` ;
+
+CREATE TABLE IF NOT EXISTS `volleytrain`.`matchfield_has_arrows` (
   `Matchfield_PK_Matchfield` INT NOT NULL,
   `Arrows_PK_Arrows` INT NOT NULL,
   `Position_PK_Position` INT NOT NULL,
@@ -225,7 +236,7 @@ CREATE TABLE IF NOT EXISTS `volleytrain`.`Matchfield_has_Arrows` (
   INDEX `fk_Matchfield_has_Arrows_Position1_idx` (`Position_PK_Position` ASC) VISIBLE,
   CONSTRAINT `fk_Matchfield_has_Arrows_Matchfield1`
     FOREIGN KEY (`Matchfield_PK_Matchfield`)
-    REFERENCES `volleytrain`.`Matchfield` (`PK_Matchfield`)
+    REFERENCES `volleytrain`.`matchfield` (`PK_Matchfield`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Matchfield_has_Arrows_Arrows1`
@@ -235,7 +246,7 @@ CREATE TABLE IF NOT EXISTS `volleytrain`.`Matchfield_has_Arrows` (
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Matchfield_has_Arrows_Position1`
     FOREIGN KEY (`Position_PK_Position`)
-    REFERENCES `volleytrain`.`Position` (`PK_Position`)
+    REFERENCES `volleytrain`.`position` (`PK_Position`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB

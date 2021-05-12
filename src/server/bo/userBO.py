@@ -1,3 +1,4 @@
+
 from server.bo.NamedBusinessObject import NamedBusinessObject
 
 class User(NamedBusinessObject):
@@ -10,6 +11,7 @@ class User(NamedBusinessObject):
 
     def __init__(self):
         super().__init__()
+        self._surname = None
         self._email = None
         self._googleUserId = None
     
@@ -22,8 +24,18 @@ class User(NamedBusinessObject):
     def setGoogleUserId(self, id):
         self._googleUserId = id
 
+    def getGoogleUserId(self):
+        return self._googleUserId
+
+    def setSurname(self, sname):
+        self._surname = sname
+    
+    def getSurname(self):
+        return self._surname
+
+
     def __str__(self):
-        return "User: {}, {}, {}, {}".format(self.getId(), self._name, self._email, self._googleUserId"
+        return "User: {}, {}, {}, {}, {}".format(self.getId(),self._surname, self._name, self._email, self._googleUserId)
 
     @staticmethod
     def from_dict(dictionary=dict()):
@@ -32,6 +44,7 @@ class User(NamedBusinessObject):
 
         obj = User()
         obj.setId(dictionary["id"])  # part of the Business object mother class
+        obj.setSurname(dictionary["surname"])
         obj.setName(dictionary["name"])
         obj.setEmail(dictionary["email"])
         obj.setGoogleUserId(dictionary["googleUserId"])

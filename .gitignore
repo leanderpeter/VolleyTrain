@@ -1,2 +1,23 @@
 
-VolleyTrainNative/node_modules/
+venv/
+.idea/
+
+*.pyc
+*.pyo
+__pycache__/
+src/__pycache__/
+src/server/__pycache__/
+src/server/bo/__pycache__/
+src/server/db/__pycache__/
+src/tests/__pycache__/
+
+.DS_Store
+src/server/db/.ds_store
+node_modules
+
+.vscode/settings.json
+frontend/debug.log
+
+
+
+
