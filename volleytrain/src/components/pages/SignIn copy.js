@@ -42,6 +42,9 @@ class SignIn extends Component {
 
     // Handles the click event of the sign in button and calls the prop onSignIn handler
     handleSignInButtonClicked = () => {
+        document.cookie = `fname= ${document.getElementById('fname').value};path=/`
+        document.cookie = `lname= ${document.getElementById('lname').value};path=/`
+
         setTimeout(() => {
             this.props.onSignIn();
         }, 0);
@@ -64,6 +67,12 @@ class SignIn extends Component {
     // rendert die  Komponente SignIn Seite
     render() {
         const {
+            
+            lnameValidationFailed,
+            lnameEdited,
+            fnameValidationFailed,
+            fnameEdited,
+            
         } = this.state;
         const {classes} = this.props;
 
@@ -71,14 +80,24 @@ class SignIn extends Component {
                 
                 
                     <Typography className={classes.root} align='center' variant='h6'>Login</Typography>
-                    <Typography style={{marginTop: "0em"}} classlname={classes.root} align='center'>Für die Nutzung der weiteren Funktionen müssen
+                    <Grid container justify='center'>
+                        <Grid item>
+                            <form className={classes.form} autoComplete="on">
+                                <TextField id="fname" label="Name" error={lnameValidationFailed}
+                                           onChange={this.textFieldValueChange}/>
+                                <TextField id="lname" label="Nachname" error={fnameValidationFailed}
+                                           onChange={this.textFieldValueChange}/>
+                            </form>
+                        </Grid>
+                    </Grid>
+                    <Typography style={{marginTop: "2em"}} classlname={classes.root} align='center'>Für die Nutzung der weiteren Funktionen müssen
                         Sie sich authentifizieren.</Typography>
                     <Grid container justify='center'>
                         <Grid item>
                             <Button style={{marginBottom: "2em", marginTop: "1em"}} variant='contained' color='primary'
                                     onClick={this.handleSignInButtonClicked}
-                                    >
-                                SignIn with Google
+                                    disabled={ lnameValidationFailed || !lnameEdited || fnameValidationFailed || !fnameEdited}>
+                                Anmelden
                             </Button>
                         </Grid>
                     </Grid>

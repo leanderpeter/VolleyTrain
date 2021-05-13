@@ -1,130 +1,105 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { withStyles, Paper, Typography, Tabs, Tab } from '@material-ui/core';
-import { Link as RouterLink } from 'react-router-dom';
-import ProfileDropDown from '../dialogs/ProfileDropDown';
-import { withRouter } from 'react-router-dom';
+import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Drawer from '@material-ui/core/Drawer';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import List from '@material-ui/core/List';
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import InboxIcon from '@material-ui/icons/MoveToInbox';
+import MailIcon from '@material-ui/icons/Mail';
+import ProfileDropDown from '../dialogs/ProfileDropDown'
+import Box from '@material-ui/core/Box';
+import SettingsIcon from '@material-ui/icons/Settings';
 
-/**
- * 
- * Zeigt den Header mit den verfügbaren Navigations Tabs.
- * Je nach Rolle (Student, Dozent, Admin) sind andere Tabs zum auswählen verfügbar.
- * 
- * @see See Material-UIs [Tabs](https://material-ui.com/components/tabs/)
- * @see See Material-UIs [Paper](https://material-ui.com/components/paper/)
- * 
- * 
-**/
+const drawerWidth = 240;
 
-class Header extends Component {
-	constructor(props) {
-    super(props);
-  
-
-		//init empty state
-		this.state = {
-			tabindex: 0
-		};
-	}
-	// handles changes of the state of tabs component
-	handleTabChange = (e, newIndex) => {
-		this.setState({
-			tabindex: newIndex
-		})
-	};
-	// Rendert Komponente
-	render() {
-    const { classes, user, currentStudent, currentPerson } = this.props;
-		return (
-      <Paper className={classes.root} variant='outlined' >
-        <ProfileDropDown user={user} />
-        <Typography className={classes.text1} variant='h3' component='h1' align='center'>
-          HdM Wahlfach App
-        </Typography>
-        <Typography className={classes.text2} variant='h5' component='h2' align='center'>
-        STUDIEREN. WISSEN. MACHEN.
-        </Typography>
-        {
-          user ?
-            
-              <>
-              {currentStudent ?
-                <>
-                <Paper variant='outlined'>
-                  <Tabs indicatorColor='secondary' textColor='secondary' variant='fullWidth' centered value={this.state.tabindex} onChange={this.handleTabChange}>
-                    <Tab label='Projektwahl' component={RouterLink} to={`/projekte`} />
-                    <Tab label="Meine Projekte" component={RouterLink} to={'/meineprojekte'}/>
-                    <Tab label="Semesterbericht" component={RouterLink} to={'/semesterbericht'}/>
-                    <Tab label='About' component={RouterLink} to={`/about`} />
-                  </Tabs>
-                </Paper>
-                </>
-                :null
-              }
-              {currentPerson?
-                <>
-                  {currentPerson.rolle === "Dozent"?
-                  <>
-                  <Paper variant='outlined'>
-                    <Tabs indicatorColor='secondary' textColor='secondary' variant='fullWidth' centered value={this.state.tabindex} onChange={this.handleTabChange}  >
-                      <Tab label='Wahl' component={RouterLink} to={`/projekte`} />
-                      <Tab label='Projektpflege' component={RouterLink} to={`/projektpflegen`} />
-                      <Tab label='Projektverwaltung' component={RouterLink} to={`/projekteDozent`} />
-                      <Tab label='About' component={RouterLink} to={`/about`} />
-                    </Tabs>
-                  </Paper>
-                  </>
-                  :null
-                  }
-                  {currentPerson.rolle === "Admin"?
-                  <>
-                  <Paper variant='outlined'>
-                    <Tabs indicatorColor='secondary' textColor='secondary' centered value={this.state.tabindex} onChange={this.handleTabChange}  >
-                      <Tab className={classes.tab} label='Wahl' component={RouterLink} to={`/projekte`} />
-                      <Tab className={classes.tab} label='Pflege' component={RouterLink} to={`/projektpflegen`} />
-                      <Tab className={classes.tab} label='Verwaltung' component={RouterLink} to={`/projekteDozent`} />
-                      <Tab className={classes.tab} label='Prüfung' component={RouterLink} to={`/projektverwaltung`} />
-                      <Tab className={classes.tab} label="Notenliste" component={RouterLink} to={'/notenliste'}/>
-                      <Tab className={classes.tab} label='Administration' component={RouterLink} to={`/administration/semester`} />
-                    </Tabs>
-                  </Paper>
-                  </>
-                  :null
-                  }
-                </>
-              :null
-              }
-            </>
-            : null
-        }
-      </Paper>
-    )
-  }
-}
-
-const styles = theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    width: '100%',
+    display: 'flex',
   },
-  tab: {
-    minWidth: 150, // a number of your choice
-    width: 150, // a number of your choice
+  appBar: {
+    width: `calc(100% - ${drawerWidth}px)`,
+    marginLeft: drawerWidth,
   },
-  text1: {
-    paddingLeft: '64px',
-    marginTop: theme.spacing(2)
+  drawer: {
+    width: drawerWidth,
+    flexShrink: 0,
   },
-  text2: {
-    marginBottom: theme.spacing(2),
+  drawerPaper: {
+    width: drawerWidth,
   },
+  // necessary for content to be below app bar
+  toolbar: theme.mixins.toolbar,
+  content: {
+    flexGrow: 1,
+    backgroundColor: theme.palette.background.default,
+    padding: theme.spacing(3),
+  },
+}));
 
-});
+export default function Header(props) {
+  const classes = useStyles();
 
+  return (
+    <div className={classes.root}>
+      <CssBaseline />
+      <AppBar position="fixed" className={classes.appBar}>
+        
+      </AppBar>
+      <Drawer
+        className={classes.drawer}
+        variant="permanent"
+        classes={{
+          paper: classes.drawerPaper,
+        }}
+        anchor="left"
+      >
+        <div className={classes.toolbar} />
+        <Divider />
+        <List>
+          {['Dashboard', 'Trainingsplanung', 'Trainingsplane', 'Ubungsverwaltung', 'Teams'].map((text, index) => (
+            <ListItem button key={text}>
+              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItem>
+          ))}
+        </List>
+        <Divider />
+        <List>
+          
+          
+            <Box 
+              display="flex"
+              flexWrap="wrap"
+              alignContent="flex-end"
+              justifyContent="center"
+              css={{ maxWidth: drawerWidth, height: "60vh" }}>
+                
+                <ListItem>
+                  <ProfileDropDown user={props.user}/>
+                </ListItem>
 
-// Prop Type
-Header.propTypes = {
-	// logged in Firebase user/person
-	user: PropTypes.object,
+                <ListItem button>
+                <ListItemIcon><SettingsIcon /></ListItemIcon>
+                </ListItem>
+                
+            </Box>
+            
+            
+          
+          
+          
+        </List>
+      </Drawer>
+      <main className={classes.content}>
+        <div className={classes.toolbar} />
+        
+      </main>
+    </div>
+  );
 }
-
-export default withRouter(withStyles(styles)(Header));

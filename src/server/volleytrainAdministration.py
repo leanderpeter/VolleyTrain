@@ -8,10 +8,14 @@ class volleytrainAdministration(object):
     def __init__(self):
         pass
     
-    def createUser(self, api_payload):
+    def createUser(self, surname, name, email, googleId):
         """ Create a person object and inject it into the database
         """
-        user = User.from_dict(api_payload)
+        user = User()
+        user.setSurname(surname)
+        user.setName(name)
+        user.setEmail(email)
+        user.setGoogleUserId(googleId)
 
         with UserMapper() as mapper:
             return mapper.insert(user)
@@ -23,3 +27,7 @@ class volleytrainAdministration(object):
     def getPersonByGoogleUserId(self, gId):
         with UserMapper() as mapper:
             return mapper.find_by_google_user_id(gId)
+
+    def saveUser(self, user):
+        with UserMapper() as mapper:
+            return mapper.update(user)

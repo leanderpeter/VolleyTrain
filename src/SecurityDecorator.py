@@ -12,6 +12,8 @@ def secured(function):
         Hier werden alle in Cookies, welche in der Anmeldung vergeben werden, abgefragt
         '''
         id_token = request.cookies.get("token")
+        name = request.cookies.get("lname")
+        surname = request.cookies.get("fname")
 
         error_message = None
         claims = None
@@ -36,13 +38,15 @@ def secured(function):
                             Demnach wird das Person BO aktualisiert
                             '''
                             user.setEmail(email)
-                            adm.save_person(person)
+                            user.setName(name)
+                            user.setSurname(surname)
+                            adm.saveUser(user)
                     else:
                         '''
                         Das System kennt die Person nicht.
                         Es wird eine neue Person angelegt
                         '''
-                        user = adm.create_person(name, email, google_user_id, rolle)
+                        user = adm.createUser(surname, name, email, google_user_id)
 
                     print(request.method, request.path, 'asked by:', email)
 

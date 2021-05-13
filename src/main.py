@@ -68,8 +68,22 @@ class UserOperation(Resource):
         """
 
         adm = volleytrainAdministration()
-        print(api.payload)
+        # print(api.payload)
+        userId = request.args.get("id")
+        name = request.args.get("name")
+        name = request.args.get("surname")
+        email = request.args.get("email")
         adm.createUser(api.payload)
+        return user
+
+@volleyTrain.route('/userbygoogle/<string:id>')
+@volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class UserByIDOperation(Resource):
+    @secured
+    @volleyTrain.marshal_list_with(user)
+    def get(self, id):
+        adm = volleytrainAdministration()
+        user = adm.getPersonByGoogleUserId(id)
         return user
 
 if __name__ == '__main__':
