@@ -53,9 +53,9 @@ class ProfileDropDown extends Component {
   render() {
     const { classes, user } = this.props;
     const { open } = this.state;
-
+    console.log(user.photoURL)
     return (
-      user ?
+      user && user.photoURL ?
         <div>
           <IconButton className={classes.avatarButton} ref={this.#avatarButtonRef} onClick={this.handleAvatarButtonClick}>
             <Avatar src={user.photoURL} />
