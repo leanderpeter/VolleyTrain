@@ -29,7 +29,7 @@ class UserMapper(Mapper):
             user.setName(name)
             user.setSurname(surname)
             user.setEmail(email)
-            user.setGoogleUserId(google_user_id)
+            user.setGoogleUserId(googleUserId)
 
             result.append(user)
 
