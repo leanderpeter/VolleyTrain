@@ -1,8 +1,9 @@
 import sys
 sys.path.append("..")
 
-from server.db.userMapper import UserMapper
-from server.bo.userBO import User
+
+from src.server.db.userMapper import UserMapper
+from src.server.bo.userBO import User
 
 user = User()
 user.setId(1)

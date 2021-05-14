@@ -1,7 +1,8 @@
 import sys
 sys.path.append("..")
 
-from server.bo.userBO import User
+
+from src.server.bo.userBO import User
 
 user = User()
 user.setId(123)
