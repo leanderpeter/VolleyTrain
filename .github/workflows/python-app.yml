@@ -35,4 +35,4 @@ jobs:
       working-directory: ./src
       run: |
         pwd
-        pytest
+        pytest server/tests/test_userBO.py
