@@ -21,4 +21,4 @@ class BusinessObject(ABC):
         self._creationDate = date
     
     def getCreationDate(self):
-        return _creationDate
+        return self._creationDate
