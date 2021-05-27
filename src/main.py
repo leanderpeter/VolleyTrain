@@ -9,6 +9,7 @@ from flask import request
 # application logic import and business objects
 from server.volleytrainAdministration import volleytrainAdministration
 from server.bo.userBO import User
+from server.bo.ExerciseBO import Exercise
 
 #SecurityDecorator
 from SecurityDecorator import secured
@@ -48,7 +49,7 @@ user = api.inherit('user', nbo, {
 
 exercise = api.inherit('exercise', nbo, {
     'tag': fields.String(attribute='_tag', description='Tag of exercise'),
-    'duration': fields.datetime(attribute='_duration', description='Duration of exercise'),
+    'duration': fields.DateTime(attribute='_duration', description='Duration of exercise'),
 })
 
 

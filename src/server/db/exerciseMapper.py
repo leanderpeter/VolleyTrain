@@ -1,12 +1,13 @@
-from server.db.mapper import Mapper
-from server.bo.exceriseBO import Exercise
+from src.server.db.mapper import Mapper
+from src.server.bo.ExerciseBO import Exercise
 
 
 class ExerciseMapper(Mapper):
-    """mapper class to insert/replace/change person object in the realtional database"""
+    """mapper class to insert/replace/change exercise object in the realtional database"""
+
 
     def __init__(self):
-        super.__init__()
+        super().__init__()
 
     def find_all(self):
         """find all exercise obj
@@ -17,7 +18,7 @@ class ExerciseMapper(Mapper):
 
         cursor = self._connection.cursor()
 
-        command = "SELECT PK_Exercise, name, tag, duration FROM users"
+        command = "SELECT PK_Exercise, name, tag, duration FROM exercise"
 
         cursor.execute(command)
         tuples = cursor.fetchall()
@@ -42,7 +43,7 @@ class ExerciseMapper(Mapper):
     def find_by_id(self, id):
         """Suchen einer exercise nach der übergebenen ID.
 
-        :param id Primärschlüsselattribut einer user aus der Datenbank
+        :param id Primärschlüsselattribut einer exercise aus der Datenbank
         :return exercise-Objekt, welche mit der ID übereinstimmt,
                 None wenn kein Eintrag gefunden wurde
         """
@@ -56,8 +57,8 @@ class ExerciseMapper(Mapper):
             exercise = Exercise()
             exercise.setId(id)
             exercise.setName(name)
-            exercise.setEmail(tag)
-            exercise.setGoogleUserId(duration)
+            exercise.setTag(tag)
+            exercise.setDuration(duration)
             result = exercise
 
         except IndexError:
@@ -70,12 +71,12 @@ class ExerciseMapper(Mapper):
         return result
 
     def insert(self, exercise):
-        """Einfügen eines user Objekts in die DB
+        """Einfügen eines exercise Objekts in die DB
 
         Dabei wird auch der Primärschlüssel des übergebenen Objekts geprüft
 
-        :param exercise das zu speichernde user Objekt
-        :return das bereits übergebene user Objekt mit aktualisierten Daten (id)
+        :param exercise das zu speichernde exercise Objekt
+        :return das bereits übergebene exercise Objekt mit aktualisierten Daten (id)
         """
         cursor = self._connection.cursor()
         cursor.execute("SELECT MAX(PK_exercise) AS maxid FROM exercise ")
@@ -91,7 +92,7 @@ class ExerciseMapper(Mapper):
                 davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
                 exercise.setId(1)
 
-        command = "INSERT INTO users (PK_exercise, name, tag, duration) VALUES (%s,%s,%s,%s,%s)"
+        command = "INSERT INTO exercise (PK_exercise, name, tag, duration) VALUES (%s,%s,%s,%s,%s)"
         data = (exercise.getId(),  exercise.getName(), exercise.getTag(), exercise.getDuration())
         cursor.execute(command, data)
 
@@ -100,7 +101,7 @@ class ExerciseMapper(Mapper):
 
         return exercise
 
-   def update_by_id(self, exercise):
+    def update(self, exercise):
         """Überschreiben / Aktualisieren eines exercise-Objekts in der DB
 
         :param exercise -> exercise-Objekt

@@ -1,8 +1,7 @@
-
-from .bo.userBO import User
-from .db.userMapper import UserMapper
-from .bo.ExerciseBO import Exercise
-from .db.exerciseMapper import ExerciseMapper
+from src.server.bo.userBO import User
+from src.server.db.userMapper import UserMapper
+from src.server.bo.ExerciseBO import Exercise
+from src.server.db.exerciseMapper import ExerciseMapper
 
 
 class volleytrainAdministration(object):
@@ -23,7 +22,7 @@ class volleytrainAdministration(object):
 
     def getUserById(self, id):
         with UserMapper() as mapper:
-            return mapper.find_by_id(id)
+            return mapper.find_byp_id(id)
 
     def getPersonByGoogleUserId(self, gId):
         with UserMapper() as mapper:
@@ -50,4 +49,4 @@ class volleytrainAdministration(object):
 
     def saveExercise(self, exercise):
         with ExerciseMapper() as mapper:
-            return mapper.update(exercise)
+            mapper.update(exercise)
