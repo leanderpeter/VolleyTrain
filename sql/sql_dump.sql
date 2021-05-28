@@ -99,6 +99,7 @@ DROP TABLE IF EXISTS `volleytrain`.`exercise` ;
 
 CREATE TABLE IF NOT EXISTS `volleytrain`.`exercise` (
   `PK_Exercise` INT NOT NULL,
+  `name` VARCHAR(128) NULL DEFAULT NULL,
   `tag` VARCHAR(45) NULL DEFAULT NULL,
   `duration` TIME NULL DEFAULT NULL,
   `Training_PK_Training` INT NOT NULL,
