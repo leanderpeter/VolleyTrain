@@ -12,6 +12,7 @@ import VolleytrainAPI from './api/VolleytrainAPI';
 import firebaseConfig from './firebaseconfig';
 import Home from './components/pages/Home';
 import Header from './components/layout/Header';
+import TrainingSchedule from './components/TrainingSchedule';
 
 /*
 Main page of the volleytrain. First firebase to verify users. Then routing to the pages via react-router-dom
@@ -148,7 +149,8 @@ class App extends React.Component {
               <Header user={currentUser}/>
               <Redirect from='/' to='home' />
                   <Route path='/home' component ={Home}>
-                    <Home/>
+                    {/* <Home/> */}
+                    <TrainingSchedule/>
                   </Route>
 
               </>
