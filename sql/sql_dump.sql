@@ -64,32 +64,18 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `volleytrain`.`training` ;
 
 CREATE TABLE IF NOT EXISTS `volleytrain`.`training` (
-  `PK_Training` INT NOT NULL,
-  `name` VARCHAR(45) NULL DEFAULT NULL,
-  `datetime` DATETIME(6) NULL DEFAULT NULL,
-  `Team_PK_Team` INT NOT NULL,
-  `User_PK_User` INT NOT NULL,
-  `users_PK_User` INT NOT NULL,
-  PRIMARY KEY (`PK_Training`, `Team_PK_Team`, `User_PK_User`, `users_PK_User`),
-  INDEX `fk_Training_Team1_idx` (`Team_PK_Team` ASC) VISIBLE,
-  INDEX `fk_Training_User1_idx` (`User_PK_User` ASC) VISIBLE,
-  INDEX `fk_training_users1_idx` (`users_PK_User` ASC) VISIBLE,
-  CONSTRAINT `fk_Training_Team1`
-    FOREIGN KEY (`Team_PK_Team`)
-    REFERENCES `volleytrain`.`team` (`PK_Team`),
-  CONSTRAINT `fk_Training_User1`
-    FOREIGN KEY (`User_PK_User`)
-    REFERENCES `mydb`.`users` (`PK_User`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_training_users1`
-    FOREIGN KEY (`users_PK_User`)
-    REFERENCES `volleytrain`.`users` (`PK_User`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+  `PK_Training` int NOT NULL,
+  `datetime` datetime(6) DEFAULT NULL,
+  `name` varchar(45) DEFAULT NULL,
+  `goal` varchar(45) DEFAULT NULL,
+  `Team_PK_Team` int NOT NULL,
+  `User_PK_User` int NOT NULL,
+
+  PRIMARY KEY (`PK_Training`,`Team_PK_Team`,`User_PK_User`),
+  KEY `fk_Training_Team1_idx` (`Team_PK_Team`),
+  KEY `fk_training_users1_idx` (`User_PK_User`),
+  CONSTRAINT `fk_Training_Team1` FOREIGN KEY (`Team_PK_Team`) REFERENCES `team` (`PK_Team`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------

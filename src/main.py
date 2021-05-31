@@ -9,6 +9,7 @@ from flask import request
 # application logic import and business objects
 from server.volleytrainAdministration import volleytrainAdministration
 from server.bo.userBO import User
+from server.bo.TrainingBO import Training
 
 #SecurityDecorator
 from SecurityDecorator import secured
@@ -34,6 +35,7 @@ volleyTrain = api.namespace('volleyTrain', description='Functions of volleyTrain
 werden sollen"""
 bo = api.model('BusinessObject', {
     'id': fields.Integer(attribute='_id', description='ID des BOs'),
+    'creation_date': fields.DateTime(attribute='_creation_date', description='Erstellungszeitpunkt')
 })
 
 nbo = api.inherit('NamedBusinessObject', bo, {
@@ -45,6 +47,13 @@ user = api.inherit('user', nbo, {
     'email': fields.String(attribute='_email', description='Email der Person'),
     'googleUserId': fields.String(attribute='_googleUserId', description='Google user ID der Person'),
 })
+
+training = api.inherit('training', nbo, {
+    'goal': fields.String(attribute='_goal', description='Ziel des Trainings'),
+    'teamId': fields.Integer(attribute='_team_id', description='ID des beteiligten Team'),
+    'userId': fields.Integer(attribute='_user_id', description='ID des Users/Trainers')
+})
+
 
 @volleyTrain.route('/user/<int:id>')
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -85,6 +94,16 @@ class UserByIDOperation(Resource):
         adm = volleytrainAdministration()
         user = adm.getPersonByGoogleUserId(id)
         return user
+
+@volleyTrain.route('/trainings')
+@volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class TrainingListOperations(Resource):
+    @volleyTrain.marshal_list_with(training)
+    @secured
+    def get(self):
+        adm = volleytrainAdministration()
+        trainings = adm.getAllTrainings()
+        return trainings
 
 if __name__ == '__main__':
     app.run(debug=True)
