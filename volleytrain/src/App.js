@@ -1,9 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
-import { Container, ThemeProvider, CssBaseline } from '@material-ui/core';
+import { withStyles, ThemeProvider, CssBaseline } from '@material-ui/core';
 import firebase from 'firebase/app'; //Firebase module
 import 'firebase/auth'; //Firebase module
 import Grid from '@material-ui/core/Grid';
+import { withRouter } from 'react-router-dom';
 
 // import Componentents from '/components/';
 import Theme from './Theme';
@@ -136,7 +137,8 @@ class App extends React.Component {
   }
 
   render() {
-    const { currentUser, appError, authError, authLoading, currentStudent, currentPerson } = this.state;
+    const {classes} = this.props;
+    const { currentUser } = this.state;
 
     return (
       <ThemeProvider theme={Theme}>
@@ -148,7 +150,7 @@ class App extends React.Component {
               <Header user={currentUser}/>
               <Redirect from='/' to='home' />
                   <Route path='/home' component ={Home}>
-                    <Home/>
+                    <Home className={classes.root}/>
                   </Route>
 
               </>
@@ -169,4 +171,18 @@ class App extends React.Component {
   }
 }
 
-export default App;
+/** Component specific styles */
+const styles = theme => ({
+  root: {
+      margin: theme.spacing(2),
+      marginLeft: theme.spacing(200)
+  },
+  formControl: {
+      minWidth: 180
+  },
+  form: {
+      marginTop: theme.spacing(1)
+  }
+});
+
+export default (withStyles(styles)(App));

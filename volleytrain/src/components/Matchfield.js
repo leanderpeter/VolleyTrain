@@ -4,26 +4,17 @@ import {
     Typography,
     withStyles,
 } from '@material-ui/core';
-import Matchfield from '../Matchfield';
 
+class Matchfield extends Component {
 
-class Home extends Component {
-
-
-    
     render() {
         const {classes} = this.props;
 
         return <div>
-                
-
-                    <Matchfield/>
-                    
-                
-        </div>
+                <Typography style={{marginTop: "2em"}} classlname={classes.root} align=''>Lets code the hell out of this Bitch!</Typography>
+            </div>
     }
 }
-
 
 /** Component specific styles */
 const styles = theme => ({
@@ -39,7 +30,7 @@ const styles = theme => ({
 });
 
 /** PropTypes */
-Home.propTypes = {
+Matchfield.propTypes = {
     /** @ignore */
     classes: PropTypes.object.isRequired,
     /**
@@ -48,4 +39,4 @@ Home.propTypes = {
     onSignIn: PropTypes.func.isRequired,
 }
 
-export default withStyles(styles)(Home)
+export default withStyles(styles)(Matchfield)
