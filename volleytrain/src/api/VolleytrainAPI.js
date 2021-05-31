@@ -1,5 +1,6 @@
 
 import UserBO from './UserBO';
+import TrainingBO from './TrainingBO';
 
 
 /*
@@ -21,6 +22,9 @@ export default class VolleytrainAPI {
 
 	//getPerson: google_user_id
 	#getUserByGoogleIDURL = (google_user_id) => `${this.#ElectivServerBaseURL}/userbygoogle/${google_user_id}`;
+
+	//Training
+	#getAllTrainings = () => `${this.#ElectivServerBaseURL}/trainings`;
 
 
 
@@ -63,4 +67,16 @@ export default class VolleytrainAPI {
 		})
 	}
 
+
+	//Training
+	
+	getAllTrainings() {
+		return this.#fetchAdvanced(this.#getAllTrainings())
+		.then((responseJSON) => {
+			let trainingBO = TrainingBO.fromJSON(responseJSON);
+			return new Promise(function(resolve) {
+				resolve(trainingBO)
+			})
+		})
+	}
 }
