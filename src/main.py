@@ -9,6 +9,7 @@ from flask import request
 # application logic import and business objects
 from server.volleytrainAdministration import volleytrainAdministration
 from server.bo.userBO import User
+from server.bo.ExerciseBO import Exercise
 
 #SecurityDecorator
 from SecurityDecorator import secured
@@ -46,6 +47,12 @@ user = api.inherit('user', nbo, {
     'googleUserId': fields.String(attribute='_googleUserId', description='Google user ID der Person'),
 })
 
+exercise = api.inherit('exercise', nbo, {
+    'tag': fields.String(attribute='_tag', description='Tag of exercise'),
+    'duration': fields.DateTime(attribute='_duration', description='Duration of exercise'),
+})
+
+
 @volleyTrain.route('/user/<int:id>')
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class UserByIDOperation(Resource):
@@ -55,6 +62,7 @@ class UserByIDOperation(Resource):
         adm = volleytrainAdministration()
         user = adm.getUserById(id)
         return user
+
 
 @volleyTrain.route('/user')
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -76,6 +84,7 @@ class UserOperation(Resource):
         adm.createUser(api.payload)
         return user
 
+
 @volleyTrain.route('/userbygoogle/<string:id>')
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class UserByIDOperation(Resource):
@@ -85,6 +94,39 @@ class UserByIDOperation(Resource):
         adm = volleytrainAdministration()
         user = adm.getPersonByGoogleUserId(id)
         return user
+
+
+@volleyTrain.route('/exercise/<int:id>')
+@volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ExerciseByIDOperation(Resource):
+    @secured
+    @volleyTrain.marshal_list_with(exercise)
+    def get(self, id):
+        adm = volleytrainAdministration()
+        exercise = adm.getExerciseById(id)
+        return exercise
+
+
+@volleyTrain.route('/exercise')
+@volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ExerciseOperation(Resource):
+    @secured
+    @volleyTrain.marshal_with(exercise)
+    @volleyTrain.expect(exercise)
+    def put(self):
+        """Please provide a exercise object to transfer it into
+        the database
+        """
+
+        adm = volleytrainAdministration()
+        # print(api.payload)
+        exerciseId = request.args.get("id")
+        name = request.args.get("name")
+        tag = request.args.get("tag")
+        adm.createExercise(api.payload)
+        return exercise
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

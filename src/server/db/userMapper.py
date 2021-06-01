@@ -1,5 +1,5 @@
-from server.db.mapper import Mapper
-from server.bo.userBO import User
+from src.server.db.mapper import Mapper
+from src.server.bo.userBO import User
 
 
 class UserMapper(Mapper):

@@ -1,5 +1,6 @@
 
 import UserBO from './UserBO';
+import ExerciseBO from './ExerciseBO';
 
 
 /*
@@ -21,6 +22,10 @@ export default class VolleytrainAPI {
 
 	//getPerson: google_user_id
 	#getUserByGoogleIDURL = (google_user_id) => `${this.#ElectivServerBaseURL}/userbygoogle/${google_user_id}`;
+
+
+	//getExercise: id
+	#getExerciseByIDURL = (id) => `${this.#ElectivServerBaseURL}/exercisebyid/${id}`;
 
 
 
@@ -59,6 +64,17 @@ export default class VolleytrainAPI {
 			console.info(userBO)
 			return new Promise(function (resolve){
 				resolve(userBO)
+			})
+		})
+	}
+
+	//gibt die Exercise mit der bestimmten ID als BO zurück
+	getExerciseByID(id){
+		return this.#fetchAdvanced(this.#getExerciseByIDURL(id)).then((responseJSON) => {
+			let exerciseBO = ExerciseBO.fromJSON(responseJSON);
+			console.info(exerciseBO)
+			return new Promise(function (resolve){
+				resolve(exerciseBO)
 			})
 		})
 	}
