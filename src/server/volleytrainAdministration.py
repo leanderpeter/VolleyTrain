@@ -1,6 +1,7 @@
 
 from .bo.userBO import User
 from .db.userMapper import UserMapper
+from .db.playerMapper import PlayerMapper
 
 
 
@@ -31,3 +32,7 @@ class volleytrainAdministration(object):
     def saveUser(self, user):
         with UserMapper() as mapper:
             return mapper.update(user)
+
+    def getAllPlayer(self):
+        with PlayerMapper() as mapper:
+            return mapper.find_all()

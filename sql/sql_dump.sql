@@ -195,6 +195,16 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
+-- Dump `volleytrain`.`player`
+-- -----------------------------------------------------
+
+LOCK TABLES `player` WRITE;
+/*!40000 ALTER TABLE `player` DISABLE KEYS */;
+INSERT INTO `player` VALUES (1,"Peter", "Griffin", 1),(2, "Glenn", "Quakmire", 1),(3,"Joe", "Swanson", 2),(4, "Brian", "Griffin", 3),(5, "Lois", "Griffin", 3),(6, "Meg", "Griffin", 3);
+/*!40000 ALTER TABLE `player` ENABLE KEYS */;
+UNLOCK TABLES;
+
+-- -----------------------------------------------------
 -- Table `volleytrain`.`matchfield_has_player`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `volleytrain`.`matchfield_has_player` ;

@@ -1,6 +1,6 @@
 
 import UserBO from './UserBO';
-
+import PlayerBO from './PlayerBO';
 
 /*
 Singleton Abstarktion des backend REST interfaces. Es handelt sich um eine access methode
@@ -12,7 +12,7 @@ export default class VolleytrainAPI {
 	static #api = null;
 
 	// Lokales Python backend
-	#ElectivServerBaseURL = '/volleyTrain';
+	#VolleytrainServerBaseURL = '/volleyTrain';
 
 	// Lokales Python backend
 	//#ElectivServerBaseURL = 'https://wahlfachapp.oa.r.appspot.com/electivApp';
@@ -20,8 +20,10 @@ export default class VolleytrainAPI {
 
 
 	//getPerson: google_user_id
-	#getUserByGoogleIDURL = (google_user_id) => `${this.#ElectivServerBaseURL}/userbygoogle/${google_user_id}`;
+	#getUserByGoogleIDURL = (google_user_id) => `${this.#VolleytrainServerBaseURL}/userbygoogle/${google_user_id}`;
 
+	//getPlayers: all
+	#getPlayersURL = () => `${this.#VolleytrainServerBaseURL}/players`;
 
 
 	/*
@@ -59,6 +61,17 @@ export default class VolleytrainAPI {
 			console.info(userBO)
 			return new Promise(function (resolve){
 				resolve(userBO)
+			})
+		})
+	}
+
+	//Get all Players
+	getPlayers() {
+		return this.#fetchAdvanced(this.#getPlayersURL(),{method: 'GET'}).then((responseJSON) => {
+			let playerBOs = PlayerBO.fromJSON(responseJSON);
+			console.info(playerBOs)
+			return new Promise(function (resolve){
+				resolve(playerBOs);
 			})
 		})
 	}

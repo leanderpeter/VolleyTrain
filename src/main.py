@@ -46,6 +46,11 @@ user = api.inherit('user', nbo, {
     'googleUserId': fields.String(attribute='_googleUserId', description='Google user ID der Person'),
 })
 
+player = api.inherit('nbo', nbo, {
+    'surname': fields.String(attribute='_surname', description='Surname of user'),
+    'teamId': fields.String(attribute='_teamId', description='Team ID of Player')
+})
+
 @volleyTrain.route('/user/<int:id>')
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class UserByIDOperation(Resource):
@@ -75,6 +80,17 @@ class UserOperation(Resource):
         email = request.args.get("email")
         adm.createUser(api.payload)
         return user
+
+@volleyTrain.route('/players')
+@volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class PlayerOperation(Resource):
+    # @secured
+    @volleyTrain.marshal_list_with(player)
+    def get(self):
+        adm = volleytrainAdministration()
+        players = adm.getAllPlayer()
+        return players
+
 
 @volleyTrain.route('/userbygoogle/<string:id>')
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')

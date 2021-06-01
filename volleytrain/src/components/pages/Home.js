@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {
-    Typography,
     withStyles,
 } from '@material-ui/core';
 import Matchfield from '../Matchfield';
+import Exercise from '../Exercise';
 
 
 class Home extends Component {
@@ -12,14 +12,11 @@ class Home extends Component {
 
     
     render() {
-        const {classes} = this.props;
+        const { classes } = this.props;
 
-        return <div>
-                
-
-                    <Matchfield/>
-                    
-                
+        return <div className={classes.root}>
+            
+            <Exercise/>
         </div>
     }
 }
@@ -28,14 +25,8 @@ class Home extends Component {
 /** Component specific styles */
 const styles = theme => ({
     root: {
-        margin: theme.spacing(2)
+        marginLeft: '240px', 
     },
-    formControl: {
-        minWidth: 180
-    },
-    form: {
-        marginTop: theme.spacing(1)
-    }
 });
 
 /** PropTypes */
