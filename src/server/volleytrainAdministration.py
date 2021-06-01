@@ -1,7 +1,9 @@
 
 from .bo.userBO import User
-from .db.userMapper import UserMapper
+from .bo.teamBO import Team
 
+from .db.userMapper import UserMapper
+from .db.teamMapper import TeamMapper
 
 
 class volleytrainAdministration(object):
@@ -31,3 +33,34 @@ class volleytrainAdministration(object):
     def saveUser(self, user):
         with UserMapper() as mapper:
             return mapper.update(user)
+
+
+    def createTeam(self, id, name, trainingsday, add_day_one, add_day_two, add_day_three):
+        
+        team = Team()
+        team.setId(id)
+        team.setName(name)
+        team.setTrainingsday(trainingsday)
+        team.setAddDayOne(add_day_one)
+        team.setAddDayTwo(add_day_two)
+        team.setAddDayThree(add_day_three)
+        
+        with TeamMapper() as mapper:
+            return mapper.insert(team)
+
+    def getAllTeams(self):
+        with TeamMapper() as mapper:
+            return mapper.find_all()
+
+    def getTeamById(self, id):
+        with TeamMapper() as mapper:
+            return mapper.find_by_id(id)
+
+    def deleteTeam(self, team):
+        with TeamMapper() as mapper:
+            return mapper.delete(team)
+
+    def saveTeam(self, team):
+        with TeamMapper() as mapper:
+            return mapper.update(team)
+

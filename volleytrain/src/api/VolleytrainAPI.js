@@ -1,5 +1,6 @@
 
 import UserBO from './UserBO';
+import TeamBO from './TeamBO';
 
 
 /*
@@ -21,7 +22,7 @@ export default class VolleytrainAPI {
 
 	//getPerson: google_user_id
 	#getUserByGoogleIDURL = (google_user_id) => `${this.#ElectivServerBaseURL}/userbygoogle/${google_user_id}`;
-
+	#getAllTeamsURL = () => `${this.#ElectivServerBaseURL}/team`;
 
 
 	/*
@@ -59,6 +60,17 @@ export default class VolleytrainAPI {
 			console.info(userBO)
 			return new Promise(function (resolve){
 				resolve(userBO)
+			})
+		})
+	}
+
+	//gibt die Person mit der bestimmten GoogleUserID als BO zurück
+	getAllTeams(){
+		return this.#fetchAdvanced(this.#getAllTeamsURL()).then((responseJSON) => {
+			let teamBO = TeamBO.fromJSON(responseJSON);
+			console.info(teamBO)
+			return new Promise(function (resolve){
+				resolve(teamBO)
 			})
 		})
 	}
