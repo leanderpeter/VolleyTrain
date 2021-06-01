@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import {
     withStyles,
 } from '@material-ui/core';
-import Matchfield from '../Matchfield';
 import Exercise from '../Exercise';
 
 
@@ -25,7 +24,8 @@ class Home extends Component {
 /** Component specific styles */
 const styles = theme => ({
     root: {
-        marginLeft: '240px', 
+        marginLeft: '240px',
+        //paddingRight: '240px',
     },
 });
 

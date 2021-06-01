@@ -53,13 +53,18 @@ class Exercise extends Component {
         return (
         <div className={classes.root}>
             <Grid container spacing={3}>
-                <Grid item xs={10} 
+                <Grid item xs={1}
                     container
                     direction="column"
                     justify="center"
+                    alignItems="center"/>
+                <Grid item xs={9} 
+                    container
+                    direction="row"
+                    justify="center"
                     alignItems="center"
-                    style={{ borderRight: '0.2em solid black', padding: '0.5em' }}>
-                <Matchfield/>
+                    style={{ borderRight: '0.2em solid black', padding: '0.5em'}}>
+                    <Matchfield/>
                 </Grid>
                 
                 <Grid item xs={2}
@@ -127,10 +132,6 @@ const styles = theme => ({
     test_player: {
         height: '45px',
         width: '50px',
-    },
-    test_field: {
-        height: '300px',
-        width: '900px',
     },
     paper: {
         padding: theme.spacing(2),

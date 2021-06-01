@@ -37,7 +37,7 @@ class Player extends Component {
 
         return (
             <div className={classes.root}>
-                <Grid spacing={2}>
+                <Grid>
                     <Grid item xs>
                         <Avatar className={classes.orange}>{player.getSurname()[0] + player.getname()[0]}</Avatar>
                     </Grid>
