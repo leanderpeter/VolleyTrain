@@ -5,7 +5,6 @@ import {
 } from '@material-ui/core';
 import Exercise from '../Exercise';
 
-
 class Home extends Component {
 
 

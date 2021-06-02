@@ -22,7 +22,6 @@ class Matchfield extends Component {
         const {classes} = this.props;
 
         return <div className={classes.root}>
-                <Typography>TESTEST</Typography>
                 <img onDragStart={this.preventDragHandler} src={field} alt="Field" className={classes.field}/>
             </div>
     }

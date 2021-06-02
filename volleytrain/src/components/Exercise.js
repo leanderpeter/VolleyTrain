@@ -7,10 +7,15 @@ import {
 import Grid from '@material-ui/core/Grid';
 import Matchfield from './Matchfield';
 import Rating from '@material-ui/lab/Rating';
-import Player from './Player';
+import Player2 from './Player2';
 import Draggable from 'react-draggable';
 import VolleytrainAPI from '../api/VolleytrainAPI';
-
+import { HTML5Backend } from 'react-dnd-html5-backend'
+import { DndProvider } from 'react-dnd';
+import Thing from './Thing';
+import LocalBox from './LocalBox';
+import GlobalBox from './GlobalBox';
+import Matchfield2 from './Matchfield2';
 
 class Exercise extends Component {
     constructor(props){
@@ -42,15 +47,15 @@ class Exercise extends Component {
     }
 
     componentDidMount(){
+        console.log("Loading component")
         this.getPlayer()
     }
-      
-
+    
     render() {
         const {classes} = this.props;
         const {players} = this.state;
-        console.log(this.state.players)
         return (
+            <DndProvider backend={HTML5Backend}>
         <div className={classes.root}>
             <Grid container spacing={3}>
                 <Grid item xs={1}
@@ -64,7 +69,9 @@ class Exercise extends Component {
                     justify="center"
                     alignItems="center"
                     style={{ borderRight: '0.2em solid black', padding: '0.5em'}}>
-                    <Matchfield/>
+                    <GlobalBox/>
+                    <Matchfield2/>
+                    
                 </Grid>
                 
                 <Grid item xs={2}
@@ -87,7 +94,7 @@ class Exercise extends Component {
                     direction="row"
                     justify=""
                     alignItems="center">
-                
+                        <Thing/>
                 {players.length > 0 ?
                     <>
                     {players.map(player => 
@@ -102,14 +109,14 @@ class Exercise extends Component {
                         onDrag={this.handleDrag}
                         onStop={this.handleStop}>
                         <div className="test_player">
-                            <Player key={player.getID()} player={player}/>
+                            <Player2 key={player.getID()} player={player}/>
                         </div>
                     </Draggable>
                     
                     )}
                     </>
                     :
-                    null
+                    console.log("No info")
                 }
             
 
@@ -120,6 +127,7 @@ class Exercise extends Component {
                 </Grid>
             </Grid>
         </div>
+        </DndProvider>
         )
     }
 }

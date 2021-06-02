@@ -107,7 +107,6 @@ class App extends React.Component {
         });
     
     setTimeout(()=>{
-      console.log(this.state);
     },1000);
     }
     
