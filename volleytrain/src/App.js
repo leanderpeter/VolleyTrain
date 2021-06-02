@@ -1,17 +1,18 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Redirect, Link } from 'react-router-dom';
 import { Container, ThemeProvider, CssBaseline } from '@material-ui/core';
 import firebase from 'firebase/app'; //Firebase module
 import 'firebase/auth'; //Firebase module
 import Grid from '@material-ui/core/Grid';
 
 // import Componentents from '/components/';
-import Theme from './Theme';
+import theme from './Theme';
 import SignIn from './components/pages/SignIn';
 import VolleytrainAPI from './api/VolleytrainAPI';
 import firebaseConfig from './firebaseconfig';
 import Home from './components/pages/Home';
 import Header from './components/layout/Header';
+import ExerciseForm from './components/pages/exerciseForm';
 
 /*
 Main page of the volleytrain. First firebase to verify users. Then routing to the pages via react-router-dom
@@ -139,16 +140,19 @@ class App extends React.Component {
     const { currentUser, appError, authError, authLoading, currentStudent, currentPerson } = this.state;
 
     return (
-      <ThemeProvider theme={Theme}>
+      <ThemeProvider theme={theme}>
         <CssBaseline/>
         <Router>
             {
               currentUser ?
               <>
               <Header user={currentUser}/>
-              <Redirect from='/' to='home' />
+              <Redirect from='/' to='exerciseForm' />
                   <Route path='/home' component ={Home}>
                     <Home/>
+                  </Route>
+                  <Route path='/exerciseForm' component ={ExerciseForm}>
+                    <ExerciseForm/>
                   </Route>
 
               </>

@@ -1,5 +1,5 @@
-from src.server.db.mapper import Mapper
-from src.server.bo.ExerciseBO import Exercise
+from server.db.mapper import Mapper
+from server.bo.ExerciseBO import Exercise
 
 
 class ExerciseMapper(Mapper):

@@ -1,7 +1,7 @@
-from src.server.bo.userBO import User
-from src.server.db.userMapper import UserMapper
-from src.server.bo.ExerciseBO import Exercise
-from src.server.db.exerciseMapper import ExerciseMapper
+from server.bo.userBO import User
+from server.db.userMapper import UserMapper
+from server.bo.ExerciseBO import Exercise
+from server.db.exerciseMapper import ExerciseMapper
 
 
 class volleytrainAdministration(object):
