@@ -4,6 +4,8 @@ import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined';
 import AddIcon from '@material-ui/icons/Add';
 import KeyboardTimePicker from '@material-ui/pickers';
 import VolleytrainAPI from '../../api/VolleytrainAPI';
+import TrainingTime from '../assets/TrainingTime';
+import TeamBO from '../../api/TeamBO';
 
 class CreateTeam extends React.Component{
 
@@ -13,8 +15,12 @@ class CreateTeam extends React.Component{
         this.state = {
             dialogOpen: null,
             teamname: "",
-            weekdays: ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],
-            selectedDay: "",
+            selectedDay: this.props.selectedDay,
+            trainingdays: 0,
+            trainingday: null,
+            addDayOne: null,
+            addDayTwo: null,
+            addDayThree: null
         }
     }
 
@@ -24,9 +30,47 @@ class CreateTeam extends React.Component{
         })
     }
 
-    handleDayChange = (e) => {
+    createTeam = () => {
+
+        let team = new TeamBO;
+        team.setID(1);
+        team.setname(this.state.teamname);
+        team.setTrainingsday(this.state.trainingday);
+        team.setAddDayOne(this.state.addDayOne);
+        team.setAddDayTwo(this.state.addDayTwo);
+        team.setAddDayThree(this.state.addDayThree);
+        VolleytrainAPI.getAPI().addTeam(team);
+    }
+
+    handleTrainingTime = () => {
+        let timeHandler = this.state.trainingdays += 1;
+        
         this.setState({
-            selectedDay: e.target.value,
+            trainingdays: timeHandler,
+        })
+    }
+
+    handleTrainingDay = (e) => {
+        this.setState({
+            trainingday: e.target.value
+        })
+    }
+
+    handleAddDayOne = (e) => {
+        this.setState({
+            addDayOne: e.target.value
+        })
+    }
+
+    handleAddDayTwo = (e) => {
+        this.setState({
+            addDayTwo: e.target.value
+        })
+    }
+
+    handleAddDayThree = (e) => {
+        this.setState({
+            addDayThree: e.target.value
         })
     }
 
@@ -35,7 +79,7 @@ class CreateTeam extends React.Component{
     }
 
     render() {
-        const {classes, dialogOpen, onClose} = this.props;
+        const {classes, dialogOpen, onClose, selectedDay, handleDayChange} = this.props;
 
 
         return(
@@ -45,7 +89,7 @@ class CreateTeam extends React.Component{
                     <DialogTitle>
                     <Grid container>
                         <Grid item xs={4}>
-                        <Button><ArrowBackOutlinedIcon color="primary" onClick={onClose}/></Button>
+                        <Button className={classes.border} onClick={onClose}><ArrowBackOutlinedIcon /></Button>
                         </Grid>
                         <Grid item xs={8}>
                         <Typography color="primary">Neues Team erstellen</Typography>
@@ -54,46 +98,39 @@ class CreateTeam extends React.Component{
                     </DialogTitle>
                     <DialogContent>
                         <Grid container spacing={2}>
-                            <Grid item xs={6}>
+                            <Grid item xs={3}>
                                 <Typography color="primary">Teamname:</Typography>
                             </Grid>
+                            <Grid className={classes.border} item xs={9}>
+                                <TextField color="primary" onChange={this.handleChange} fullWidth/>
+                            </Grid>
+                            {this.state.trainingdays >= 1 ? 
+                            <Grid item xs={12}>
+                                <TrainingTime onChange={this.handleTrainingDay} value={selectedDay}/> 
+                            </Grid>
+                            : null}
+                            {this.state.trainingdays >= 2 ? 
+                            <Grid item xs={12}>
+                                <TrainingTime onChange={this.handleAddDayOne} value={selectedDay}/> 
+                            </Grid>
+                            : null}
+                            {this.state.trainingdays >= 3 ? 
+                            <Grid item xs={12}>
+                                <TrainingTime onChange={this.handleAddDayTwo} value={selectedDay}/> 
+                            </Grid>
+                            : null}
+                            {this.state.trainingdays >= 4 ?
+                                <Grid item xs={12}>
+                                    <TrainingTime onChange={this.handleAddDayThree} value={selectedDay}/> 
+                                </Grid>
+                            :
+                            <Grid item xs={6}> 
+                                <Button color="extra" variant="outlined" onClick={this.handleTrainingTime}><AddIcon />Trainingszeit hinzufügen</Button>
+                            </Grid>
+                            }
+                            
                             <Grid item xs={6}>
-                                <TextField variant="outlined" color="primary" label="Dein Team" onChange={this.handleChange} fullWidth/>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <Typography color="primary">Wochentag:</Typography>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <Select label="Wochentag wählen" variant="outlined" onChange={this.handleDayChange} value={this.state.selectedDay} label="Wochentag wählen ..." fullWidth>
-                                    {this.state.weekdays.map((day) => (
-                                        <MenuItem value={day}>{day}</MenuItem>
-                                    ))}
-                                </Select>
-                            </Grid>
-                            <Grid item xs={6} />
-                            <Grid item xs={3}>
-                                <Typography color="primary">Beginn:</Typography>
-                            </Grid>
-                            <Grid item xs={3}>
-{/*                                 <KeyboardTimePicker variant="outlined" onChange={this.handleTimeChange} value={this.state.time} fullWidth />
- */}                                
-                            </Grid>
-                            <Grid item xs={6} />
-                            <Grid item xs={3}>
-                                <Typography color="primary">Ende:</Typography>
-                            </Grid>
-                            <Grid item xs={3}>
-                                <Select variant="outlined" onChange={this.handleTimeChange} value={this.state.time} fullWidth>
-                                {this.state.weekdays.map((day) => (
-                                        <MenuItem value={day}>{day}</MenuItem>
-                                    ))}
-                                </Select>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <Button><AddIcon />Trainingszeit hinzufügen</Button>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <Button variant="contained" color="secondary" fullWidth onClick={this.handleClick}>Team erstellen</Button>
+                                <Button className={classes.button} fullWidth onClick={this.createTeam}>Team erstellen</Button>
                             </Grid>
                         </Grid>
                     </DialogContent>
@@ -105,7 +142,26 @@ class CreateTeam extends React.Component{
 
 /** Component specific styles */
 const styles = theme => ({
-    
-  });
+    root: {
+        margin: theme.spacing(2),
+        width: '100%'
+    },
+    border: {
+        border: '1px solid #3ECCA5',
+        boxSizing: 'border-box',
+        boxShadow: '0px 4px 10px rgba(84, 78, 78, 0.2)',
+        borderRadius: '9px',
+        marginBottom: '15px',
+        background: '#fcfcfc',
+        
+    },
+    button: {
+        color: '#ffffff',
+        background: 'linear-gradient(90.46deg, #FFD542 12.09%, #FFB676 104.14%)',
+        borderRadius: '9px',
+        fontWeight: 'bold',
+        fontVariant: 'normal',
+    },
+});
 
 export default withStyles(styles)(CreateTeam);

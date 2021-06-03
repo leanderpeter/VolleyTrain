@@ -48,9 +48,9 @@ user = api.inherit('user', nbo, {
 })
 team = api.inherit('team', nbo, {
     'trainingsday': fields.Integer(attribute='_trainingsday', deschription='fk of trainingdays with timestamps for team'),
-    'add_day_one': fields.Integer(attribute='_add_day_one', deschription='fk of trainingdays with timestamps for team'),
-    'add_day_two': fields.Integer(attribute='_add_day_two', deschription='fk of trainingdays with timestamps for team'),
-    'add_day_three': fields.Integer(attribute='_add_day_three', deschription='fk of trainingdays with timestamps for team'),
+    'addDayOne': fields.Integer(attribute='_addDayOne', deschription='fk of trainingdays with timestamps for team'),
+    'addDayTwo': fields.Integer(attribute='_addDayTwo', deschription='fk of trainingdays with timestamps for team'),
+    'addDayThree': fields.Integer(attribute='_addDayThree', deschription='fk of trainingdays with timestamps for team'),
 })
 
 @volleyTrain.route('/user/<int:id>')

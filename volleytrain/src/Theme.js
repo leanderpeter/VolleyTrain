@@ -52,6 +52,12 @@ const theme = createMuiTheme({
       secondary: colors.blueGrey[600],
       link: colors.blue[600]
     },
+    extra: {
+      contrastText: '#c4c4c4',
+      dark: '#c4c4c4',
+      main: '#c4c4c4',
+      light: '#c4c4c4'
+    },
     background: {
       default: '#F4F6F8',
       paper: white

@@ -38,9 +38,9 @@ CREATE TABLE IF NOT EXISTS `volleytrain`.`team` (
   `PK_Team` INT NOT NULL,
   `name` VARCHAR(45) NULL DEFAULT NULL,
   `trainingsday`INT NULL DEFAULT NULL,
-  `add_day_one` INT NULL DEFAULT NULL,
-  `add_day_two` INT NULL DEFAULT NULL,
-  `add_day_three` INT NULL DEFAULT NULL,
+  `addDayOne` INT NULL DEFAULT NULL,
+  `addDayTwo` INT NULL DEFAULT NULL,
+  `addDayThree` INT NULL DEFAULT NULL,
   PRIMARY KEY (`PK_Team`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4

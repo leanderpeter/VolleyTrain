@@ -35,15 +35,15 @@ class volleytrainAdministration(object):
             return mapper.update(user)
 
 
-    def createTeam(self, id, name, trainingsday, add_day_one, add_day_two, add_day_three):
+    def createTeam(self, id, name, trainingsday, addDayOne, addDayTwo, addDayThree):
         
         team = Team()
         team.setId(id)
         team.setName(name)
         team.setTrainingsday(trainingsday)
-        team.setAddDayOne(add_day_one)
-        team.setAddDayTwo(add_day_two)
-        team.setAddDayThree(add_day_three)
+        team.setAddDayOne(addDayOne)
+        team.setAddDayTwo(addDayTwo)
+        team.setAddDayThree(addDayThree)
         
         with TeamMapper() as mapper:
             return mapper.insert(team)

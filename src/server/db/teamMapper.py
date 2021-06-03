@@ -23,14 +23,14 @@ class TeamMapper(Mapper):
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        for (id, name, trainingsday, add_day_one, add_day_two, add_day_three) in tuples:
+        for (id, name, trainingsday, addDayOne, addDayTwo, addDayThree) in tuples:
             team = Team()
             team.setId(id)
             team.setName(name)
             team.setTrainingsday(trainingsday)
-            team.setAddDayOne(add_day_one)
-            team.setAddDayTwo(add_day_two)
-            team.setAddDayThree(add_day_three)
+            team.setAddDayOne(addDayOne)
+            team.setAddDayTwo(addDayTwo)
+            team.setAddDayThree(addDayThree)
 
             result.append(team)
 
@@ -55,14 +55,14 @@ class TeamMapper(Mapper):
         cursor.execute(command)
         tuples = cursor.fetchall()
         try:
-            (id, name, trainingsday, add_day_one, add_day_two, add_day_three) = tuples[0]
+            (id, name, trainingsday, addDayOne, addDayTwo, addDayThree) = tuples[0]
             team = Team()
             team.setId(id)
             team.setName(name)
             team.setTrainingsday(trainingsday)
-            team.setAddDayOne(add_day_one)
-            team.setAddDayTwo(add_day_two)
-            team.setAddDayThree(add_day_three)
+            team.setAddDayOne(addDayOne)
+            team.setAddDayTwo(addDayTwo)
+            team.setAddDayThree(addDayThree)
             result = team
 
         except IndexError:
@@ -97,7 +97,7 @@ class TeamMapper(Mapper):
                 davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
                 team.setId(1)
 
-        command = "INSERT INTO team (PK_Team, name, trainingsday, add_day_one, add_day_two, add_day_three) VALUES (%s,%s,%s,%s,%s,%s)"
+        command = "INSERT INTO team (PK_Team, name, trainingsday, addDayOne, addDayTwo, addDayThree) VALUES (%s,%s,%s,%s,%s,%s)"
         data = (team.getId(), team.getName(), team.getTrainingsday(), team.getAddDayOne(), team.getAddDayTwo(), team.getAddDayThree())
         cursor.execute(command, data)
 
@@ -115,7 +115,7 @@ class TeamMapper(Mapper):
         """
         cursor = self._connection.cursor()
 
-        command = "UPDATE team " + "SET name=%s, trainingsday=%s, add_day_one=%s, add_day_two=%s, add_day_three=%s WHERE PK_Team=%s"
+        command = "UPDATE team " + "SET name=%s, trainingsday=%s, addDayOne=%s, addDayTwo=%s, addDayThree=%s WHERE PK_Team=%s"
         data = (team.getName(), team.getTrainingsday(), team.getAddDayOne(), team.getAddDayTwo(), team.getAddDayThree(), team.getId())
 
         cursor.execute(command, data)

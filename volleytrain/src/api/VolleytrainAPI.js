@@ -23,6 +23,10 @@ export default class VolleytrainAPI {
 	//getPerson: google_user_id
 	#getUserByGoogleIDURL = (google_user_id) => `${this.#ElectivServerBaseURL}/userbygoogle/${google_user_id}`;
 	#getAllTeamsURL = () => `${this.#ElectivServerBaseURL}/team`;
+	#addTeamURL = () => `${this.#ElectivServerBaseURL}/team`;
+	#getTeamByIdURL = (id) => `${this.#ElectivServerBaseURL}/team/${id}`;
+	#deleteTeamURL = (id) => `${this.#ElectivServerBaseURL}/team/${id}`;
+	#updateTeamURL= () => `${this.#ElectivServerBaseURL}/team`;
 
 
 	/*
@@ -73,6 +77,55 @@ export default class VolleytrainAPI {
 				resolve(teamBO)
 			})
 		})
+	}
+
+	getTeamByID(id){
+		return this.#fetchAdvanced(this.#getTeamByIdURL(id)).then((responseJSON) => {
+			let teamBO = TeamBO.fromJSON(responseJSON);
+			console.info(teamBO)
+			return new Promise(function (resolve){
+				resolve(teamBO)
+			})
+		})
+	}
+
+	addTeam(teamBO) {
+		return this.#fetchAdvanced(this.#addTeamURL(), {
+			method: 'POST',
+			headers: {
+				'Accept': 'application/json, text/plain',
+				'Content-type': 'application/json',
+			},
+			body: JSON.stringify(teamBO)
+		}).then((responseJSON) => {
+			// zuruck kommt ein array, wir benoetigen aber nur ein Objekt aus dem array
+			let responseTeamBO = TeamBO.fromJSON(responseJSON);
+			return new Promise(function (resolve) {
+				resolve(responseTeamBO);
+			})
+		})
+	}
+
+	updateTeam(teamBO){
+		return this.#fetchAdvanced(this.#updateTeamURL(), {
+			method: 'PUT',
+			headers: {
+				'Accept': 'application/json, text/plain',
+				'Content-type': 'application/json',
+			},
+			body: JSON.stringify(teamBO)
+		}).then((responseJSON) => {
+			// zuruck kommt ein array, wir benoetigen aber nur ein Objekt aus dem array
+			let responseTeamBO = TeamBO.fromJSON(responseJSON);
+			return new Promise(function (resolve) {
+				resolve(responseTeamBO);
+			})
+		})
+	}
+
+	//Projekt löschen
+	deleteTeam(id){
+		return this.#fetchAdvanced(this.#deleteTeamURL(id),{method: 'DELETE'})
 	}
 
 }

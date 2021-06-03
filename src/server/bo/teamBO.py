@@ -5,10 +5,10 @@ class Team(NamedBusinessObject):
 
     def __init__(self):
         super().__init__()
-        self._trainingsday = 0
-        self._add_day_one = None
-        self._add_day_two = None
-        self._add_day_three = None
+        self._trainingsday = None
+        self._addDayOne = None
+        self._addDayTwo = None
+        self._addDayThree = None
 
     def setTrainingsday(self, day):
         self._trainingsday = day
@@ -17,22 +17,22 @@ class Team(NamedBusinessObject):
         return self._trainingsday
 
     def setAddDayOne(self, day):
-        self._add_day_one = day
+        self._addDayOne = day
 
     def getAddDayOne(self):
-        return self._add_day_one
+        return self._addDayOne
 
     def setAddDayTwo(self, day):
-        self._add_day_two = day
+        self._addDayTwo = day
 
     def getAddDayTwo(self):
-        return self._add_day_two
+        return self._addDayTwo
 
     def setAddDayThree(self, day):
-        self._add_day_three = day
+        self._addDayThree = day
 
     def getAddDayThree(self):
-        return self._add_day_three
+        return self._addDayThree
 
     @staticmethod
     def from_dict(dictionary=dict()):
@@ -43,9 +43,9 @@ class Team(NamedBusinessObject):
         obj.setId(dictionary["id"])  # part of the Business object mother class
         obj.setName(dictionary["name"])
         obj.setTrainingsday(dictionary["trainingsday"])
-        obj.setAddDayOne(dictionary["add_day_one"])
-        obj.setAddDayTwo(dictionary["add_day_two"])
-        obj.setAddDayThree(dictionary["add_day_three"])
+        obj.setAddDayOne(dictionary["addDayOne"])
+        obj.setAddDayTwo(dictionary["addDayTwo"])
+        obj.setAddDayThree(dictionary["addDayThree"])
         return obj
 
 
