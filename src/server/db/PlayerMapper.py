@@ -17,16 +17,17 @@ class PlayerMapper(Mapper):
 
         cursor = self._connection.cursor()
 
-        command = "SELECT PK_Player, name, role FROM players"
+        command = "SELECT PK_Player, name, role, t_number FROM players"
 
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        for (id, name, role) in tuples:
+        for (id, name, role, t_number) in tuples:
             player = Player()
             player.setId(id)
             player.setName(name)
             player.setRole(role)
+            player.setT_number(t_number)
 
             result.append(player)
 
@@ -47,15 +48,16 @@ class PlayerMapper(Mapper):
         """
         result = None
         cursor = self._connection.cursor()
-        command = "SELECT PK_Player, name, role FROM players WHERE PK_Player='{}'".format(id)
+        command = "SELECT PK_Player, name, role, t_number FROM players WHERE PK_Player='{}'".format(id)
         cursor.execute(command)
         tuples = cursor.fetchall()
         try:
-            (id, name, role) = tuples[0]
+            (id, name, role, t_number) = tuples[0]
             player = Player()
             player.setId(id)
             player.setName(name)
-            player.role(role)
+            player.setRole(role)
+            player.setT_number(t_number)
             result = player
 
         except IndexError:
@@ -89,8 +91,8 @@ class PlayerMapper(Mapper):
                 davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
                 player.setId(1)
 
-        command = "INSERT INTO players (PK_Player, name, role) VALUES (%s,%s,%s)"
-        data = (player.getId(), player.getName(), player.getRole())
+        command = "INSERT INTO players (PK_Player, name, role, t_number) VALUES (%s,%s,%s,%s)"
+        data = (player.getId(), player.getName(), player.getRole(), player.getT_number())
         cursor.execute(command, data)
 
         self._connection.commit()
@@ -106,8 +108,9 @@ class PlayerMapper(Mapper):
         """
         cursor = self._connection.cursor()
 
-        command = "UPDATE players " + "SET name=%s, role=%s"
-        data = (player.getName(), player.getRole())
+        command = "UPDATE players " + "SET name=%s, role=%s, t_number=%s WHERE PK_Player=%s"
+        data = (player.getName(), player.getRole(), player.getT_number()), player.getId()
+
         cursor.execute(command, data)
 
         self._connection.commit()
