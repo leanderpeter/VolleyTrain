@@ -1,9 +1,11 @@
 
 from .bo.userBO import User
 from .bo.teamBO import Team
+from .bo.trainingdayBO import Trainingday
 
 from .db.userMapper import UserMapper
 from .db.teamMapper import TeamMapper
+from .db.trainingdayMapper import TrainingdayMapper
 
 
 class volleytrainAdministration(object):
@@ -35,10 +37,9 @@ class volleytrainAdministration(object):
             return mapper.update(user)
 
 
-    def createTeam(self, id, name, trainingsday, addDayOne, addDayTwo, addDayThree):
+    def createTeam(self, name, trainingsday, addDayOne, addDayTwo, addDayThree):
         
         team = Team()
-        team.setId(id)
         team.setName(name)
         team.setTrainingsday(trainingsday)
         team.setAddDayOne(addDayOne)
@@ -64,3 +65,21 @@ class volleytrainAdministration(object):
         with TeamMapper() as mapper:
             return mapper.update(team)
 
+
+    def createTrainingday(self, weekday, starttime, endtime):
+        
+        trainingday = Trainingday()
+        trainingday.setWeekday(weekday)
+        trainingday.setStarttime(starttime)
+        trainingday.setEndtime(endtime)
+        
+        with TrainingdayMapper() as mapper:
+            return mapper.insert(trainingday)
+
+    def getAllTraingdays(self):
+        with TrainingdayMapper() as mapper:
+            return mapper.find_all()
+
+    def getTrainingdayById(self, id):
+        with TrainingdayMapper() as mapper:
+            return mapper.find_by_id(id)
