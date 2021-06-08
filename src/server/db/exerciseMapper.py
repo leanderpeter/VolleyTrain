@@ -92,8 +92,8 @@ class ExerciseMapper(Mapper):
                 davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
                 exercise.setId(1)
 
-        command = "INSERT INTO exercise (PK_exercise, name, tag, duration) VALUES (%s,%s,%s,%s,%s)"
-        data = (exercise.getId(),  exercise.getName(), exercise.getTag(), exercise.getDuration())
+        command = "INSERT INTO exercise (PK_exercise, name, tag, duration, Training_PK_Training) VALUES (%s,%s,%s,%s,%s)"
+        data = (exercise.getId(),  exercise.getName(), exercise.getTag(), exercise.getDuration(), exercise.getTraining())
         cursor.execute(command, data)
 
         self._connection.commit()

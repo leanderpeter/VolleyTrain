@@ -11,6 +11,7 @@ class Exercise(NamedBusinessObject):
         super.__init__()
         self._tag = None
         self._duration = None
+        self._training = None
 
     def setTag(self, tag):
         self._tag = tag
@@ -21,8 +22,14 @@ class Exercise(NamedBusinessObject):
     def setDuration(self, duration):
         self._duration = duration
 
-    def getDuration(self):
+    def getDuration(self):  
         return self._duration
+  
+    def setTraining(self, training):
+        self._training = training
+
+    def getTraining(self):
+        return self._training
 
     def __str__(self):
         return "Exercise: {} {} {} {}".format(self._getID(), self._name, self._tag, self._duration)
@@ -37,4 +44,6 @@ class Exercise(NamedBusinessObject):
         obj.setName(dictionary["name"])
         obj.setTag(dictionary["tag"])
         obj.setDuration(dictionary["duration"])
+        obj.setTraining(dictionary["training"])
+        
         return obj

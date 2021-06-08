@@ -50,6 +50,7 @@ user = api.inherit('user', nbo, {
 exercise = api.inherit('exercise', nbo, {
     'tag': fields.String(attribute='_tag', description='Tag of exercise'),
     'duration': fields.DateTime(attribute='_duration', description='Duration of exercise'),
+    'training': fields.Integer(attribute='_training', description='training of exercise'),
 })
 
 
@@ -113,18 +114,15 @@ class ExerciseOperation(Resource):
     @secured
     @volleyTrain.marshal_with(exercise)
     @volleyTrain.expect(exercise)
-    def put(self):
+    def post(self):
         """Please provide a exercise object to transfer it into
         the database
         """
-
+        
         adm = volleytrainAdministration()
-        # print(api.payload)
-        exerciseId = request.args.get("id")
-        name = request.args.get("name")
-        tag = request.args.get("tag")
-        adm.createExercise(api.payload)
-        return exercise
+        exercise = Exercise.from_dict(api.payload)
+        created_exercise = adm.createExercise(exercise)
+        return created_exercise
 
 
 

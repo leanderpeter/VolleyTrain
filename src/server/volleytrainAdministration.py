@@ -32,13 +32,8 @@ class volleytrainAdministration(object):
         with UserMapper() as mapper:
             return mapper.update(user)
 
-    def createExercise(self,  name, tag, duration):
-        """ Create a Exercise object and inject it into the database
-        """
-        exercise = Exercise()
-        exercise.setName(name)
-        exercise.setTag(tag)
-        exercise.setDuration(duration)
+    def createExercise(self, exercise):
+        """ Create a Exercise object and inject it into the database """
 
         with ExerciseMapper() as mapper:
             return mapper.insert(exercise)
