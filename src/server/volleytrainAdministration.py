@@ -2,6 +2,8 @@ from server.bo.userBO import User
 from server.db.userMapper import UserMapper
 from server.bo.ExerciseBO import Exercise
 from server.db.exerciseMapper import ExerciseMapper
+from server.bo.PlayerBO import Player
+from server.db.PlayerMapper import PlayerMapper
 
 
 class volleytrainAdministration(object):
@@ -45,3 +47,22 @@ class volleytrainAdministration(object):
     def saveExercise(self, exercise):
         with ExerciseMapper() as mapper:
             mapper.update(exercise)
+
+    def createPlayer(self, name, role, t_number):
+        """ Create a Player object and inject it into the database
+        """
+        player = Player()
+        player.setName(name)
+        player.setRole(role)
+        player.setT_number(t_number)
+
+        with PlayerMapper() as mapper:
+            return mapper.insert(player)
+
+    def getPlayerById(self, id):
+        with PlayerMapper() as mapper:
+            return mapper.find_by_id(id)
+
+    def savePlayer(self, player):
+        with PlayerMapper() as mapper:
+            mapper.update(player)
