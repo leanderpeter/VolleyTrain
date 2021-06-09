@@ -38,16 +38,20 @@ const Exercises = () => {
 
     var i;
     var posPlayer = [];
-    for (i = 0; i < PlayerData.length; i++) {
-        const obj = {
-            top: Math.floor(PlayerData[i].top),
-            left: Math.floor(PlayerData[i].left),
-            name: PlayerData[i].name,
-            surname: PlayerData[i].surname,
-            id: PlayerData[i].id,
+    //check if data is loaded
+    if (MatchfieldPlayers.length > 0 && players.length > 0){
+        for (i = 0; i < PlayerData.length; i++) {
+            const obj = {
+                top: Math.floor(PlayerData[i].top),
+                left: Math.floor(PlayerData[i].left),
+                name: PlayerData[i].name,
+                surname: PlayerData[i].surname,
+                id: PlayerData[i].id,
+            }
+            posPlayer.push(obj)
         }
-        posPlayer.push(obj)
     }
+    
 
     // init styling
     const classes = styles();
@@ -68,9 +72,6 @@ const Exercises = () => {
         setLoadingInProgress(true)
         setError(null)
     }
-    useEffect(() => {
-        getPlayers();
-    }, []);
 
     // get all Matchfield_Player_Position Data
     const getMatchfieldPlayers = () => {
@@ -89,10 +90,6 @@ const Exercises = () => {
         setLoadingInProgress(true)
         setError(null)
     }
-    useEffect(() => {
-        getMatchfieldPlayers();
-    }, []);
-
 
     //get all position Data
     const getPosition = () => {
@@ -111,8 +108,11 @@ const Exercises = () => {
         setLoadingInProgress(true)
         setError(null)
     }
+    
     useEffect(() => {
-        getPosition();
+        getMatchfieldPlayers();
+        getPosition()
+        getPlayers();
     }, []);
 
     return (
@@ -186,6 +186,7 @@ const Exercises = () => {
 const styles = makeStyles({
     root: {
         flexGrow: 1,
+        marginLeft: '240px',
     },
     test_player: {
         height: '45px',

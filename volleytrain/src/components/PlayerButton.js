@@ -6,11 +6,12 @@ import Avatar from '@material-ui/core/Avatar';
 
 function PlayerButton(props){
   const classes = styles();
+  console.log(props)
   return(
     <div className={classes.root}>
       <Grid>
         <Grid item xs>
-          <Avatar className={classes.orange}>{props.player.name[0]+props.player.surname[0]}</Avatar>
+            <Avatar className={classes.orange}>{props.player.name[0]+props.player.surname[0]}</Avatar>
         </Grid>
       </Grid>
     </div>

@@ -50,11 +50,9 @@ class volleytrainAdministration(object):
     
     """ Training """
 
-    def createTraining(self, name, team_id, user_id):
-        training = Training()
-        training.setName(name)
-        training.setTeamId(team_id)
-        training.setUserId(user_id)
+    def createTraining(self, training):
+        with TrainingMapper() as mapper:
+            return mapper.insert(training)
 
     def getAllTrainings(self):
         with TrainingMapper() as mapper:
@@ -63,6 +61,14 @@ class volleytrainAdministration(object):
     def getTrainingById(self, id):
         with TrainingMapper() as mapper:
             return mapper.find_by_id(id)
+    
+    def saveTraining(self, training):
+        with TrainingMapper() as mapper:
+            return mapper.update(training)
+    
+    def deleteTraining(self, training):
+        with TrainingMapper() as mapper:
+            return mapper.delete(training)
 
 
     def createTeam(self, name, trainingsday, addDayOne, addDayTwo, addDayThree):
