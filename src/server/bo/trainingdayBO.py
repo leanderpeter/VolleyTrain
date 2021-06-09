@@ -7,8 +7,8 @@ class Trainingday(BusinessObject):
     def __init__(self):
         super().__init__()
         self._weekday = None
-        self._starttime = None
-        self._endtime = None
+        self._starttime = datetime.time
+        self._endtime = datetime.time
 
     def setWeekday(self, day):
         self._weekday = day

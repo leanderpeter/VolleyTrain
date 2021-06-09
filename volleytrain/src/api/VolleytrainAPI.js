@@ -1,6 +1,7 @@
 
 import UserBO from './UserBO';
 import TeamBO from './TeamBO';
+import TrainingdayBO from './TrainingdayBO';
 
 
 /*
@@ -27,6 +28,9 @@ export default class VolleytrainAPI {
 	#getTeamByIdURL = (id) => `${this.#ElectivServerBaseURL}/team/${id}`;
 	#deleteTeamURL = (id) => `${this.#ElectivServerBaseURL}/team/${id}`;
 	#updateTeamURL= () => `${this.#ElectivServerBaseURL}/team`;
+	#getAllTrainingdaysURL = () => `${this.#ElectivServerBaseURL}/traingday`;
+	#getTrainingdayByIdURL = (id) => `${this.#ElectivServerBaseURL}/trainingday/${id}`;
+	#addTrainingdayURL = () => `${this.#ElectivServerBaseURL}/trainingday`;
 
 
 	/*
@@ -126,6 +130,43 @@ export default class VolleytrainAPI {
 	//Projekt löschen
 	deleteTeam(id){
 		return this.#fetchAdvanced(this.#deleteTeamURL(id),{method: 'DELETE'})
+	}
+
+
+	//gibt die Person mit der bestimmten GoogleUserID als BO zurück
+	getAllTrainingdays(){
+		return this.#fetchAdvanced(this.#getAllTrainingdaysURL()).then((responseJSON) => {
+			let trainingdayBO = TrainingdayBO.fromJSON(responseJSON);
+			return new Promise(function (resolve){
+				resolve(trainingdayBO)
+			})
+		})
+	}
+
+	getTrainingdayByID(id){
+		return this.#fetchAdvanced(this.#getTrainingdayByIdURL(id)).then((responseJSON) => {
+			let trainingdayBO = TrainingdayBO.fromJSON(responseJSON);
+			return new Promise(function (resolve){
+				resolve(trainingdayBO)
+			})
+		})
+	}
+
+	addTrainingday(trainingdayBO) {
+		return this.#fetchAdvanced(this.#addTrainingdayURL(), {
+			method: 'POST',
+			headers: {
+				'Accept': 'application/json, text/plain',
+				'Content-type': 'application/json',
+			},
+			body: JSON.stringify(trainingdayBO)
+		}).then((responseJSON) => {
+			// zuruck kommt ein array, wir benoetigen aber nur ein Objekt aus dem array
+			let responseTrainingdayBO = TrainingdayBO.fromJSON(responseJSON);
+			return new Promise(function (resolve) {
+				resolve(responseTrainingdayBO);
+			})
+		})
 	}
 
 }

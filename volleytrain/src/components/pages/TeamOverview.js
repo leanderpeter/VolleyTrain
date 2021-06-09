@@ -2,8 +2,18 @@ import { withStyles, Card, Paper, CardContent, Button, Typography, Grid } from '
 import React from 'react';
 import VolleytrainAPI from '../../api/VolleytrainAPI';
 import CreateTeam from '../dialogs/CreateTeam';
+import {
+    BrowserRouter as Router,
+    Switch,
+    Redirect,
+    Route,
+    Link,
+    useRouteMatch,
+    useParams
+  } from "react-router-dom";
+  import Team from './Team';
 
-class Team extends React.Component {
+class TeamOverview extends React.Component {
 
     constructor(props){
         super(props);
@@ -49,21 +59,28 @@ class Team extends React.Component {
     } 
 
 
+
     render() {
         const {classes} = this.props;
-        const {dialogOpen} = this.state;
+        const {dialogOpen, teams} = this.state;
 
         return(
             <div>
-                <Grid spacing={3} container direction="row" alignItems="center" justify="center" className={classes.root}>
-                    {this.state.teams.map((teamBO) => (
-                        <Grid item xs={3}>
+                <Grid spacing={3} container direction="row" justify="center" className={classes.root}>
+                
+                    {teams.map((teamBO) => (
+
+                    
+                        <Grid key={teamBO.getID()} item>
+                            <Link to={{pathname: "/team", state: {team: teamBO}}} className={classes.link} team={teamBO}>
                                 <Paper className={classes.papes}>
                                     <Typography>{teamBO.getname()}</Typography>
                                 </Paper>
+                            </Link>
                         </Grid>
                     ))}
-                    <Grid item xs={3}>
+                    
+                    <Grid item>
                         <Paper className={classes.border} variant="outlined" onClick={this.handleClickOpen} color="secondary">
                                 <Button>Team erstellen</Button>
                         </Paper>
@@ -81,6 +98,9 @@ const styles = theme => ({
         margin: theme.spacing(2),
         width: '80%',
         marginLeft: '20%',
+    },
+    link: {
+        textDecoration: 'None',
     },
     border: {
         border: '2px solid #BFCE0D',
@@ -114,4 +134,4 @@ const styles = theme => ({
     },
 });
 
-export default withStyles(styles)(Team);
+export default withStyles(styles)(TeamOverview);

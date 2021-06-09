@@ -1,11 +1,12 @@
 import { withStyles, Button, Dialog, DialogTitle, DialogContent, Typography, Grid, TextField, Select, MenuItem } from '@material-ui/core';
 import React from 'react';
 import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined';
+import SaveAltIcon from '@material-ui/icons/SaveAlt';
 import AddIcon from '@material-ui/icons/Add';
-import KeyboardTimePicker from '@material-ui/pickers';
 import VolleytrainAPI from '../../api/VolleytrainAPI';
 import TrainingTime from '../assets/TrainingTime';
 import TeamBO from '../../api/TeamBO';
+import TrainingdayBO from '../../api/TrainingdayBO';
 
 class CreateTeam extends React.Component{
 
@@ -15,12 +16,15 @@ class CreateTeam extends React.Component{
         this.state = {
             dialogOpen: null,
             teamname: "",
-            selectedDay: this.props.selectedDay,
+            weekday: "",
             trainingdays: 0,
-            trainingday: null,
+            trainingday: "",
             addDayOne: null,
             addDayTwo: null,
-            addDayThree: null
+            addDayThree: null,
+            createButtonDisabled: false,
+            starttime: null,
+            endtime: null
         }
     }
 
@@ -42,17 +46,35 @@ class CreateTeam extends React.Component{
         VolleytrainAPI.getAPI().addTeam(team);
     }
 
+    saveTrainingday = () => {
+        this.setState({
+            createButtonDisabled: false,
+        })
+
+        let trainingday = new TrainingdayBO;
+        trainingday.setID(1);
+        trainingday.setWeekday(this.state.weekday);
+        trainingday.setStarttime(this.state.starttime);
+        trainingday.setEndtime(this.state.endtime);
+        VolleytrainAPI.getAPI().addTrainingday(trainingday);
+        console.log(trainingday);
+    }
+
     handleTrainingTime = () => {
         let timeHandler = this.state.trainingdays += 1;
         
         this.setState({
             trainingdays: timeHandler,
+            createButtonDisabled: true
         })
     }
 
     handleTrainingDay = (e) => {
         this.setState({
-            trainingday: e.target.value
+            trainingday: e.target.value,
+            weekday: e.target.weekday,
+            starttime: e.target.starttime,
+            endtime: e.target.endtime
         })
     }
 
@@ -79,7 +101,8 @@ class CreateTeam extends React.Component{
     }
 
     render() {
-        const {classes, dialogOpen, onClose, selectedDay, handleDayChange} = this.props;
+        const {classes, dialogOpen, onClose } = this.props;
+        const { createButtonDisabled, trainingdays, weekday, starttime, endtime } = this.state;
 
 
         return(
@@ -94,6 +117,7 @@ class CreateTeam extends React.Component{
                         <Grid item xs={8}>
                         <Typography color="primary">Neues Team erstellen</Typography>
                         </Grid>
+                        {console.log( weekday, starttime, endtime)}
                     </Grid>
                     </DialogTitle>
                     <DialogContent>
@@ -104,33 +128,38 @@ class CreateTeam extends React.Component{
                             <Grid className={classes.border} item xs={9}>
                                 <TextField color="primary" onChange={this.handleChange} fullWidth/>
                             </Grid>
-                            {this.state.trainingdays >= 1 ? 
+                            {trainingdays >= 1 ? 
                             <Grid item xs={12}>
-                                <TrainingTime onChange={this.handleTrainingDay} value={selectedDay}/> 
+                                <TrainingTime onChange={this.handleTrainingDay} value={weekday} weekday={weekday} starttime={starttime} endtime={endtime} />  
                             </Grid>
                             : null}
-                            {this.state.trainingdays >= 2 ? 
+                            {trainingdays >= 2 ? 
                             <Grid item xs={12}>
-                                <TrainingTime onChange={this.handleAddDayOne} value={selectedDay}/> 
+                                <TrainingTime onChange={this.handleAddDayOne} value={weekday} weekday={weekday} starttime={starttime} endtime={endtime} /> 
                             </Grid>
                             : null}
-                            {this.state.trainingdays >= 3 ? 
+                            {trainingdays >= 3 ? 
                             <Grid item xs={12}>
-                                <TrainingTime onChange={this.handleAddDayTwo} value={selectedDay}/> 
+                                <TrainingTime onChange={this.handleAddDayTwo} value={weekday}/> 
                             </Grid>
                             : null}
-                            {this.state.trainingdays >= 4 ?
+                            {trainingdays >= 4 ?
                                 <Grid item xs={12}>
-                                    <TrainingTime onChange={this.handleAddDayThree} value={selectedDay}/> 
+                                    <TrainingTime onChange={this.handleAddDayThree} value={weekday}/> 
                                 </Grid>
-                            :
+                            : null}
+                            {createButtonDisabled ? 
+                            <Grid item xs={6}> 
+                                <Button color="extra" variant="outlined" onClick={this.saveTrainingday}><SaveAltIcon />Trainingszeit speichern</Button>
+                            </Grid>
+                            
+                            : 
                             <Grid item xs={6}> 
                                 <Button color="extra" variant="outlined" onClick={this.handleTrainingTime}><AddIcon />Trainingszeit hinzufügen</Button>
                             </Grid>
                             }
-                            
                             <Grid item xs={6}>
-                                <Button className={classes.button} fullWidth onClick={this.createTeam}>Team erstellen</Button>
+                                <Button disabled={createButtonDisabled} className={classes.button} fullWidth onClick={this.createTeam}>Team erstellen</Button>
                             </Grid>
                         </Grid>
                     </DialogContent>

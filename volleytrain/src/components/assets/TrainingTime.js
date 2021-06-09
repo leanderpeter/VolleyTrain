@@ -8,7 +8,10 @@ class TrainingTime extends React.Component{
         super(props);
 
         this.state = {
-            weekdays: [1, 2, 3]
+            weekdays: ["montags", "dienstags", "mittwochs"],
+            selectedDay: "",
+            starttime: null,
+            endtime: null
         }
     }
 
@@ -18,8 +21,21 @@ class TrainingTime extends React.Component{
         })
     }
 
+    handleStarttimeChange = (e) => {
+        this.setState({
+            starttime: e.target.value
+        })
+    }
+
+    handleEndtimeChange = (e) => {
+        this.setState({
+            endtime: e.target.value
+        })
+    }
+
     render() {
-        const {classes, root, onChange, value, label} = this.props
+        const {classes, root, onChange, value, label, weekday, starttime, endtime } = this.props
+        const {weekdays, } = this.state
 
         return(
             <div>
@@ -28,8 +44,8 @@ class TrainingTime extends React.Component{
                         <Typography color="primary">Wochentag:</Typography>
                     </Grid>
                             <Grid className={classes.border} item xs={3}>
-                                <Select onChange={onChange} value={value} fullWidth>
-                                    {this.state.weekdays.map((day) => (
+                                <Select onChange={onChange} value={weekday} fullWidth>
+                                    {weekdays.map((day) => (
                                         <MenuItem value={day}>{day}</MenuItem>
                                     ))}
                                 </Select>
@@ -43,15 +59,15 @@ class TrainingTime extends React.Component{
                                 <Typography color="primary">Beginn:</Typography>
                             </Grid>
                             <Grid item xs={6} className={classes.border}>
-                                <TextField type="time" onChange={this.handleTimeChange} value={this.state.time} fullWidth />
-                                
+                                <TextField type="time" onChange={onChange} value={starttime} fullWidth />
+                                {console.log(starttime, endtime, weekday)}
                             </Grid>
                             <Grid item xs={3} />
                             <Grid item xs={3}>
                                 <Typography color="primary">Ende:</Typography>
                             </Grid>
                             <Grid item xs={6} className={classes.border}>
-                                <TextField type="time" onChange={this.handleTimeChange} value={this.state.time} fullWidth />
+                                <TextField type="time" onChange={onChange} value={endtime} fullWidth />
                             </Grid>
                 </Grid>
             </div>

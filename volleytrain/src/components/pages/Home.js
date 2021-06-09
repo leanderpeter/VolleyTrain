@@ -15,7 +15,7 @@ import {
     TextField,
     Container
 } from '@material-ui/core';
-import TeamsOverview from './TeamsOverview';
+import TeamOverview from './TeamOverview';
 
 
 class Home extends Component {
@@ -25,12 +25,15 @@ class Home extends Component {
     render() {
         const {classes} = this.props;
 
-        return <div>
+        return (
+            <div>
+                
                 
                     <Typography style={{marginTop: "2em"}} classlname={classes.root} align='center'>Letadfadgfs code the hell out of this Bitch!</Typography>
-                    <TeamsOverview />
+                    <TeamOverview />
                 
-        </div>
+            </div>
+        )
     }
 }
 
