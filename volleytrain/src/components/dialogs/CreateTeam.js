@@ -38,7 +38,7 @@ class CreateTeam extends React.Component{
 
         let team = new TeamBO;
         team.setID(1);
-        team.setname(this.state.teamname);
+        team.setName(this.state.teamname);
         team.setTrainingsday(this.state.trainingday);
         team.setAddDayOne(this.state.addDayOne);
         team.setAddDayTwo(this.state.addDayTwo);

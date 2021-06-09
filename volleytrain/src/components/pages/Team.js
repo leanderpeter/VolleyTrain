@@ -39,7 +39,7 @@ class Team extends Component {
                 <Grid spacing={3} container direction="row" justify="center" className={classes.border}>
                     
                         <Grid item xs={7}>
-                            <Typography>{team.getname()}</Typography>
+                            <Typography>{team.getName()}</Typography>
                         </Grid>
                         <Divider orientation="vertical" flexItem />
                         <Grid item xs={4} />

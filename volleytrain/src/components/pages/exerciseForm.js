@@ -23,7 +23,7 @@ class ExerciseForm extends React.Component {
         exercise.setID(2)
         exercise.setTraining(1)
         exercise.setDuration(10)
-        exercise.setname("nam")
+        exercise.setName("nam")
         exercise.setGoal("goal")
         exercise.setDescription("desc")
         exercise.setNotes("notes")

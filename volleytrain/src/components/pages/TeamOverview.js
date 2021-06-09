@@ -74,7 +74,7 @@ class TeamOverview extends React.Component {
                         <Grid key={teamBO.getID()} item>
                             <Link to={{pathname: "/team", state: {team: teamBO}}} className={classes.link} team={teamBO}>
                                 <Paper className={classes.papes}>
-                                    <Typography>{teamBO.getname()}</Typography>
+                                    <Typography>{teamBO.getName()}</Typography>
                                 </Paper>
                             </Link>
                         </Grid>
