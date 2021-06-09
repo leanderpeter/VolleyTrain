@@ -6,15 +6,16 @@ export default class BusinessObject {
 	/*
 	Null constructor
 	*/
-	constructor(id){
-		this.id = id;
+	constructor(anID, aCreationDate){
+		this.id = anID;
+		this.creation_date = aCreationDate;
 	}
 
 	/*
 	Jedes Business Object erhaelt eine neue ID, die aId.
 	*/
-	setID(id){
-		this.id =id
+	setID(anID){
+		this.id = anID;
 	}
 
 	/*
@@ -22,6 +23,14 @@ export default class BusinessObject {
 	*/
 	getID(){
 		return this.id;
+	}
+
+	setCreationDate(aCreationDate) {
+		this.creation_date = aCreationDate;
+	}
+
+	getCreationDate() {
+		return this.creation_date;
 	}
 
 	/*

@@ -1,5 +1,9 @@
 
 import UserBO from './UserBO';
+import TrainingBO from './TrainingBO';
+import TeamBO from './TeamBO';
+import TrainingdayBO from './TrainingdayBO';
+import ExerciseBO from './ExerciseBO';
 
 
 /*
@@ -12,18 +16,28 @@ export default class VolleytrainAPI {
 	static #api = null;
 
 	// Lokales Python backend
-	#ElectivServerBaseURL = '/volleyTrain';
-
-	// Lokales Python backend
-	//#ElectivServerBaseURL = 'https://wahlfachapp.oa.r.appspot.com/electivApp';
-
-
+	#VolleyTrainServerBaseURL = '/volleyTrain';
 
 	//getPerson: google_user_id
-	#getUserByGoogleIDURL = (google_user_id) => `${this.#ElectivServerBaseURL}/userbygoogle/${google_user_id}`;
-
-
-
+	#getUserByGoogleIDURL = (google_user_id) => `${this.#VolleyTrainServerBaseURL}/userbygoogle/${google_user_id}`;
+	#getAllTeamsURL = () => `${this.#VolleyTrainServerBaseURL}/team`;
+	#addTeamURL = () => `${this.#VolleyTrainServerBaseURL}/team`;
+	#getTeamByIdURL = (id) => `${this.#VolleyTrainServerBaseURL}/team/${id}`;
+	#deleteTeamURL = (id) => `${this.#VolleyTrainServerBaseURL}/team/${id}`;
+	#updateTeamURL= () => `${this.#VolleyTrainServerBaseURL}/team`;
+	#getAllTrainingdaysURL = () => `${this.#VolleyTrainServerBaseURL}/traingday`;
+	#getTrainingdayByIdURL = (id) => `${this.#VolleyTrainServerBaseURL}/trainingday/${id}`;
+	#addTrainingdayURL = () => `${this.#VolleyTrainServerBaseURL}/trainingday`;
+	//getExercise: id
+	#getExerciseByIDURL = (id) => `${this.#VolleyTrainServerBaseURL}/exercise/${id}`;
+	#deleteExerciseURL = (id) => `${this.#VolleyTrainServerBaseURL}/exercise/${id}`;
+	//POSTE eine neue Übung
+	#addExerciseURL = () => `${this.#VolleyTrainServerBaseURL}/exercise`;
+	#getExercisesURL = () => `${this.#VolleyTrainServerBaseURL}/exercise`;
+	#updateExerciseURL = () => `${this.#VolleyTrainServerBaseURL}/exercise`;
+	//Training
+	#getAllTrainings = () => `${this.#VolleyTrainServerBaseURL}/trainings`;
+	
 	/*
 	Singleton/Einzelstuck instanz erhalten
 	*/
@@ -54,6 +68,7 @@ export default class VolleytrainAPI {
 
 	//gibt die Person mit der bestimmten GoogleUserID als BO zurück
 	getUserByGoogleID(google_user_id){
+		console.log(this.#getUserByGoogleIDURL(google_user_id))
 		return this.#fetchAdvanced(this.#getUserByGoogleIDURL(google_user_id)).then((responseJSON) => {
 			let userBO = UserBO.fromJSON(responseJSON);
 			console.info(userBO)
@@ -61,6 +76,173 @@ export default class VolleytrainAPI {
 				resolve(userBO)
 			})
 		})
+	}
+
+	//Training
+	getAllTrainings() {
+		return this.#fetchAdvanced(this.#getAllTrainings())
+		.then((responseJSON) => {
+			let trainingBO = TrainingBO.fromJSON(responseJSON);
+			return new Promise(function(resolve) {
+				resolve(trainingBO)
+			})
+		})
+	}
+
+	//gibt die Person mit der bestimmten GoogleUserID als BO zurück
+	getAllTeams(){
+		return this.#fetchAdvanced(this.#getAllTeamsURL()).then((responseJSON) => {
+			let teamBO = TeamBO.fromJSON(responseJSON);
+			console.info(teamBO)
+			return new Promise(function (resolve){
+				resolve(teamBO)
+			})
+		})
+	}
+	
+	//gibt die Exercise mit der bestimmten ID als BO zurück
+	getExerciseByID(id){
+		return this.#fetchAdvanced(this.#getExerciseByIDURL(id)).then((responseJSON) => {
+			let exerciseBO = ExerciseBO.fromJSON(responseJSON);
+			return new Promise(function (resolve){
+				resolve(exerciseBO)
+			})
+		})
+	}
+
+	getTeamByID(id){
+		return this.#fetchAdvanced(this.#getTeamByIdURL(id)).then((responseJSON) => {
+			let teamBO = TeamBO.fromJSON(responseJSON);
+			console.info(teamBO)
+			return new Promise(function (resolve){
+				resolve(teamBO)
+			})
+		})
+	}
+
+	addTeam(teamBO) {
+		return this.#fetchAdvanced(this.#addTeamURL(), {
+			method: 'POST',
+			headers: {
+				'Accept': 'application/json, text/plain',
+				'Content-type': 'application/json',
+			},
+			body: JSON.stringify(teamBO)
+		}).then((responseJSON) => {
+			// zuruck kommt ein array, wir benoetigen aber nur ein Objekt aus dem array
+			let responseTeamBO = TeamBO.fromJSON(responseJSON);
+			return new Promise(function (resolve) {
+				resolve(responseTeamBO);
+			})
+		})
+	}
+
+	//Eine Übung hinzufügen
+	addExercise(exerciseBO) {
+		return this.#fetchAdvanced(this.#addExerciseURL(), {
+			method: 'POST',
+			headers: {
+				'Accept': 'application/json, text/plain',
+				'Content-type': 'application/json',
+			},
+			body: JSON.stringify(exerciseBO)
+		}).then((responseJSON) => {
+			// zuruck kommt ein array, wir benoetigen aber nur ein Objekt aus dem array
+			let responseExerciseBO = ExerciseBO.fromJSON(responseJSON);
+			return new Promise(function (resolve) {
+				resolve(responseExerciseBO);
+			})
+		})
+	}
+
+	updateTeam(teamBO){
+		return this.#fetchAdvanced(this.#updateTeamURL(), {
+			method: 'PUT',
+			headers: {
+				'Accept': 'application/json, text/plain',
+				'Content-type': 'application/json',
+			},
+			body: JSON.stringify(teamBO)
+		}).then((responseJSON) => {
+			// zuruck kommt ein array, wir benoetigen aber nur ein Objekt aus dem array
+			let responseTeamBO = TeamBO.fromJSON(responseJSON);
+			return new Promise(function (resolve) {
+				resolve(responseTeamBO);
+			})
+		})
+	}
+
+	//eine Übung bearbeiten/updaten
+	updateExercise(exerciseBO){
+		return this.#fetchAdvanced(this.#updateExerciseURL(), {
+			method: 'PUT',
+			headers: {
+				'Accept': 'application/json, text/plain',
+				'Content-type': 'application/json',
+			},
+			body: JSON.stringify(exerciseBO)
+		}).then((responseJSON) => {
+			// zuruck kommt ein array, wir benoetigen aber nur ein Objekt aus dem array
+			let responseExerciseBO = ExerciseBO.fromJSON(responseJSON);
+			return new Promise(function (resolve) {
+				resolve(responseExerciseBO);
+			})
+		})
+	}
+
+	//Projekt löschen
+	deleteTeam(id){
+		return this.#fetchAdvanced(this.#deleteTeamURL(id),{method: 'DELETE'})
+	}
+
+
+	//gibt die Person mit der bestimmten GoogleUserID als BO zurück
+	getAllTrainingdays(){
+		return this.#fetchAdvanced(this.#getAllTrainingdaysURL()).then((responseJSON) => {
+			let trainingdayBO = TrainingdayBO.fromJSON(responseJSON);
+			return new Promise(function (resolve){
+				resolve(trainingdayBO)
+			})
+		})
+	}
+
+	getExercises() {
+		return this.#fetchAdvanced(this.#getExercisesURL()).then((responseJSON) => {
+			let exerciseBOs = ExerciseBO.fromJSON(responseJSON);
+			return new Promise(function (resolve){
+				resolve(exerciseBOs);
+			})
+		})
+	}
+
+	getTrainingdayByID(id){
+		return this.#fetchAdvanced(this.#getTrainingdayByIdURL(id)).then((responseJSON) => {
+			let trainingdayBO = TrainingdayBO.fromJSON(responseJSON);
+			return new Promise(function (resolve){
+				resolve(trainingdayBO)
+			})
+		})
+	}
+
+	addTrainingday(trainingdayBO) {
+		return this.#fetchAdvanced(this.#addTrainingdayURL(), {
+			method: 'POST',
+			headers: {
+				'Accept': 'application/json, text/plain',
+				'Content-type': 'application/json',
+			},
+			body: JSON.stringify(trainingdayBO)
+		}).then((responseJSON) => {
+			// zuruck kommt ein array, wir benoetigen aber nur ein Objekt aus dem array
+			let responseTrainingdayBO = TrainingdayBO.fromJSON(responseJSON);
+			return new Promise(function (resolve) {
+				resolve(responseTrainingdayBO);
+			})
+		})
+	}
+	//Übung löschen
+	deleteExercise(id){
+		return this.#fetchAdvanced(this.#deleteExerciseURL(id),{method: 'DELETE'})
 	}
 
 }
