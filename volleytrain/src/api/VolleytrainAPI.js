@@ -24,6 +24,9 @@ export default class VolleytrainAPI {
 
 	//getPlayers: all
 	#getPlayersURL = () => `${this.#VolleytrainServerBaseURL}/players`;
+	#addPlayerURL = () => `${this.#ElectivServerBaseURL}/player`;
+	#deletePlayerURL = (id) => `${this.#ElectivServerBaseURL}/player/${id}`;
+	#updatePlayerURL= () => `${this.#ElectivServerBaseURL}/player`;
 
 
 	/*
@@ -74,6 +77,47 @@ export default class VolleytrainAPI {
 				resolve(playerBOs);
 			})
 		})
+	}
+
+	//Spieler hinzufuegen
+	addPlayer(playerBO) {
+		return this.#fetchAdvanced(this.#addPlayerURL(), {
+			method: 'POST',
+			headers: {
+				'Accept': 'application/json, text/plain',
+				'Content-type': 'application/json',
+			},
+			body: JSON.stringify(playerBO)
+		}).then((responseJSON) => {
+			// zuruck kommt ein array, wir benoetigen aber nur ein Objekt aus dem array
+			let responsePlayerBO = PlayerBO.fromJSON(responseJSON);
+			return new Promise(function (resolve) {
+				resolve(responsePlayerBO);
+			})
+		})
+	}
+	
+	//Spieler bearbeiten
+	updatePlayer(playerBO){
+		return this.#fetchAdvanced(this.#updatePlayerURL(), {
+			method: 'PUT',
+			headers: {
+				'Accept': 'application/json, text/plain',
+				'Content-type': 'application/json',
+			},
+			body: JSON.stringify(playerBO)
+		}).then((responseJSON) => {
+			// zuruck kommt ein array, wir benoetigen aber nur ein Objekt aus dem array
+			let responsePlayerBO = PlayerBO.fromJSON(responseJSON);
+			return new Promise(function (resolve) {
+				resolve(responsePlayerBO);
+			})
+		})
+	}
+
+	//Spieler löschen
+	deletePlayer(id){
+		return this.#fetchAdvanced(this.#deletePlayerURL(id),{method: 'DELETE'})
 	}
 
 }
