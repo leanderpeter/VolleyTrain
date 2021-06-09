@@ -147,7 +147,7 @@ class App extends React.Component {
               currentUser ?
               <>
               <Header user={currentUser}/>
-              <Redirect from='/' to='exerciseForm' />
+              <Redirect from='/' to='home' />
                   <Route path='/home' component ={Home}>
                     <Home/>
                   </Route>

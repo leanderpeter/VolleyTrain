@@ -1,5 +1,7 @@
 import React from 'react';
 import { Grid, TextField, Typography, withStyles } from '@material-ui/core';
+import ExerciseBO from '../../api/ExerciseBO'
+import VolleytrainAPI from '../../api/VolleytrainAPI'
 
 
 class ExerciseForm extends React.Component {
@@ -16,7 +18,27 @@ class ExerciseForm extends React.Component {
         }
     }
 
+    addExercise(){
+        let exercise = new ExerciseBO()
+        exercise.setID(2)
+        exercise.setTraining(1)
+        exercise.setDuration(10)
+        exercise.setname("nam")
+        exercise.setGoal("goal")
+        exercise.setDescription("desc")
+        exercise.setNotes("notes")
+
+        //VolleytrainAPI.getAPI().addExercise(exercise)
+
+        //VolleytrainAPI.getAPI().getExerciseByID(1).then(res=>console.log(res))
+        //VolleytrainAPI.getAPI().getExercises().then(res=>console.log(res))
+        
+        //VolleytrainAPI.getAPI().updateExercise(exercise)
+        //VolleytrainAPI.getAPI().deleteExercise(2)
+    }
+
     handleInputChange = (event) => {
+        this.addExercise()
         const value = event.target.value;
     
         let error = false;

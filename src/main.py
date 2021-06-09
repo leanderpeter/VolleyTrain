@@ -48,9 +48,11 @@ user = api.inherit('user', nbo, {
 })
 
 exercise = api.inherit('exercise', nbo, {
-    'tag': fields.String(attribute='_tag', description='Tag of exercise'),
-    'duration': fields.DateTime(attribute='_duration', description='Duration of exercise'),
+    'notes': fields.String(attribute='_notes', description='notes of exercise'),
+    'duration': fields.Integer(attribute='_duration', description='Duration of exercise'),
     'training': fields.Integer(attribute='_training', description='training of exercise'),
+    'goal': fields.String(attribute='_goal', description='goal of exercise'),
+    'description': fields.String(attribute='_description', description='description of exercise'),
 })
 
 
@@ -107,6 +109,10 @@ class ExerciseByIDOperation(Resource):
         exercise = adm.getExerciseById(id)
         return exercise
 
+    @secured
+    def delete(self, id):
+        adm = volleytrainAdministration()
+        adm.deleteExercise(id)
 
 @volleyTrain.route('/exercise')
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -118,12 +124,41 @@ class ExerciseOperation(Resource):
         """Please provide a exercise object to transfer it into
         the database
         """
-        
+
         adm = volleytrainAdministration()
         exercise = Exercise.from_dict(api.payload)
-        created_exercise = adm.createExercise(exercise)
-        return created_exercise
+        print(exercise)
+        
+        if exercise is not None:
+            created_exercise = adm.createExercise(exercise)
+            return created_exercise , 200
+        else:
+            return '', 500
+   
+    @volleyTrain.marshal_list_with(exercise)
+    @secured
+    def get(self):
+        """Auslesen aller Projektart-Objekten.
+        """
+        adm = volleytrainAdministration()
+        exercises = adm.getAllExercises()
+        return exercises
 
+    @volleyTrain.marshal_with(exercise)
+    @volleyTrain.expect(exercise)
+    @secured
+    def put(self):
+        '''
+        Update exercise
+        '''
+        adm = volleytrainAdministration()
+        exercise = Exercise.from_dict(api.payload)
+
+        if exercise is not None:
+            response = adm.saveExercise(exercise)
+            return response, 200
+        else:
+            return '', 500
 
 
 if __name__ == '__main__':

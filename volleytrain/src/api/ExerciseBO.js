@@ -2,34 +2,75 @@ import NamedBusinessObject from './NamedBusinessObject';
 
 export default class ExerciseBO extends NamedBusinessObject{
 
-    constructor(atag, aduration){
+    constructor(){
     super();
-    this.tag = atag;
-    this.duration = aduration;
+    this.duration = null;
+	this.training = null;
+	this.description= null;
+	this.notes = null;
+	this.goal = null;
     }
+  
     /*
 	erhalte
 	*/
-	gettag(){
-        return this.tag;
-    }
-    /*
-	setze
-	*/
-    settag(atag){
-        this.tag = atag;
-    }
-    /*
-	erhalte
-	*/
-	getduration(){
+	getDuration(){
         return this.duration;
     }
     /*
 	setze
 	*/
-    setduration(aduration){
+    setDuration(aduration){
         this.duration = aduration;
+    }
+	  /*
+	erhalte
+	*/
+	getTraining(){
+        return this.training;
+    }
+    /*
+	setze
+	*/
+    setTraining(training){
+        this.training = training;
+    }
+
+	  /*
+	erhalte
+	*/
+	getDescription(){
+        return this.description;
+    }
+    /*
+	setze
+	*/
+    setDescription(description){
+        this.description = description;
+    }
+	  /*
+	erhalte
+	*/
+	getNotes(){
+        return this.notes;
+    }
+    /*
+	setze
+	*/
+    setNotes(notes){
+        this.notes = notes;
+    }
+	  /*
+	erhalte
+	*/
+	getGoal(){
+        return this.goal;
+    }
+    /*
+	setze
+	*/
+    setGoal(goal){
+        this.goal = goal;
     }
 
    /**

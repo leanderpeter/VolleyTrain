@@ -46,7 +46,15 @@ class volleytrainAdministration(object):
 
     def saveExercise(self, exercise):
         with ExerciseMapper() as mapper:
-            mapper.update(exercise)
+            return mapper.update(exercise)
+
+    def getAllExercises(self):
+        with ExerciseMapper() as mapper:
+            return mapper.find_all()
+
+    def deleteExercise(self, exerciseId):
+        with ExerciseMapper() as mapper:
+            return mapper.delete(exerciseId)
 
     def createPlayer(self, name, role, t_number):
         """ Create a Player object and inject it into the database
