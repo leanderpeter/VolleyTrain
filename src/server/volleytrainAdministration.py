@@ -1,11 +1,14 @@
 
-from .bo.userBO import User
-from .bo.teamBO import Team
-from .bo.trainingdayBO import Trainingday
+from server.bo.teamBO import Team
+from server.bo.trainingdayBO import Trainingday
 
-from .db.userMapper import UserMapper
-from .db.teamMapper import TeamMapper
-from .db.trainingdayMapper import TrainingdayMapper
+from server.db.teamMapper import TeamMapper
+from server.db.trainingdayMapper import TrainingdayMapper
+from server.bo.userBO import User
+from server.db.userMapper import UserMapper
+from server.db.exerciseMapper import ExerciseMapper
+from server.bo.PlayerBO import Player
+from server.db.PlayerMapper import PlayerMapper
 
 
 class volleytrainAdministration(object):
@@ -26,7 +29,7 @@ class volleytrainAdministration(object):
 
     def getUserById(self, id):
         with UserMapper() as mapper:
-            return mapper.find_by_id(id)
+            return mapper.find_byp_id(id)
 
     def getPersonByGoogleUserId(self, gId):
         with UserMapper() as mapper:
@@ -83,3 +86,43 @@ class volleytrainAdministration(object):
     def getTrainingdayById(self, id):
         with TrainingdayMapper() as mapper:
             return mapper.find_by_id(id)
+    def createExercise(self, exercise):
+        """ Create a Exercise object and inject it into the database """
+
+        with ExerciseMapper() as mapper:
+            return mapper.insert(exercise)
+
+    def getExerciseById(self, id):
+        with ExerciseMapper() as mapper:
+            return mapper.find_by_id(id)
+
+    def saveExercise(self, exercise):
+        with ExerciseMapper() as mapper:
+            return mapper.update(exercise)
+
+    def getAllExercises(self):
+        with ExerciseMapper() as mapper:
+            return mapper.find_all()
+
+    def deleteExercise(self, exerciseId):
+        with ExerciseMapper() as mapper:
+            return mapper.delete(exerciseId)
+
+    def createPlayer(self, name, role, t_number):
+        """ Create a Player object and inject it into the database
+        """
+        player = Player()
+        player.setName(name)
+        player.setRole(role)
+        player.setT_number(t_number)
+
+        with PlayerMapper() as mapper:
+            return mapper.insert(player)
+
+    def getPlayerById(self, id):
+        with PlayerMapper() as mapper:
+            return mapper.find_by_id(id)
+
+    def savePlayer(self, player):
+        with PlayerMapper() as mapper:
+            mapper.update(player)

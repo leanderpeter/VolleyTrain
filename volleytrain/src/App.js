@@ -7,7 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import Link from 'react-router-dom';
 
 // import Componentents from '/components/';
-import Theme from './Theme';
+import theme from './Theme';
 import SignIn from './components/pages/SignIn';
 import VolleytrainAPI from './api/VolleytrainAPI';
 import firebaseConfig from './firebaseconfig';
@@ -16,6 +16,7 @@ import Header from './components/layout/Header';
 import Team from './components/pages/Team';
 import TeamOverview from './components/pages/TeamOverview'
 import TeamBO from './api/TeamBO';
+import ExerciseForm from './components/pages/exerciseForm';
 
 /*
 Main page of the volleytrain. First firebase to verify users. Then routing to the pages via react-router-dom
@@ -143,7 +144,7 @@ class App extends React.Component {
     const { currentUser, appError, authError, authLoading, currentStudent, currentPerson } = this.state;
 
     return (
-      <ThemeProvider theme={Theme}>
+      <ThemeProvider theme={theme}>
         <CssBaseline/>
         <Router>
             {
@@ -162,6 +163,9 @@ class App extends React.Component {
 							<Team {...props}/>
 						)}
 						/>
+                  <Route path='/exerciseForm' component ={ExerciseForm}>
+                    <ExerciseForm/>
+                  </Route>
 
               </>
               :

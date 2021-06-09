@@ -12,6 +12,7 @@ from server.volleytrainAdministration import volleytrainAdministration
 from server.bo.teamBO import Team
 from server.bo.trainingdayBO import Trainingday
 from server.bo.userBO import User
+from server.bo.ExerciseBO import Exercise
 
 #SecurityDecorator
 from SecurityDecorator import secured
@@ -61,6 +62,14 @@ trainingday = api.inherit('trainingday', bo, {
     'starttime': fields.String(attribute='_starttime', description='starttime of training'),
     'endtime': fields.String(attribute='_endtime', description='endtime of training'),
 })
+exercise = api.inherit('exercise', nbo, {
+    'notes': fields.String(attribute='_notes', description='notes of exercise'),
+    'duration': fields.Integer(attribute='_duration', description='Duration of exercise'),
+    'training': fields.Integer(attribute='_training', description='training of exercise'),
+    'goal': fields.String(attribute='_goal', description='goal of exercise'),
+    'description': fields.String(attribute='_description', description='description of exercise'),
+})
+
 
 @volleyTrain.route('/user/<int:id>')
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -71,6 +80,7 @@ class UserByIDOperation(Resource):
         adm = volleytrainAdministration()
         user = adm.getUserById(id)
         return user
+
 
 @volleyTrain.route('/user')
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -91,6 +101,7 @@ class UserOperation(Resource):
         email = request.args.get("email")
         adm.createUser(api.payload)
         return user
+
 
 @volleyTrain.route('/userbygoogle/<string:id>')
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -175,6 +186,67 @@ class TrainingdayOperations(Resource):
             adm = volleytrainAdministration()
             trainingday = adm.getTrainingdayById(id)
             return trainingday
+
+@volleyTrain.route('/exercise/<int:id>')
+@volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ExerciseByIDOperation(Resource):
+    @secured
+    @volleyTrain.marshal_list_with(exercise)
+    def get(self, id):
+        adm = volleytrainAdministration()
+        exercise = adm.getExerciseById(id)
+        return exercise
+
+    @secured
+    def delete(self, id):
+        adm = volleytrainAdministration()
+        adm.deleteExercise(id)
+
+@volleyTrain.route('/exercise')
+@volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ExerciseOperation(Resource):
+    @secured
+    @volleyTrain.marshal_with(exercise)
+    @volleyTrain.expect(exercise)
+    def post(self):
+        """Please provide a exercise object to transfer it into
+        the database
+        """
+
+        adm = volleytrainAdministration()
+        exercise = Exercise.from_dict(api.payload)
+        print(exercise)
+        
+        if exercise is not None:
+            created_exercise = adm.createExercise(exercise)
+            return created_exercise , 200
+        else:
+            return '', 500
+   
+    @volleyTrain.marshal_list_with(exercise)
+    @secured
+    def get(self):
+        """Auslesen aller Projektart-Objekten.
+        """
+        adm = volleytrainAdministration()
+        exercises = adm.getAllExercises()
+        return exercises
+
+    @volleyTrain.marshal_with(exercise)
+    @volleyTrain.expect(exercise)
+    @secured
+    def put(self):
+        '''
+        Update exercise
+        '''
+        adm = volleytrainAdministration()
+        exercise = Exercise.from_dict(api.payload)
+
+        if exercise is not None:
+            response = adm.saveExercise(exercise)
+            return response, 200
+        else:
+            return '', 500
 
 
 if __name__ == '__main__':
