@@ -18,6 +18,7 @@
 --
 -- Table structure for table `equipment`
 --
+CREATE SCHEMA IF NOT EXISTS `volleytrain` ;
 USE volleytrain;
 
 DROP TABLE IF EXISTS `users`;
@@ -242,7 +243,7 @@ CREATE TABLE `position` (
 
 LOCK TABLES `position` WRITE;
 /*!40000 ALTER TABLE `position` DISABLE KEYS */;
-INSERT INTO `position` VALUES (1,1,1),(2,22,23),(3,5,10);
+INSERT INTO `position` VALUES (1,350,30),(2,400,300),(3,120,320),(4,153,89),(5,122,250),(6,50,122);
 /*!40000 ALTER TABLE `position` ENABLE KEYS */;
 UNLOCK TABLES;
 

@@ -45,7 +45,6 @@ const useStyles = makeStyles((theme) => ({
   content: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.default,
-    padding: theme.spacing(3),
   },
 }));
 
@@ -87,7 +86,7 @@ export default function Header(props) {
             </ListItemIcon>
             Trainingspläne
           </ListItem>
-          <ListItem button component={Link} to={'/index.html'}>
+          <ListItem button component={Link} to={'/exercises'}>
             <ListItemIcon style={{ color: "white" }}>
               <MenuBookIcon />
             </ListItemIcon>

@@ -1,7 +1,8 @@
-
-import React, { Component } from "react";
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
+import Exercises from '../Exercises';
+import TeamOverview from './TeamOverview';
 import Box from "@material-ui/core/Box";
-import PropTypes from "prop-types";
 import { Button, Grid, withStyles, Paper, GridList, Typography } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import FitnessCenterIcon from "@material-ui/icons/FitnessCenter";
@@ -49,7 +50,7 @@ class Home extends Component {
             </Button>
           </Paper>
         </Grid>
-        <Grid item component={Link} to={"/index.html"}>
+        <Grid item component={Link} to={"/exercises"}>
           <Paper
             className={classes.border}
             variant="outlined"

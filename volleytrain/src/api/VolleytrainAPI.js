@@ -1,10 +1,12 @@
 
 import UserBO from './UserBO';
+import PlayerBO from './PlayerBO';
 import TrainingBO from './TrainingBO';
 import TeamBO from './TeamBO';
 import TrainingdayBO from './TrainingdayBO';
 import ExerciseBO from './ExerciseBO';
-
+import MatchfieldPlayerBO from './MatchfieldPlayerBO'
+import PositionBO from './PositionBO'
 
 /*
 Singleton Abstarktion des backend REST interfaces. Es handelt sich um eine access methode
@@ -16,6 +18,20 @@ export default class VolleytrainAPI {
 	static #api = null;
 
 	// Lokales Python backend
+	#VolleytrainServerBaseURL = '/volleyTrain';
+
+	// Lokales Python backend
+	//#ElectivServerBaseURL = 'https://wahlfachapp.oa.r.appspot.com/electivApp';
+
+
+
+	//getPerson: google_user_id
+	//#getUserByGoogleIDURL = (google_user_id) => `${this.#VolleytrainServerBaseURL}/userbygoogle/${google_user_id}`;
+
+	//getPlayers: all
+	#getPlayersURL = () => `${this.#VolleytrainServerBaseURL}/players`;
+
+
 	#VolleyTrainServerBaseURL = '/volleyTrain';
 
 	//getPerson: google_user_id
@@ -38,6 +54,14 @@ export default class VolleytrainAPI {
 	//Training
 	#getAllTrainings = () => `${this.#VolleyTrainServerBaseURL}/trainings`;
 	
+	//MatchfieldPlayerBO
+	#getAllMatchfieldPlayerBO = () => `${this.#VolleyTrainServerBaseURL}/matchfieldPlayers`;
+
+	//positions
+	#getAllPositionsURL = () => `${this.#VolleyTrainServerBaseURL}/position`;
+
+
+
 	/*
 	Singleton/Einzelstuck instanz erhalten
 	*/
@@ -78,6 +102,14 @@ export default class VolleytrainAPI {
 		})
 	}
 
+	getPlayers() {
+		return this.#fetchAdvanced(this.#getPlayersURL(),{method: 'GET'}).then((responseJSON) => {
+			let playerBOs = PlayerBO.fromJSON(responseJSON);
+			return new Promise(function (resolve){
+				resolve(playerBOs);
+			})
+		})
+	}
 	//Training
 	getAllTrainings() {
 		return this.#fetchAdvanced(this.#getAllTrainings())
@@ -244,5 +276,27 @@ export default class VolleytrainAPI {
 	deleteExercise(id){
 		return this.#fetchAdvanced(this.#deleteExerciseURL(id),{method: 'DELETE'})
 	}
+
+	//Training
+	getAllMatchfieldPlayerBO() {
+		return this.#fetchAdvanced(this.#getAllMatchfieldPlayerBO())
+		.then((responseJSON) => {
+			let matchfieldPlayerBO = MatchfieldPlayerBO.fromJSON(responseJSON);
+			return new Promise(function(resolve) {
+				resolve(matchfieldPlayerBO)
+			})
+		})
+	}	
+
+	//Training
+	getAllPositions() {
+		return this.#fetchAdvanced(this.#getAllPositionsURL())
+		.then((responseJSON) => {
+			let positionBO = PositionBO.fromJSON(responseJSON);
+			return new Promise(function(resolve) {
+				resolve(positionBO)
+			})
+		})
+	}	
 
 }
