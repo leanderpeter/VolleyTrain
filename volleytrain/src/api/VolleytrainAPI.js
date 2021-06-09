@@ -18,17 +18,15 @@ export default class VolleytrainAPI {
 	#VolleyTrainServerBaseURL = '/volleyTrain';
 
 	//getPerson: google_user_id
-	#getUserByGoogleIDURL = (google_user_id) => `${this.#ElectivServerBaseURL}/userbygoogle/${google_user_id}`;
-	#getAllTeamsURL = () => `${this.#ElectivServerBaseURL}/team`;
-	#addTeamURL = () => `${this.#ElectivServerBaseURL}/team`;
-	#getTeamByIdURL = (id) => `${this.#ElectivServerBaseURL}/team/${id}`;
-	#deleteTeamURL = (id) => `${this.#ElectivServerBaseURL}/team/${id}`;
-	#updateTeamURL= () => `${this.#ElectivServerBaseURL}/team`;
-	#getAllTrainingdaysURL = () => `${this.#ElectivServerBaseURL}/traingday`;
-	#getTrainingdayByIdURL = (id) => `${this.#ElectivServerBaseURL}/trainingday/${id}`;
-	#addTrainingdayURL = () => `${this.#ElectivServerBaseURL}/trainingday`;
-
 	#getUserByGoogleIDURL = (google_user_id) => `${this.#VolleyTrainServerBaseURL}/userbygoogle/${google_user_id}`;
+	#getAllTeamsURL = () => `${this.#VolleyTrainServerBaseURL}/team`;
+	#addTeamURL = () => `${this.#VolleyTrainServerBaseURL}/team`;
+	#getTeamByIdURL = (id) => `${this.#VolleyTrainServerBaseURL}/team/${id}`;
+	#deleteTeamURL = (id) => `${this.#VolleyTrainServerBaseURL}/team/${id}`;
+	#updateTeamURL= () => `${this.#VolleyTrainServerBaseURL}/team`;
+	#getAllTrainingdaysURL = () => `${this.#VolleyTrainServerBaseURL}/traingday`;
+	#getTrainingdayByIdURL = (id) => `${this.#VolleyTrainServerBaseURL}/trainingday/${id}`;
+	#addTrainingdayURL = () => `${this.#VolleyTrainServerBaseURL}/trainingday`;
 	//getExercise: id
 	#getExerciseByIDURL = (id) => `${this.#VolleyTrainServerBaseURL}/exercise/${id}`;
 	#deleteExerciseURL = (id) => `${this.#VolleyTrainServerBaseURL}/exercise/${id}`;
