@@ -1,23 +1,3 @@
-<<<<<<< Updated upstream
-import React, {Component} from 'react';
-import Box from '@material-ui/core/Box';
-import PropTypes from 'prop-types';
-import {
-    Card,
-    Button,
-    Grid,
-    Typography,
-    withStyles,
-    Paper,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-    TextField,
-    Container
-} from '@material-ui/core';
-
-=======
 import React, { Component } from "react";
 import Box from "@material-ui/core/Box";
 import PropTypes from "prop-types";
@@ -28,7 +8,7 @@ import AvTimerIcon from "@material-ui/icons/AvTimer";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import GroupIcon from "@material-ui/icons/Group";
 import Divider from "@material-ui/core/Divider";
->>>>>>> Stashed changes
+
 
 class Home extends Component {
   render() {
@@ -96,24 +76,8 @@ class Home extends Component {
       <Divider className={classes.solid}/>
       <Typography>Geplante Trainingspläne</Typography>
       </div>
-
-<<<<<<< Updated upstream
-    
-    render() {
-        const {classes} = this.props;
-
-        return <div>
-                
-
-                    <Typography style={{marginTop: "2em"}} classlname={classes.root} align='center'>Lets code the hell out of this Bitch!</Typography>
-                    
-                
-        </div>
-    }
-=======
     );
   }
->>>>>>> Stashed changes
 }
 
 /** Component specific styles */
@@ -158,6 +122,8 @@ const styles = (theme) => ({
   },
   solid: {
     border: "1px solid #bbb",
+    marginLeft: "280px",
+    marginRight: "50px",
   }
 });
 
