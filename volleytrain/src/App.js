@@ -1,9 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
-import { Container, ThemeProvider, CssBaseline } from '@material-ui/core';
+import { Container, ThemeProvider, CssBaseline} from '@material-ui/core';
 import firebase from 'firebase/app'; //Firebase module
 import 'firebase/auth'; //Firebase module
 import Grid from '@material-ui/core/Grid';
+import Link from 'react-router-dom';
 
 // import Componentents from '/components/';
 import Theme from './Theme';
