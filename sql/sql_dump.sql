@@ -252,6 +252,10 @@ DROP TABLE IF EXISTS `team`;
 CREATE TABLE `team` (
   `PK_Team` int NOT NULL,
   `name` varchar(45) DEFAULT NULL,
+  `trainingsday`INT NULL DEFAULT NULL,
+  `addDayOne` INT NULL DEFAULT NULL,
+  `addDayTwo` INT NULL DEFAULT NULL,
+  `addDayThree` INT NULL DEFAULT NULL,
   PRIMARY KEY (`PK_Team`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
