@@ -18,6 +18,7 @@
 --
 -- Table structure for table `equipment`
 --
+CREATE SCHEMA IF NOT EXISTS `volleytrain` ;
 USE volleytrain;
 
 DROP TABLE IF EXISTS `users`;

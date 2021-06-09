@@ -12,7 +12,7 @@ const DragStyle = {
     cursor: 'move',
 };
 
-function Player({ id, left, top, hideSourceOnDrag, children,}){
+function Player({ id, left, top, surname, name}){
   const classes = styles();
 
   const [{ isDragging }, drag] = useDrag(() => ({
@@ -22,15 +22,14 @@ function Player({ id, left, top, hideSourceOnDrag, children,}){
         isDragging: monitor.isDragging(),
     }),
     }), [id, left, top]);
-    if (isDragging && hideSourceOnDrag) {
+    if (isDragging) {
         return <div ref={drag}/>;
     }
-    console.log(children)
   return(
     <div ref={drag} style={{...DragStyle, left, top }} role="Box" className={classes.root}>
       <Grid>
         <Grid item xs>
-          <Avatar className={classes.orange}>{children}</Avatar>
+          <Avatar className={classes.orange}>{name[0] + surname[0]}</Avatar>
         </Grid>
       </Grid>
     </div>

@@ -1,21 +1,17 @@
 
-from .bo.userBO import User
-from .db.userMapper import UserMapper
-from .db.playerMapper import PlayerMapper
 from server.bo.TrainingBO import Training
-
 from server.db.TrainingMapper import TrainingMapper
 from server.bo.teamBO import Team
 from server.bo.trainingdayBO import Trainingday
-
 from server.db.teamMapper import TeamMapper
 from server.db.trainingdayMapper import TrainingdayMapper
 from server.bo.userBO import User
 from server.db.userMapper import UserMapper
 from server.db.exerciseMapper import ExerciseMapper
-from server.bo.PlayerBO import Player
-from server.db.PlayerMapper import PlayerMapper
-
+from server.bo.playerBO import Player
+from server.db.playerMapper import PlayerMapper
+from server.db.positionMapper import PositionMapper
+from server.db.matchfieldPlayerMapper import MatchfieldPlayerMapper
 
 class volleytrainAdministration(object):
 
@@ -155,3 +151,11 @@ class volleytrainAdministration(object):
     def savePlayer(self, player):
         with PlayerMapper() as mapper:
             mapper.update(player)
+
+    def getAllPositions(self):
+        with PositionMapper() as mapper:
+            return mapper.find_all()
+
+    def getAllMatchfieldPlayers(self):
+        with MatchfieldPlayerMapper() as mapper:
+            return mapper.find_all()

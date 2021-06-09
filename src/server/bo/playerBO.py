@@ -1,4 +1,3 @@
-
 from server.bo.NamedBusinessObject import NamedBusinessObject
 
 class Player(NamedBusinessObject):
@@ -35,7 +34,7 @@ class Player(NamedBusinessObject):
         ''' turn a python dict into a user object
         '''
 
-        obj = User()
+        obj = Player()
         obj.setId(dictionary["id"])  # part of the Business object mother class
         obj.setSurname(dictionary["surname"])
         obj.setName(dictionary["name"])

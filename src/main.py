@@ -82,6 +82,18 @@ exercise = api.inherit('exercise', nbo, {
     'description': fields.String(attribute='_description', description='description of exercise'),
 })
 
+position = api.inherit('position', bo, {
+    'top': fields.String(attribute='_x', description='X Postion'),
+    'left': fields.String(attribute='_y', description='Y Postion'),
+})
+
+matchfieldPlayers = api.inherit('matchfieldPlayers', {
+    '_matchfield_pk': fields.Integer(attribute='_matchfield_pk', description='_matchfield_pk'),
+    '_player_pk': fields.Integer(attribute='_player_pk', description='_player_pk'),
+    '_position_pk': fields.Integer(attribute='_position_pk', description='_position_pk'),
+})
+
+
 
 @volleyTrain.route('/user/<int:id>')
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -278,6 +290,27 @@ class ExerciseOperation(Resource):
             return response, 200
         else:
             return '', 500
+
+@volleyTrain.route('/position')
+@volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class PositionOperation(Resource):
+    # @secured
+    @volleyTrain.marshal_list_with(position)
+    def get(self):
+        adm = volleytrainAdministration()
+        positions = adm.getAllPositions()
+        return positions
+
+
+@volleyTrain.route('/matchfieldPlayers')
+@volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class MatchfieldPlayerOperation(Resource):
+    # @secured
+    @volleyTrain.marshal_list_with(matchfieldPlayers)
+    def get(self):
+        adm = volleytrainAdministration()
+        matchfieldPlayers = adm.getAllMatchfieldPlayers()
+        return matchfieldPlayers
 
 
 if __name__ == '__main__':

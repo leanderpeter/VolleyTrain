@@ -5,21 +5,21 @@ export default class PositionBO extends BusinessObject{
 
 	constructor(ax, ay){
         super();
-        this.x = ax;
-        this.y = ay;
+        this.top = ax;
+        this.left = ay;
     }
     /*
 	erhalte 
 	*/
 	getPos(){
-        return (this.x, this.y)
+        return (this.top, this.left)
     }
     /*
 	setze 
 	*/
     setPos(ax, ay){
-        this.y = ay;
-        this.x = ax;
+        this.top = ay;
+        this.left = ax;
     }
 
     static fromJSON(positions) {

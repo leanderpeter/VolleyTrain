@@ -11,7 +11,6 @@ class PlayerMapper(Mapper):
 
     def find_all(self):
         """find all player entry
-
         :return all player objs
         """
         result = []

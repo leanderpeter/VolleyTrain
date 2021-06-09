@@ -1,9 +1,9 @@
 from server.db.mapper import Mapper
-from server.bo.positionBO import Position
+from server.bo.matchfieldPlayerBO import MatchfieldPlayerBO
 
 
-class PositionMapper(Mapper):
-    """mapper class to insert/replace/change positions object in the realtional database
+class MatchfieldPlayerMapper(Mapper):
+    """mapper class to insert/replace/change MatchfieldPlayer object in the realtional database
     """
 
     def __init__(self):
@@ -18,17 +18,17 @@ class PositionMapper(Mapper):
 
         cursor = self._connection.cursor()
 
-        command = "SELECT PK_Position, x, y FROM position"
+        command = "SELECT Matchfield_PK_Matchfield, Player_PK_Player, Position_PK_Position FROM matchfield_has_player"
 
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        for (id, x, y) in tuples:
-            pos = Position()
-            pos.setId(id)
-            pos.setXPosition(x)
-            pos.setYPosition(y)
-            result.append(pos)
+        for (Matchfield_PK_Matchfield, Player_PK_Player, Position_PK_Position) in tuples:
+            obj = MatchfieldPlayerBO()
+            obj.setMatchfieldPK(Matchfield_PK_Matchfield)
+            obj.setPlayerPK(Player_PK_Player)
+            obj.setPositionPK(Position_PK_Position)
+            result.append(obj)
 
         self._connection.commit()
         cursor.close()
@@ -45,21 +45,7 @@ class PositionMapper(Mapper):
         :return user-Objekt, welche mit der ID übereinstimmt,
                 None wenn kein Eintrag gefunden wurde
         """
-        result = None
-        cursor = self._connection.cursor()
-        command = "SELECT * FROM position WHERE Matchfield_PK_Matchfield='{}'".format(id)
-        cursor.execute(command)
-        tuples = cursor.fetchall()
-        try:
-            pass
-        except IndexError:
-            """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
-			keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
-            result = None
-
-        self._connection.commit()
-        cursor.close()
-        return result
+        pass
 
     def find_by_google_user_id(self, google_user_id):
         """Suchen einer user nach der übergebenen Google User ID. 

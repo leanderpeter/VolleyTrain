@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import {Grid, makeStyles} from '@material-ui/core';
 import { deepOrange, deepPurple } from '@material-ui/core/colors';
 import Avatar from '@material-ui/core/Avatar';
-import { DndProvider } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
 
 function PlayerButton(props){
   const classes = styles();
@@ -12,7 +10,7 @@ function PlayerButton(props){
     <div className={classes.root}>
       <Grid>
         <Grid item xs>
-          <Avatar className={classes.orange}>{props.player.title}</Avatar>
+          <Avatar className={classes.orange}>{props.player.name[0]+props.player.surname[0]}</Avatar>
         </Grid>
       </Grid>
     </div>

@@ -1,5 +1,4 @@
 import React, {useRef, useState, useEffect} from 'react';
-import Child from './Child'
 import PropTypes from 'prop-types';
 import {
     Button,
@@ -21,51 +20,38 @@ const Exercises = () => {
     // you need to assign it to a `ref`, so we call `useRef()` to get one
     const childRef = useRef();
 
-    // Init states for resources from Backend
+    // Init states for resources from Backend Players
     const [players, setPlayers] = useState([]);
     const [error, setError] = useState(null);
     const [loadingInProgress, setLoadingInProgress] = useState(null);
 
+    // init state for resources MatchfieldPlayerBO
+    const [MatchfieldPlayers, setMatchfieldPlayers] = useState([])
+
+    // init state for resources Position Data
+    const [Positions, setPositions] = useState([])
+
+    //combine the jsons MatchfieldPlayers and Players
+    var combi = MatchfieldPlayers.map(x => Object.assign(x, players.find(y => y.id == x._player_pk)));
+    //combine the jsons Combi and Positions
+    var PlayerData = combi.map(x => Object.assign(x, Positions.find(y => y.id == x._position_pk)));
+
+    var i;
+    var posPlayer = [];
+    for (i = 0; i < PlayerData.length; i++) {
+        const obj = {
+            top: Math.floor(PlayerData[i].top),
+            left: Math.floor(PlayerData[i].left),
+            name: PlayerData[i].name,
+            surname: PlayerData[i].surname,
+            id: PlayerData[i].id,
+        }
+        posPlayer.push(obj)
+    }
+
     // init styling
     const classes = styles();
 
-    //Mock players
-    const PlayerList = [
-        //    y         x
-        {top: 5, left: 100, title: 'LP'},
-        {top: 45, left: 100, title: 'ERM'},
-        {top: 85, left: 100, title: 'WB'},
-        {top: 125, left: 100, title: 'JB'},
-        {top: null, left: null, title: 'SM'},
-        {top: null, left: null, title: 'ME'},
-        {top: null, left: null, title: 'JS'},
-        {top: null, left: null, title: 'SP'},
-    ]
-
-    // PlayersInMatchfield Mock
-    var PlayersInMatchfield = [
-        {PlayerID: 1, PositionID: 1},
-        {PlayerID: 2, PositionID: 2},
-        {PlayerID: 3, PositionID: 3},
-        {PlayerID: 4, PositionID: 4},
-    ]
-
-    // Positions Mock
-    var Positions = [
-        // positionid top  left
-        {PositionID: 1, top: 30, left: 200},
-        {PositionID: 2, top: 60, left: 100},
-        {PositionID: 3, top: 0, left: 0},
-        {PositionID: 4, top: 160, left: 800},
-        {PositionID: 5, top: 360, left: 300},
-        {PositionID: 6, top: 860, left: 450},
-    ]
-
-    //combine the jsons Position and PlayersInMatchfield
-    var posXPlayer = PlayersInMatchfield.map(x => Object.assign(x, Positions.find(y => y.PositionID == x.PositionID)));    
-    console.log(posXPlayer)
-
-    console.log(players)
     const getPlayers = () => {
         VolleytrainAPI.getAPI().getPlayers().then(
             playerBOs => {
@@ -86,6 +72,49 @@ const Exercises = () => {
         getPlayers();
     }, []);
 
+    // get all Matchfield_Player_Position Data
+    const getMatchfieldPlayers = () => {
+        VolleytrainAPI.getAPI().getAllMatchfieldPlayerBO().then(
+            MatchfieldPlayerBOs => {
+                setMatchfieldPlayers(MatchfieldPlayerBOs)
+                setLoadingInProgress(false)
+                setError(null)
+            }
+        ).catch(e => {
+            setMatchfieldPlayers([])
+            setLoadingInProgress(false)
+            setError(e)
+        })
+        // setze laden auf wahr
+        setLoadingInProgress(true)
+        setError(null)
+    }
+    useEffect(() => {
+        getMatchfieldPlayers();
+    }, []);
+
+
+    //get all position Data
+    const getPosition = () => {
+        VolleytrainAPI.getAPI().getAllPositions().then(
+            positionBOS => {
+                setPositions(positionBOS)
+                setLoadingInProgress(false)
+                setError(null)
+            }
+        ).catch(e => {
+            setPositions([])
+            setLoadingInProgress(false)
+            setError(e)
+        })
+        // setze laden auf wahr
+        setLoadingInProgress(true)
+        setError(null)
+    }
+    useEffect(() => {
+        getPosition();
+    }, []);
+
     return (
     <div>
         <DndProvider backend={HTML5Backend}>
@@ -103,7 +132,7 @@ const Exercises = () => {
                     alignItems="center"
                     style={{ borderRight: '0.2em solid black', padding: '0.5em'}}>
                     <div>
-                        <Matchfield2 ref={childRef} PlayerList={PlayerList} PositionList={Positions}/>
+                        <Matchfield2 ref={childRef} PlayerList={posPlayer}/>
                     </div>     
                               
                 </Grid>
@@ -128,12 +157,12 @@ const Exercises = () => {
                     direction="row"
                     justify=""
                     alignItems="center">
-                {players.length > 0 ?
+                {posPlayer.length > 0 ?
                     <>
-                    {players.map(player => 
+                    {posPlayer.map(player => 
                         <div className="test_player">
-                            <Button onClick={() => childRef.current.addPlayer(player.getID())} className={classes.playerButton}>
-                                <PlayerButton key={player.getID()} player={player}/>
+                            <Button onClick={() => childRef.current.addPlayer(player.id)} className={classes.playerButton}>
+                                <PlayerButton key={player.id} player={player}/>
                             </Button>
                         </div>
                     )}
@@ -143,7 +172,7 @@ const Exercises = () => {
                 }
                 </Grid>
                 <Typography variant="subtitle2">Linien:</Typography>
-                <Button onClick={() => childRef.current.addPlayer(1)}>Click me</Button>
+                <Button onClick={() => childRef.current.addPlayer(2)}>Click me</Button>
                 <Typography variant="subtitle2">Objekte:</Typography>
                 </Grid>
             </Grid>

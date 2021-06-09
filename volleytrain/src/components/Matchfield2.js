@@ -44,6 +44,7 @@ const Matchfield2= forwardRef(({PlayerList, PositionList}, ref) => {
     useImperativeHandle(ref, () => ({
 
       addPlayer(playerID) {
+        playerID = playerID - 1
         if (PlayerList[playerID].top === null){
           PlayerList[playerID].left = Math.floor(Math.random() * 200);
           PlayerList[playerID].top = Math.floor(Math.random() * 200);
@@ -52,14 +53,13 @@ const Matchfield2= forwardRef(({PlayerList, PositionList}, ref) => {
       }
   
     }));
-    console.log(boxes)
     return (
       <div>
         <div ref={drop} className={classes.box}>
           <img src={field} alt="Field" className={classes.field}/>
           {Object.keys(boxes).map((key) => {
-            const { left, top, title } = boxes[key];
-            return (<Player key={key} id={key} left={left} top={top}>
+            const { left, top, name, surname } = boxes[key];
+            return (<Player id={key} left={left} top={top} surname={surname} name={name}>
               
               </Player>);
             })}

@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {
     withStyles,
+    Typography
 } from '@material-ui/core';
 import Exercises from '../Exercises';
 import TeamOverview from './TeamOverview';
@@ -15,12 +16,8 @@ class Home extends Component {
         const {classes} = this.props;
 
         return (
-            <div>
-                
-                
-                    <Typography style={{marginTop: "2em"}} classlname={classes.root} align='center'>Letadfadgfs code the hell out of this Bitch!</Typography>
-                    <TeamOverview />
-                
+            <div className={classes.root}>
+                <Exercises/>
             </div>
         )
     }
