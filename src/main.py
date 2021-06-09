@@ -51,7 +51,7 @@ user = api.inherit('user', nbo, {
 training = api.inherit('training', nbo, {
     'goal': fields.String(attribute='_goal', description='Ziel des Trainings'),
     'teamId': fields.Integer(attribute='_team_id', description='ID des beteiligten Team'),
-    'userId': fields.Integer(attribute='_user_id', description='ID des Users/Trainers')
+    'userId': fields.Integer(attribute='_user_id', description='ID des User/Trainer')
 })
 
 

@@ -15,6 +15,7 @@ class TrainingScheduleEntry extends React.Component {
         this.state = {
             training: props.training
         }
+        console.log(this.props.training)
     }
 
     render () {
@@ -30,8 +31,7 @@ class TrainingScheduleEntry extends React.Component {
                                 <Grid container spacing={3}>
                                     <Grid item xs={3} sm={2}>
                                         <Typography align = 'center'>
-                                            {/* {training.getCreationDate()} */}
-                                            Uhrzeit
+                                            {training.getCreationDate()}
                                         </Typography>
                                     </Grid>
                                     <Divider orientation="vertical" flexItem />

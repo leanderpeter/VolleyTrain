@@ -18,7 +18,7 @@ class UserMapper(Mapper):
 
         cursor = self._connection.cursor()
 
-        command = "SELECT PK_User, surname, name, email, googleUserId FROM users"
+        command = "SELECT PK_User, surname, name, email, googleUserId FROM user"
 
         cursor.execute(command)
         tuples = cursor.fetchall()
@@ -50,7 +50,7 @@ class UserMapper(Mapper):
         """
         result = None
         cursor = self._connection.cursor()
-        command = "SELECT PK_User, surname, name, email, google_user_id FROM users WHERE PK_User='{}'".format(id)
+        command = "SELECT PK_User, surname, name, email, google_user_id FROM user WHERE PK_User='{}'".format(id)
         cursor.execute(command)
         tuples = cursor.fetchall()
         try:
@@ -82,7 +82,7 @@ class UserMapper(Mapper):
         result = None
 
         cursor = self._connection.cursor()
-        command = "SELECT PK_User, surname, name, email, google_user_id FROM users WHERE google_user_id='{}'".format(
+        command = "SELECT PK_User, surname, name, email, google_user_id FROM user WHERE google_user_id='{}'".format(
                 google_user_id)
         cursor.execute(command)
         tuples = cursor.fetchall()
@@ -111,7 +111,7 @@ class UserMapper(Mapper):
         :return das bereits übergebene user Objekt mit aktualisierten Daten (id)
         """
         cursor = self._connection.cursor()
-        cursor.execute("SELECT MAX(PK_User) AS maxid FROM users ")
+        cursor.execute("SELECT MAX(PK_User) AS maxid FROM user ")
         tuples = cursor.fetchall()
 
         for (maxid) in tuples:
@@ -124,7 +124,7 @@ class UserMapper(Mapper):
                 davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
                 user.setId(1)
 
-        command = "INSERT INTO users (PK_User, surname, name, email, google_user_id) VALUES (%s,%s,%s,%s,%s)"
+        command = "INSERT INTO user (PK_User, surname, name, email, google_user_id) VALUES (%s,%s,%s,%s,%s)"
         data = (user.getId(), user.getSurname(), user.getName(), user.getEmail(), user.getGoogleUserId())
         cursor.execute(command, data)
 
@@ -141,7 +141,7 @@ class UserMapper(Mapper):
         """
         cursor = self._connection.cursor()
 
-        command = "UPDATE users " + "SET surname=%s, name=%s, email=%s WHERE google_user_id=%s"
+        command = "UPDATE user " + "SET surname=%s, name=%s, email=%s WHERE google_user_id=%s"
         data = (user.getSurname(), user.getName(), user.getEmail(), user.getGoogleUserId())
 
         cursor.execute(command, data)
@@ -158,7 +158,7 @@ class UserMapper(Mapper):
         """
         cursor = self._connection.cursor()
 
-        command = "UPDATE users " + "SET surname=%s, name=%s, email=%s WHERE id=%s"
+        command = "UPDATE user " + "SET surname=%s, name=%s, email=%s WHERE id=%s"
         data = (user.getSurname(), user.getName(), user.getEmail(), user.getId())
 
         cursor.execute(command, data)
@@ -173,7 +173,7 @@ class UserMapper(Mapper):
         """
         cursor = self._connection.cursor()
 
-        command = "DELETE FROM users WHERE PK_User={}".format(user.getId())
+        command = "DELETE FROM user WHERE PK_User={}".format(user.getId())
         cursor.execute(command)
 
         self._connection.commit()
