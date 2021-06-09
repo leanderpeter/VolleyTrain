@@ -9,6 +9,7 @@ import AvTimerIcon from "@material-ui/icons/AvTimer";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import GroupIcon from "@material-ui/icons/Group";
 import Divider from "@material-ui/core/Divider";
+import TrainingSchedule from '../TrainingSchedule';
 
 
 class Home extends Component {
@@ -36,7 +37,7 @@ class Home extends Component {
             </Button>
           </Paper>
         </Grid>
-        <Grid item component={Link} to={"/index.html"}>
+        <Grid item component={Link} to={"/training"}>
           <Paper
             className={classes.border}
             variant="outlined"
@@ -75,7 +76,7 @@ class Home extends Component {
         
       </Grid>
       <Divider className={classes.solid}/>
-      <Typography>Geplante Trainingspläne</Typography>
+      <TrainingSchedule/>
       </div>
     );
   }
@@ -92,13 +93,12 @@ const styles = (theme) => ({
     textDecoration: "None",
   },
   border: {
-    border: "2px solid #BFCE0D",
     boxSizing: "border-box",
     alignItems: "center",
     textAlign: "center",
     boxShadow: "0px 4px 10px rgba(84, 78, 78, 0.2)",
     borderRadius: "9px",
-    background: "linear-gradient(90.46deg, #FFD542 12.09%, #FFB676 104.14%)",
+    background: "linear-gradient(80.45deg, #071168 -35.38%, #1F9F80 -9.15%, #BFCE0D 114.78%)",
     width: theme.spacing(26),
     height: theme.spacing(18),
   },

@@ -69,19 +69,19 @@ export default function Header(props) {
         <div className={classes.toolbar} />
         <Divider />
         <List>
-          <ListItem button component={Link} to={'/index.html'}>
+          <ListItem button component={Link} to={'/home'}>
             <ListItemIcon style={{ color: "white" }}>
               <AppsIcon />
             </ListItemIcon>
             Dashboard
           </ListItem>
-          <ListItem button component={Link} to={'/index.html'}>
+          <ListItem button component={Link} to={'/exerciseForm'}>
             <ListItemIcon style={{ color: "white" }}>
               <FitnessCenterIcon />
             </ListItemIcon>
             Trainingsplanung
           </ListItem>
-          <ListItem button component={Link} to={'/index.html'}>
+          <ListItem button component={Link} to={'/training'}>
             <ListItemIcon style={{ color: "white" }}>
               <AvTimerIcon />
             </ListItemIcon>
