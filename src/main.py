@@ -50,10 +50,12 @@ user = api.inherit('user', nbo, {
 
 training = api.inherit('training', nbo, {
     'goal': fields.String(attribute='_goal', description='Ziel des Trainings'),
-    'teamId': fields.Integer(attribute='_team_id', description='ID des beteiligten Team'),
-    'userId': fields.Integer(attribute='_user_id', description='ID des User/Trainer')
+    'team_id': fields.Integer(attribute='_team_id', description='ID des beteiligten Team'),
+    'user_id': fields.Integer(attribute='_user_id', description='ID des User/Trainer')
 })
 
+
+""" UserOperations """
 
 @volleyTrain.route('/user/<int:id>')
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -67,6 +69,7 @@ class UserByIDOperation(Resource):
 
 @volleyTrain.route('/user')
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+
 class UserOperation(Resource): 
     @secured
     @volleyTrain.marshal_with(user)
@@ -95,6 +98,9 @@ class UserByIDOperation(Resource):
         user = adm.getPersonByGoogleUserId(id)
         return user
 
+
+""" TrainingOperations """
+
 @volleyTrain.route('/trainings')
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class TrainingListOperations(Resource):
@@ -104,6 +110,61 @@ class TrainingListOperations(Resource):
         adm = volleytrainAdministration()
         trainings = adm.getAllTrainings()
         return trainings
+
+    @volleyTrain.marshal_with(training, code=200)
+    @volleyTrain.expect(training) 
+    @secured
+    def post(self):
+        adm = volleytrainAdministration()
+        proposal = Training.from_dict(api.payload)
+        print(api.payload)
+
+        print(proposal)
+        if proposal is not None:
+            training = adm.createTraining(proposal)
+            return training, 200       
+        else:
+            return '', 500 
+
+@volleyTrain.route('/training')
+@volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class TrainingOperations(Resource):
+    @volleyTrain.marshal_with(training)
+    @volleyTrain.expect(training, validate=True)
+    @secured
+    def put(self):
+        adm = volleytrainAdministration()
+        training = Training.from_dict(api.payload)
+        print(training)
+
+        if training is not None:
+            adm.saveTraining(training)
+            return training, 200
+        else:
+            return '', 500
+
+@volleyTrain.route('/training/<int:training_id>')
+@volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@volleyTrain.param('training_id', 'Dies ist die ID von Training')
+class TrainingOperations(Resource):
+    @volleyTrain.marshal_with(training)
+    @secured
+    def get(self, training_id):
+        adm = volleytrainAdministration()
+        training = adm.getTrainingById(training_id)
+        return training
+    
+    @volleyTrain.marshal_with(training)
+    @secured
+    def delete(self, training_id):
+        adm = volleytrainAdministration()
+        training = adm.getTrainingById(training_id)
+
+        if training is not None:
+            adm.deleteTraining(training)
+            return 'Successfully deleted', 200
+        else:
+            return 'Deleting failed', 500
 
 if __name__ == '__main__':
     app.run(debug=True)
