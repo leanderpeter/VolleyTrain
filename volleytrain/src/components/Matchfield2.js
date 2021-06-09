@@ -1,44 +1,74 @@
-import React, {Component, useRef} from 'react';
 import PropTypes from 'prop-types';
 import {
     makeStyles,
     withStyles,
 } from '@material-ui/core';
 import field from './media/field.png';
-import { useDrop } from "react-dnd";
+import { forwardRef, useCallback, useState } from 'react';
+import { useDrop } from 'react-dnd';
+import { ItemTypes } from './ItemTypes';
+import update from 'immutability-helper';
+import Player from './Player';
+import React, { useImperativeHandle } from 'react';
 
-function useLocalDrop(onDrop) {
-    const ref = useRef();
-  
-    const [, dropTarget] = useDrop({
-      accept: "thing",
-      drop(item, monitor) {
-        const offset = monitor.getSourceClientOffset();
-        if (offset && ref.current) {
-          const dropTargetXy = ref.current.getBoundingClientRect();
-          onDrop("local", {
-            x: offset.x - dropTargetXy.left,
-            y: offset.y - dropTargetXy.top
-          });
-        }
-      }
-    });
-  
-    return elem => {
-      ref.current = elem;
-      dropTarget(ref);
-    };
-  }
+const DragStyles = {
+  width: 300,
+  height: 300,
+  border: '1px solid black',
+  position: 'relative',
+};
 
-function Matchfield2(props){
+const Matchfield2= forwardRef(({PlayerList, PositionList}, ref) => {
     const classes = styles();
-    const ref = useLocalDrop(console.log);
+    
+      const [boxes, setBoxes] = useState([]);
+      const moveBox = useCallback((id, left, top) => {
+          setBoxes(update(boxes, {
+              [id]: {
+                  $merge: { left, top },
+              },
+          }));
+      }, [boxes, setBoxes]);
+      const [, drop] = useDrop(() => ({
+          accept: ItemTypes.BOX,
+          drop(item, monitor) {
+              const delta = monitor.getDifferenceFromInitialOffset();
+              const left = Math.round(item.left + delta.x);
+              const top = Math.round(item.top + delta.y);
+              moveBox(item.id, left, top);
+              console.log(item.id, left, top)
+              return undefined;
+          },
+      }), [moveBox]);
+  
+    useImperativeHandle(ref, () => ({
+
+      addPlayer(playerID) {
+        if (PlayerList[playerID].top === null){
+          PlayerList[playerID].left = Math.floor(Math.random() * 200);
+          PlayerList[playerID].top = Math.floor(Math.random() * 200);
+        }
+        setBoxes([...boxes, PlayerList[playerID]])
+      }
+  
+    }));
+    console.log(boxes)
     return (
-        <div>
-            <img src={field} ref={ref} alt="Field" className={classes.field}/>
+      <div>
+        <div ref={drop} className={classes.box}>
+          <img src={field} alt="Field" className={classes.field}/>
+          {Object.keys(boxes).map((key) => {
+            const { left, top, title } = boxes[key];
+            return (<Player key={key} id={key} left={left} top={top}>
+              
+              </Player>);
+            })}
         </div>
-    )
-}
+        <p>
+		</p>
+      </div>
+      );
+})
 
 
 /** Component specific styles */
@@ -47,9 +77,18 @@ const styles = makeStyles({
         flexGrow: 1,
         //margin: theme.spacing(2)
     },
+    box: {
+      height: '90%',
+      width: '90%',
+      position: 'relative',
+      //border: '1px solid black',
+      
+  },
     field: {
-        height: '90%',
-        width: '90%',
+        height: '100%',
+        width: '100%',
+        position: 'relative',
+        border: '1px solid black',
         
     }
 });

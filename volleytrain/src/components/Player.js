@@ -3,16 +3,34 @@ import PropTypes from 'prop-types';
 import {Grid, makeStyles} from '@material-ui/core';
 import { deepOrange, deepPurple } from '@material-ui/core/colors';
 import Avatar from '@material-ui/core/Avatar';
-import { DndProvider } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
+import { useDrag } from 'react-dnd';
+import { ItemTypes } from './ItemTypes';
 
-function Player2(props){
+
+const DragStyle = {
+    position: 'absolute',
+    cursor: 'move',
+};
+
+function Player({ id, left, top, hideSourceOnDrag, children,}){
   const classes = styles();
+
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: ItemTypes.BOX,
+    item: { id, left, top },
+    collect: (monitor) => ({
+        isDragging: monitor.isDragging(),
+    }),
+    }), [id, left, top]);
+    if (isDragging && hideSourceOnDrag) {
+        return <div ref={drag}/>;
+    }
+    console.log(children)
   return(
-    <div className={classes.root}>
+    <div ref={drag} style={{...DragStyle, left, top }} role="Box" className={classes.root}>
       <Grid>
         <Grid item xs>
-          <Avatar className={classes.orange}>{props.player.surname[0] + props.player.name[0]}</Avatar>
+          <Avatar className={classes.orange}>{children}</Avatar>
         </Grid>
       </Grid>
     </div>
@@ -38,11 +56,11 @@ const styles = makeStyles({
 });
 
 /** PropTypes */
-Player2.propTypes = {
+Player.propTypes = {
     /** @ignore */
     classes: PropTypes.object.isRequired,
     expandedState: PropTypes.bool.isRequired,
     onExpandedStateChange: PropTypes.func.isRequired,
 }
 
-export default Player2;
+export default Player;

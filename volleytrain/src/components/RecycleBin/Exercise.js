@@ -1,25 +1,24 @@
-import React, {Component} from 'react';
+import React, {Component, forwardRef, useRef, useImperativeHandle} from 'react';
 import PropTypes from 'prop-types';
 import {
+    Button,
     Typography,
     withStyles,
 } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
-import Matchfield from './Matchfield';
 import Rating from '@material-ui/lab/Rating';
 import Player2 from './Player2';
-import Draggable from 'react-draggable';
 import VolleytrainAPI from '../api/VolleytrainAPI';
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { DndProvider } from 'react-dnd';
-import Thing from './Thing';
-import LocalBox from './LocalBox';
-import GlobalBox from './GlobalBox';
 import Matchfield2 from './Matchfield2';
+
+
 
 class Exercise extends Component {
     constructor(props){
         super(props);
+        this.child = React.createRef();
         this.state = {
             players: [],
             error: null,
@@ -50,10 +49,15 @@ class Exercise extends Component {
         console.log("Loading component")
         this.getPlayer()
     }
+
+    onClick = () => {
+        this.child.current.doSomething();
+    };
     
     render() {
         const {classes} = this.props;
         const {players} = this.state;
+
         return (
             <DndProvider backend={HTML5Backend}>
         <div className={classes.root}>
@@ -69,9 +73,10 @@ class Exercise extends Component {
                     justify="center"
                     alignItems="center"
                     style={{ borderRight: '0.2em solid black', padding: '0.5em'}}>
-                    <GlobalBox/>
-                    <Matchfield2/>
-                    
+                    <div>
+                        <Matchfield2 ref={this.child}/>
+                    </div>     
+                              
                 </Grid>
                 
                 <Grid item xs={2}
@@ -94,35 +99,20 @@ class Exercise extends Component {
                     direction="row"
                     justify=""
                     alignItems="center">
-                        <Thing/>
                 {players.length > 0 ?
                     <>
                     {players.map(player => 
-                    
-                    <Draggable
-                        handle=".test_player"
-                        //defaultPosition={{x: 633, y: -210}}
-                        position={null}
-                        grid={[5, 5]}
-                        scale={1}
-                        onStart={this.handleStart}
-                        onDrag={this.handleDrag}
-                        onStop={this.handleStop}>
                         <div className="test_player">
                             <Player2 key={player.getID()} player={player}/>
                         </div>
-                    </Draggable>
-                    
                     )}
                     </>
                     :
                     console.log("No info")
                 }
-            
-
-
                 </Grid>
                 <Typography variant="subtitle2">Linien:</Typography>
+                <Button onClick={this.onClick}>Click me</Button>
                 <Typography variant="subtitle2">Objekte:</Typography>
                 </Grid>
             </Grid>

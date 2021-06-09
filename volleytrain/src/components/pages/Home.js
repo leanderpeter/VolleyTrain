@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {
     withStyles,
 } from '@material-ui/core';
-import Exercise from '../Exercise';
+import Exercises from '../Exercises';
 
 class Home extends Component {
 
@@ -13,8 +13,7 @@ class Home extends Component {
         const { classes } = this.props;
 
         return <div className={classes.root}>
-            
-            <Exercise/>
+            <Exercises/>
         </div>
     }
 }
