@@ -23,7 +23,7 @@ class PlayerMapper(Mapper):
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        for (id,surname, name, teamId, role, t_number) in tuples:
+        for (id, surname, name, teamId, role, t_number) in tuples:
             player = Player()
             player.setId(id)
             player.setName(name)

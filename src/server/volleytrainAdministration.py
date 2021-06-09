@@ -1,8 +1,8 @@
 
-from .bo.userBO import User
-from .db.userMapper import UserMapper
-from .bo.playerBO import Player
-from .db.playerMapper import PlayerMapper
+from server.bo.userBO import User
+from server.db.userMapper import UserMapper
+from server.bo.playerBO import Player
+from server.db.playerMapper import PlayerMapper
 
 
 
@@ -60,3 +60,7 @@ class volleytrainAdministration(object):
     def savePlayer(self, player):
         with PlayerMapper() as mapper:
             mapper.update(player)
+
+    def deletePlayer(self, player):
+        with PlayerMapper() as mapper:
+            mapper.delete(player)
