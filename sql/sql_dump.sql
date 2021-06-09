@@ -18,7 +18,11 @@
 --
 -- Table structure for table `equipment`
 --
+USE volleytrain;
 
+DROP TABLE IF EXISTS `users`;
+
+LOCK TABLES `equipment` WRITE;
 DROP TABLE IF EXISTS `equipment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
@@ -266,7 +270,7 @@ CREATE TABLE `team` (
 
 LOCK TABLES `team` WRITE;
 /*!40000 ALTER TABLE `team` DISABLE KEYS */;
-INSERT INTO `team` VALUES (1,'Team1'),(2,'Team2'),(3,'Team3');
+INSERT INTO `team` VALUES (1,'Team1',1,1,1,1),(2,'Team2',1,1,1,1),(3,'Team3',1,1,1,1);
 /*!40000 ALTER TABLE `team` ENABLE KEYS */;
 UNLOCK TABLES;
 
