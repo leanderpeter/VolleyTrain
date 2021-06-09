@@ -4,17 +4,25 @@ import {
     withStyles,
 } from '@material-ui/core';
 import Exercises from '../Exercises';
+import TeamOverview from './TeamOverview';
+
 
 class Home extends Component {
 
 
     
     render() {
-        const { classes } = this.props;
+        const {classes} = this.props;
 
-        return <div className={classes.root}>
-            <Exercises/>
-        </div>
+        return (
+            <div>
+                
+                
+                    <Typography style={{marginTop: "2em"}} classlname={classes.root} align='center'>Letadfadgfs code the hell out of this Bitch!</Typography>
+                    <TeamOverview />
+                
+            </div>
+        )
     }
 }
 
