@@ -1,5 +1,6 @@
 
 import UserBO from './UserBO';
+import TrainingBO from './TrainingBO';
 import TeamBO from './TeamBO';
 import TrainingdayBO from './TrainingdayBO';
 import ExerciseBO from './ExerciseBO';
@@ -34,7 +35,9 @@ export default class VolleytrainAPI {
 	#addExerciseURL = () => `${this.#VolleyTrainServerBaseURL}/exercise`;
 	#getExercisesURL = () => `${this.#VolleyTrainServerBaseURL}/exercise`;
 	#updateExerciseURL = () => `${this.#VolleyTrainServerBaseURL}/exercise`;
-
+	//Training
+	#getAllTrainings = () => `${this.#VolleyTrainServerBaseURL}/trainings`;
+	
 	/*
 	Singleton/Einzelstuck instanz erhalten
 	*/
@@ -75,6 +78,17 @@ export default class VolleytrainAPI {
 		})
 	}
 
+	//Training
+	getAllTrainings() {
+		return this.#fetchAdvanced(this.#getAllTrainings())
+		.then((responseJSON) => {
+			let trainingBO = TrainingBO.fromJSON(responseJSON);
+			return new Promise(function(resolve) {
+				resolve(trainingBO)
+			})
+		})
+	}
+
 	//gibt die Person mit der bestimmten GoogleUserID als BO zurück
 	getAllTeams(){
 		return this.#fetchAdvanced(this.#getAllTeamsURL()).then((responseJSON) => {
@@ -85,6 +99,7 @@ export default class VolleytrainAPI {
 			})
 		})
 	}
+	
 	//gibt die Exercise mit der bestimmten ID als BO zurück
 	getExerciseByID(id){
 		return this.#fetchAdvanced(this.#getExerciseByIDURL(id)).then((responseJSON) => {

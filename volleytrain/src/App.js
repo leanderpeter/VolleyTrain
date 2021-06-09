@@ -13,6 +13,7 @@ import VolleytrainAPI from './api/VolleytrainAPI';
 import firebaseConfig from './firebaseconfig';
 import Home from './components/pages/Home';
 import Header from './components/layout/Header';
+import TrainingSchedule from './components/TrainingSchedule';
 import Team from './components/pages/Team';
 import TeamOverview from './components/pages/TeamOverview'
 import TeamBO from './api/TeamBO';
@@ -152,20 +153,21 @@ class App extends React.Component {
               <>
               <Header user={currentUser}/>
               <Redirect from='/' to='home' />
-                  <Route path='/home' component={Home}>
-                    <Home/>
-                  </Route>
-                  <Route path='/teamoverview' render={props => (
-							<TeamOverview {...props}/>
-						)}
-						/>
-                  <Route path='/team' render={props => (
-							<Team {...props}/>
-						)}
-						/>
-                  <Route path='/exerciseForm' component ={ExerciseForm}>
-                    <ExerciseForm/>
-                  </Route>
+                <Route path='/home' component={Home}>
+                  <Home/>
+                </Route>
+                <Route path='/training' component ={Home}>
+                  <TrainingSchedule/>
+                </Route>
+                <Route path='/teamoverview' render={props => (
+							    <TeamOverview {...props}/>
+                  )}/>
+                <Route path='/team' render={props => (
+                  <Team {...props}/>
+                  )}/>
+                <Route path='/exerciseForm' component ={ExerciseForm}>
+                  <ExerciseForm/>
+                </Route>
 
               </>
               :

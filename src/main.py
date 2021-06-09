@@ -12,6 +12,7 @@ from server.volleytrainAdministration import volleytrainAdministration
 from server.bo.teamBO import Team
 from server.bo.trainingdayBO import Trainingday
 from server.bo.userBO import User
+from server.bo.TrainingBO import Training
 from server.bo.ExerciseBO import Exercise
 
 #SecurityDecorator
@@ -38,6 +39,7 @@ volleyTrain = api.namespace('volleyTrain', description='Functions of volleyTrain
 werden sollen"""
 bo = api.model('BusinessObject', {
     'id': fields.Integer(attribute='_id', description='ID des BOs'),
+    'creation_date': fields.DateTime(attribute='_creation_date', description='Erstellungszeitpunkt')
 })
 
 nbo = api.inherit('NamedBusinessObject', bo, {
@@ -50,6 +52,12 @@ user = api.inherit('user', nbo, {
     'googleUserId': fields.String(attribute='_googleUserId', description='Google user ID der Person'),
 })
 
+training = api.inherit('training', nbo, {
+    'goal': fields.String(attribute='_goal', description='Ziel des Trainings'),
+    'teamId': fields.Integer(attribute='_team_id', description='ID des beteiligten Team'),
+    'userId': fields.Integer(attribute='_user_id', description='ID des User/Trainer')
+})
+ 
 team = api.inherit('team', nbo, {
     'trainingsday': fields.Integer(attribute='_trainingsday', deschription='fk of trainingdays with timestamps for team'),
     'addDayOne': fields.Integer(attribute='_addDayOne', deschription='fk of trainingdays with timestamps for team'),
@@ -113,6 +121,15 @@ class UserByIDOperation(Resource):
         user = adm.getPersonByGoogleUserId(id)
         return user
 
+@volleyTrain.route('/trainings')
+@volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class TrainingListOperations(Resource):
+    @volleyTrain.marshal_list_with(training)
+    @secured
+    def get(self):
+        adm = volleytrainAdministration()
+        trainings = adm.getAllTrainings()
+        return trainings
 
 @volleyTrain.route('/team')
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')

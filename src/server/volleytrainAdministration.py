@@ -1,4 +1,7 @@
 
+from server.bo.TrainingBO import Training
+
+from server.db.TrainingMapper import TrainingMapper
 from server.bo.teamBO import Team
 from server.bo.trainingdayBO import Trainingday
 
@@ -12,9 +15,12 @@ from server.db.PlayerMapper import PlayerMapper
 
 
 class volleytrainAdministration(object):
+
     def __init__(self):
         pass
     
+    """ User / Trainer """
+
     def createUser(self, surname, name, email, googleId):
         """ Create a person object and inject it into the database
         """
@@ -38,6 +44,22 @@ class volleytrainAdministration(object):
     def saveUser(self, user):
         with UserMapper() as mapper:
             return mapper.update(user)
+    
+    """ Training """
+
+    def createTraining(self, name, team_id, user_id):
+        training = Training()
+        training.setName(name)
+        training.setTeamId(team_id)
+        training.setUserId(user_id)
+
+    def getAllTrainings(self):
+        with TrainingMapper() as mapper:
+            return mapper.find_all()
+
+    def getTrainingById(self, id):
+        with TrainingMapper() as mapper:
+            return mapper.find_by_id(id)
 
 
     def createTeam(self, name, trainingsday, addDayOne, addDayTwo, addDayThree):
