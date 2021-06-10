@@ -21,3 +21,8 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# firebase
+serviceAccount.*
+cypress.env.json
+firebaseconfig.json
