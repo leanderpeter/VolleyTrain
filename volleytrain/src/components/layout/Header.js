@@ -15,6 +15,8 @@ import MailIcon from '@material-ui/icons/Mail';
 import ProfileDropDown from '../dialogs/ProfileDropDown'
 import Box from '@material-ui/core/Box';
 import SettingsIcon from '@material-ui/icons/Settings';
+import { Button } from '@material-ui/core';
+import firebase from 'firebase'
 
 const drawerWidth = 240;
 
@@ -88,6 +90,10 @@ export default function Header(props) {
                 <ListItemIcon><SettingsIcon /></ListItemIcon>
                 </ListItem>
 
+                <ListItem>
+                  <Button onClick={()=>firebase.auth().signOut()}>Logout</Button>
+                </ListItem>
+                
             </Box>
             
             
