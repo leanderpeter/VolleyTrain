@@ -29,7 +29,8 @@ class Team extends Component {
 
         this.state = {
             team: this.props.location.state.team,
-            open: false
+            open: false,
+            trainingdays: []
         }
     }
 
@@ -43,16 +44,27 @@ class Team extends Component {
         VolleytrainAPI.getAPI().deleteTeam(this.state.team.getID());
     }
 
-    
+    getTrainingdays = () => {
+        VolleytrainAPI.getAPI().getTrainingdaysByTeamID(this.state.team.getID())
+        .then(trainingdayBOs => {
+            this.setState({
+                trainingdays: trainingdayBOs
+            })
+        })
+    }
+
+    componentDidMount() {
+        this.getTrainingdays();
+    }
     
     render() {
         const {classes} = this.props;
-        const {team, open} = this.state
+        const {team, open, trainingdays} = this.state
 
         return (
             <div className={classes.root}>
                 <Grid spacing={3} container direction="row" justify="center" className={classes.border}>
-                    
+                    {console.log(trainingdays)}
                         <Grid item xs={7}>
                             <Typography variant="h5">{team.getName()}</Typography>
                         </Grid>
@@ -60,6 +72,9 @@ class Team extends Component {
                         <Grid item xs={4} />
                         <Grid item xs={4}>
                             <Typography variant="h6">Trainingszeiten</Typography>
+                            {trainingdays.map((day) => (
+                                <Typography key={day.getID()}>{day.getWeekday()} {day.getStarttime()} - {day.getEndtime()} Uhr</Typography>
+                            ))}
                             <Typography>Mittwoch 10.00 - 13.00 Uhr</Typography>
                             <Typography>Dienstag 10.00 - 13.00 Uhr</Typography>
                         </Grid>
