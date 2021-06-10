@@ -49,7 +49,7 @@ class ExerciseMapper(Mapper):
         """
         result = None
         cursor = self._connection.cursor()
-        command = "SELECT PK_exercise, name, tag, duration FROM exercise WHERE PK_exercise={}".format(id)
+        command = "SELECT PK_exercise, name, tag, duration FROM exercise WHERE PK_exercise='{}'".format(id)
         cursor.execute(command)
         tuples = cursor.fetchall()
         try:
