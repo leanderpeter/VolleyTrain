@@ -1,19 +1,10 @@
 import React, {Component} from 'react';
-import Box from '@material-ui/core/Box';
 import PropTypes from 'prop-types';
 import {
-    Card,
     Button,
     Grid,
     Typography,
     withStyles,
-    Paper,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-    TextField,
-    Container
 } from '@material-ui/core';
 
 /**
@@ -63,8 +54,6 @@ class SignIn extends Component {
 
     // rendert die  Komponente SignIn Seite
     render() {
-        const {
-        } = this.state;
         const {classes} = this.props;
 
         return <div>

@@ -1,5 +1,5 @@
-from src.server.db.mapper import Mapper
-from src.server.bo.ExerciseBO import Exercise
+from server.db.mapper import Mapper
+from server.bo.ExerciseBO import Exercise
 
 
 class ExerciseMapper(Mapper):
@@ -18,17 +18,20 @@ class ExerciseMapper(Mapper):
 
         cursor = self._connection.cursor()
 
-        command = "SELECT PK_Exercise, name, tag, duration FROM exercise"
+        command = "SELECT PK_Exercise, name, Training_PK_Training, duration, notes, description, goal FROM exercise"
 
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        for (id, name, tag, duration) in tuples:
+        for (id, name, training, duration, notes, description, goal) in tuples:
             exercise = Exercise()
             exercise.setId(id)
             exercise.setName(name)
-            exercise.setTag(tag)
+            exercise.setTraining(training)
             exercise.setDuration(duration)
+            exercise.setNotes(notes)
+            exercise.setDescription(description)
+            exercise.setGoal(goal)
 
             result.append(exercise)
 
@@ -49,16 +52,20 @@ class ExerciseMapper(Mapper):
         """
         result = None
         cursor = self._connection.cursor()
-        command = "SELECT PK_exercise, name, tag, duration FROM exercise WHERE PK_exercise='{}'".format(id)
+        command = "SELECT PK_Exercise, name, Training_PK_Training, duration, notes, description, goal FROM exercise WHERE PK_Exercise={}".format(id)
         cursor.execute(command)
         tuples = cursor.fetchall()
         try:
-            (id, name, tag, duration) = tuples[0]
+            (id, name, training, duration, notes, description, goal) = tuples[0]
             exercise = Exercise()
             exercise.setId(id)
             exercise.setName(name)
-            exercise.setTag(tag)
+            exercise.setTraining(training)
             exercise.setDuration(duration)
+            exercise.setNotes(notes)
+            exercise.setDescription(description)
+            exercise.setGoal(goal)
+
             result = exercise
 
         except IndexError:
@@ -92,8 +99,8 @@ class ExerciseMapper(Mapper):
                 davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
                 exercise.setId(1)
 
-        command = "INSERT INTO exercise (PK_exercise, name, tag, duration) VALUES (%s,%s,%s,%s,%s)"
-        data = (exercise.getId(),  exercise.getName(), exercise.getTag(), exercise.getDuration())
+        command = "INSERT INTO exercise (PK_Exercise, name, Training_PK_Training, duration, notes, description, goal) VALUES (%s,%s,%s,%s,%s,%s,%s)"
+        data = (exercise.getId(),  exercise.getName(), exercise.getTraining(), exercise.getDuration(), exercise.getNotes(), exercise.getDescription(), exercise.getGoal())
         cursor.execute(command, data)
 
         self._connection.commit()
@@ -109,27 +116,29 @@ class ExerciseMapper(Mapper):
         """
         cursor = self._connection.cursor()
 
-        command = "UPDATE exercise " + "name=%s, tag=%s WHERE id=%s"
-        data = (exercise.getName(), exercise.getTag, exercise.getDuration, exercise.getId())
+        command = "UPDATE exercise set " + "name=%s, duration=%s, notes=%s, description=%s, goal=%s WHERE PK_Exercise=%s"
+        data = (exercise.getName(), exercise.getDuration(), exercise.getNotes(), exercise.getDescription(), exercise.getGoal(), exercise.getId())
 
         cursor.execute(command, data)
 
         self._connection.commit()
         cursor.close()
 
-    def delete(self, exercise):
+        return exercise
+
+    def delete(self, exerciseId):
         """Löschen der Daten einer exercise aus der Datenbank
 
         :param exercise -> exercise-Objekt
         """
         cursor = self._connection.cursor()
 
-        command = "DELETE FROM exercise WHERE PK_exercise={}".format(exercise.getId())
+        command = "DELETE FROM exercise WHERE PK_exercise={}".format(exerciseId)
         cursor.execute(command)
 
         self._connection.commit()
         cursor.close()
-        return exercise
+        return exerciseId
 
 '''Only for testing purpose'''
 
