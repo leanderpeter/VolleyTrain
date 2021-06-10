@@ -63,16 +63,14 @@ training = api.inherit('training', nbo, {
 })
  
 team = api.inherit('team', nbo, {
-    'trainingsday': fields.Integer(attribute='_trainingsday', deschription='fk of trainingdays with timestamps for team'),
-    'addDayOne': fields.Integer(attribute='_addDayOne', deschription='fk of trainingdays with timestamps for team'),
-    'addDayTwo': fields.Integer(attribute='_addDayTwo', deschription='fk of trainingdays with timestamps for team'),
-    'addDayThree': fields.Integer(attribute='_addDayThree', deschription='fk of trainingdays with timestamps for team'),
+    'trainer': fields.Integer(attribute='_trainer', deschription='id of user as trainer'),
 })
 
 trainingday = api.inherit('trainingday', bo, {
     'weekday': fields.String(attribute='_weekday', description='weekday of training'),
     'starttime': fields.String(attribute='_starttime', description='starttime of training'),
     'endtime': fields.String(attribute='_endtime', description='endtime of training'),
+    'team': fields.Integer(attribute='_team', description='team of trainingday')
 })
 exercise = api.inherit('exercise', nbo, {
     'notes': fields.String(attribute='_notes', description='notes of exercise'),
@@ -217,6 +215,8 @@ class TrainingOperations(Resource):
             return 'Successfully deleted', 200
         else:
             return 'Deleting failed', 500
+
+
 @volleyTrain.route('/team')
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class TeamOperations(Resource):
@@ -235,7 +235,7 @@ class TeamOperations(Resource):
         proposal = Team.from_dict(api.payload)
 
         if proposal is not None:
-            p = adm.createTeam(proposal.getName(), proposal.getTrainingsday(), proposal.getAddDayOne(), proposal.getAddDayTwo(), proposal.getAddDayThree())
+            p = adm.createTeam(proposal.getName(), proposal.getTrainer())
             return p, 200
         else:
             return '', 500
@@ -256,6 +256,17 @@ class TeamByIDOperation(Resource):
         team = adm.getTeamById(id)
         return team
 
+@volleyTrain.route('/team/<string:name>')
+@volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class TeamByIDOperation(Resource):
+    @secured
+    @volleyTrain.marshal_list_with(team)
+    def get(self, name):
+        adm = volleytrainAdministration()
+        team = adm.getTeamByName(name)
+        return team
+
+
 
 @volleyTrain.route('/trainingday')
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -275,20 +286,21 @@ class TrainingdayOperations(Resource):
         proposal = Trainingday.from_dict(api.payload)
 
         if proposal is not None:
-            p = adm.createTrainingday(proposal.getWeekday(), proposal.getStarttime(), proposal.getEndtime())
+            p = adm.createTrainingday(proposal.getWeekday(), proposal.getStarttime(), proposal.getEndtime(), proposal.getTeam())
             return p, 200
         else:
             return '', 500
 
-    @volleyTrain.route('/trainingday/<int:id>')
-    @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-    class TrainingdayByIDOperation(Resource):
-        @secured
-        @volleyTrain.marshal_list_with(trainingday)
-        def get(self, id):
-            adm = volleytrainAdministration()
-            trainingday = adm.getTrainingdayById(id)
-            return trainingday
+@volleyTrain.route('/trainingday/<int:id>')
+@volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class TrainingdayByTeamIDOperation(Resource):
+    @secured
+    @volleyTrain.marshal_list_with(trainingday)
+    def get(self, id):
+        adm = volleytrainAdministration()
+        trainingday = adm.getTrainingdaysByTeamId(id)
+        return trainingday
+
 
 @volleyTrain.route('/exercise/<int:id>')
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')

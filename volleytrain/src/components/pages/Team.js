@@ -17,6 +17,9 @@ import {
     Container, Divider
 } from '@material-ui/core';
 import TeamOverview from './TeamOverview';
+import CreateTeam from '../dialogs/CreateTeam';
+import VolleytrainAPI from '../../api/VolleytrainAPI';
+import TrainingSchedule from '../TrainingSchedule';
 
 
 class Team extends Component {
@@ -25,42 +28,56 @@ class Team extends Component {
         super(props)
 
         this.state = {
-            team: this.props.location.state.team
+            team: this.props.location.state.team,
+            open: false
         }
     }
 
+    handleClick = () => {
+        this.setState({
+            open: true
+        })
+    }
+
+    deleteTeam = () => {
+        VolleytrainAPI.getAPI().deleteTeam(this.state.team.getID());
+    }
+
+    
     
     render() {
         const {classes} = this.props;
-        const {team} = this.state
+        const {team, open} = this.state
 
         return (
-            <div>
+            <div className={classes.root}>
                 <Grid spacing={3} container direction="row" justify="center" className={classes.border}>
                     
                         <Grid item xs={7}>
-                            <Typography>{team.getName()}</Typography>
+                            <Typography variant="h5">{team.getName()}</Typography>
                         </Grid>
                         <Divider orientation="vertical" flexItem />
                         <Grid item xs={4} />
                         <Grid item xs={4}>
-                            <Typography>Traingszeiten</Typography>
+                            <Typography variant="h6">Trainingszeiten</Typography>
                             <Typography>Mittwoch 10.00 - 13.00 Uhr</Typography>
                             <Typography>Dienstag 10.00 - 13.00 Uhr</Typography>
                         </Grid>
                         <Grid item xs={3}>
-                            <Typography>Traingsdauer</Typography>
+                            <Typography variant="h6">Trainingsdauer</Typography>
                             <Typography>3 Stunde(n)</Typography>
                             <Typography>3 Stunde(n)</Typography>
                         </Grid>
                         <Divider orientation="vertical" flexItem />
                         <Grid item xs={1} />
                         <Grid item xs={3}>
-                            <Typography>Verwalten</Typography>
-                            <Typography>... aktuelles Team bearbeiten</Typography>
-                            <Typography>... aktuelles Team löschen</Typography>
+                            <Typography variant="h6">Verwalten</Typography>
+                            <Typography onClick={this.handleClick}>... aktuelles Team bearbeiten</Typography>
+                            <Typography onClick={this.deleteTeam}>... aktuelles Team löschen</Typography>
                         </Grid>
                 </Grid>
+                <TrainingSchedule />
+                <CreateTeam dialogOpen={open} team={team} />
             </div>
         )
     }
@@ -70,17 +87,13 @@ class Team extends Component {
 /** Component specific styles */
 const styles = theme => ({
     root: {
-        margin: theme.spacing(2),
-        width: '80%',
-        marginLeft: '20%',
+        marginLeft: 240,
     },
     link: {
         textDecoration: 'None',
     },
     border: {
         margin: theme.spacing(2),
-        width: '80%',
-        marginLeft: '20%',
         border: '2px solid #BFCE0D',
         boxSizing: 'border-box',
         alignItems: 'center',
@@ -88,10 +101,10 @@ const styles = theme => ({
         boxShadow: '0px 4px 10px rgba(84, 78, 78, 0.2)',
         borderRadius: '9px',
         background: '#fcfcfc',
-        width: "80%",
         
     },
     papes: {
+        margin: theme.spacing(2),
         background: 'linear-gradient(80.45deg, #071168 -35.38%, #1F9F80 -9.15%, #BFCE0D 114.78%)',
         borderRadius: '9px',
         fontWeight: 'bold',

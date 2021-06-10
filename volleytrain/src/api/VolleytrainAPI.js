@@ -36,14 +36,20 @@ export default class VolleytrainAPI {
 
 	//getPerson: google_user_id
 	#getUserByGoogleIDURL = (google_user_id) => `${this.#VolleyTrainServerBaseURL}/userbygoogle/${google_user_id}`;
+	
+	//Team
 	#getAllTeamsURL = () => `${this.#VolleyTrainServerBaseURL}/team`;
 	#addTeamURL = () => `${this.#VolleyTrainServerBaseURL}/team`;
 	#getTeamByIdURL = (id) => `${this.#VolleyTrainServerBaseURL}/team/${id}`;
+	#getTeamByNameURL = (name) => `${this.#VolleyTrainServerBaseURL}/team/${name}`
 	#deleteTeamURL = (id) => `${this.#VolleyTrainServerBaseURL}/team/${id}`;
 	#updateTeamURL= () => `${this.#VolleyTrainServerBaseURL}/team`;
-	#getAllTrainingdaysURL = () => `${this.#VolleyTrainServerBaseURL}/traingday`;
-	#getTrainingdayByIdURL = (id) => `${this.#VolleyTrainServerBaseURL}/trainingday/${id}`;
+
+	//Trainingday
+	#getAllTrainingdaysURL = () => `${this.#VolleyTrainServerBaseURL}/trainingday`;
+	#getTrainingdaysByTeamIdURL = (id) => `${this.#VolleyTrainServerBaseURL}/trainingday/${id}`;
 	#addTrainingdayURL = () => `${this.#VolleyTrainServerBaseURL}/trainingday`;
+
 	//getExercise: id
 	#getExerciseByIDURL = (id) => `${this.#VolleyTrainServerBaseURL}/exercise/${id}`;
 	#deleteExerciseURL = (id) => `${this.#VolleyTrainServerBaseURL}/exercise/${id}`;
@@ -152,6 +158,16 @@ export default class VolleytrainAPI {
 		})
 	}
 
+	getTeamByName(name){
+		return this.#fetchAdvanced(this.#getTeamByNameURL(name)).then((responseJSON) => {
+			let teamBO = TeamBO.fromJSON(responseJSON);
+			console.info(teamBO)
+			return new Promise(function (resolve){
+				resolve(teamBO)
+			})
+		})
+	}
+
 	addTeam(teamBO) {
 		return this.#fetchAdvanced(this.#addTeamURL(), {
 			method: 'POST',
@@ -247,11 +263,11 @@ export default class VolleytrainAPI {
 		})
 	}
 
-	getTrainingdayByID(id){
-		return this.#fetchAdvanced(this.#getTrainingdayByIdURL(id)).then((responseJSON) => {
-			let trainingdayBO = TrainingdayBO.fromJSON(responseJSON);
+	getTrainingdaysByTeamID(id){
+		return this.#fetchAdvanced(this.#getTrainingdaysByTeamIdURL(id)).then((responseJSON) => {
+			let trainingdayBOs = TrainingdayBO.fromJSON(responseJSON);
 			return new Promise(function (resolve){
-				resolve(trainingdayBO)
+				resolve(trainingdayBOs)
 			})
 		})
 	}

@@ -1,4 +1,4 @@
-import { withStyles, Card, Paper, CardContent, Button, Typography, Grid } from '@material-ui/core';
+import { withStyles, Card, Paper, CardContent, Button, Typography, Grid, FormHelperText } from '@material-ui/core';
 import React from 'react';
 import VolleytrainAPI from '../../api/VolleytrainAPI';
 import CreateTeam from '../dialogs/CreateTeam';
@@ -12,6 +12,7 @@ import {
     useParams
   } from "react-router-dom";
   import Team from './Team';
+  import AddIcon from '@material-ui/icons/Add';
 
 class TeamOverview extends React.Component {
 
@@ -58,8 +59,6 @@ class TeamOverview extends React.Component {
         this.getTeams();
     } 
 
-
-
     render() {
         const {classes} = this.props;
         const {dialogOpen, teams} = this.state;
@@ -74,7 +73,7 @@ class TeamOverview extends React.Component {
                         <Grid key={teamBO.getID()} item>
                             <Link to={{pathname: "/team", state: {team: teamBO}}} className={classes.link} team={teamBO}>
                                 <Paper className={classes.papes}>
-                                    <Typography>{teamBO.getName()}</Typography>
+                                    <Typography><b>{teamBO.getName()}</b></Typography>
                                 </Paper>
                             </Link>
                         </Grid>
@@ -82,7 +81,7 @@ class TeamOverview extends React.Component {
                     
                     <Grid item>
                         <Paper className={classes.border} variant="outlined" onClick={this.handleClickOpen} color="secondary">
-                                <Button>Team erstellen</Button>
+                                <Typography color="primary"><b>Team hinzufügen <AddIcon /></b></Typography>
                         </Paper>
                     </Grid>
                 </Grid>
@@ -106,10 +105,12 @@ const styles = theme => ({
         border: '2px solid #BFCE0D',
         boxSizing: 'border-box',
         alignItems: 'center',
-        textAlign: 'center',
+        display: 'flex',
         boxShadow: '0px 4px 10px rgba(84, 78, 78, 0.2)',
         borderRadius: '9px',
         background: '#fcfcfc',
+        color: '#fcfcfc',
+        paddingLeft: theme.spacing(2),
         width: theme.spacing(26),
         height: theme.spacing(18),
         
@@ -117,11 +118,10 @@ const styles = theme => ({
     papes: {
         background: 'linear-gradient(80.45deg, #071168 -35.38%, #1F9F80 -9.15%, #BFCE0D 114.78%)',
         borderRadius: '9px',
-        fontWeight: 'bold',
-        fontVariant: 'normal',
+        display: 'flex',
         color: '#ffffff',
+        paddingLeft: theme.spacing(2),
         alignItems: 'center',
-        textAlign: 'center',
         width: theme.spacing(26),
         height: theme.spacing(18),
     },

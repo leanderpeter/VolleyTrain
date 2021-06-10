@@ -71,15 +71,12 @@ class volleytrainAdministration(object):
             return mapper.delete(training)
 
 
-    def createTeam(self, name, trainingsday, addDayOne, addDayTwo, addDayThree):
+    def createTeam(self, name, trainer):
         
         team = Team()
         team.setName(name)
-        team.setTrainingsday(trainingsday)
-        team.setAddDayOne(addDayOne)
-        team.setAddDayTwo(addDayTwo)
-        team.setAddDayThree(addDayThree)
-        
+        team.setTrainer(trainer)
+
         with TeamMapper() as mapper:
             return mapper.insert(team)
 
@@ -91,6 +88,10 @@ class volleytrainAdministration(object):
         with TeamMapper() as mapper:
             return mapper.find_by_id(id)
 
+    def getTeamByName(self, name):
+        with TeamMapper() as mapper:
+            return mapper.find_by_name(name)
+
     def deleteTeam(self, team):
         with TeamMapper() as mapper:
             return mapper.delete(team)
@@ -100,12 +101,13 @@ class volleytrainAdministration(object):
             return mapper.update(team)
 
 
-    def createTrainingday(self, weekday, starttime, endtime):
+    def createTrainingday(self, weekday, starttime, endtime, team):
         
         trainingday = Trainingday()
         trainingday.setWeekday(weekday)
         trainingday.setStarttime(starttime)
         trainingday.setEndtime(endtime)
+        trainingday.setTeam(team)
         
         with TrainingdayMapper() as mapper:
             return mapper.insert(trainingday)
@@ -114,9 +116,11 @@ class volleytrainAdministration(object):
         with TrainingdayMapper() as mapper:
             return mapper.find_all()
 
-    def getTrainingdayById(self, id):
+    def getTrainingdaysByTeamId(self, id):
         with TrainingdayMapper() as mapper:
-            return mapper.find_by_id(id)
+            return mapper.find_by_team_id(id)
+
+
     def createExercise(self, exercise):
         """ Create a Exercise object and inject it into the database """
 

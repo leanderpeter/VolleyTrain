@@ -9,6 +9,7 @@ class Trainingday(BusinessObject):
         self._weekday = None
         self._starttime = datetime.time
         self._endtime = datetime.time
+        self._team = None
 
     def setWeekday(self, day):
         self._weekday = day
@@ -28,6 +29,12 @@ class Trainingday(BusinessObject):
     def getEndtime(self):
         return self._endtime
 
+    def setTeam(self, team):
+        self._team = team
+
+    def getTeam(self):
+        return self._team
+
     @staticmethod
     def from_dict(dictionary=dict()):
         ''' turn a python dict into a team object
@@ -38,6 +45,7 @@ class Trainingday(BusinessObject):
         obj.setWeekday(dictionary["weekday"])
         obj.setStarttime(dictionary["starttime"])
         obj.setEndtime(dictionary["endtime"])
+        obj.setTeam(dictionary["team"])
         return obj
 
 

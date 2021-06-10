@@ -23,12 +23,13 @@ class TrainingdayMapper(Mapper):
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        for (id, weekday, starttime, endtime) in tuples:
+        for (id, weekday, starttime, endtime, team) in tuples:
             trainingday = Trainingday()
             trainingday.setId(id)
             trainingday.setWeekday(weekday)
             trainingday.setStarttime(starttime)
             trainingday.setEndtime(endtime)
+            trainingday.setTeam(team)
 
             result.append(trainingday)
 
@@ -39,6 +40,37 @@ class TrainingdayMapper(Mapper):
 
     def find_by_name(self):
         pass
+
+    def find_by_team_id(self, id):
+        """find all trainingday obj
+
+        :return all trainingday objs
+        """
+        result = []
+
+        cursor = self._connection.cursor()
+
+        command = "SELECT * FROM trainingday WHERE team='{}'".format(id)
+
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        for (id, weekday, starttime, endtime, team) in tuples:
+            trainingday = Trainingday()
+            trainingday.setId(id)
+            trainingday.setWeekday(weekday)
+            trainingday.setStarttime(starttime)
+            trainingday.setEndtime(endtime)
+            trainingday.setTeam(team)
+
+            result.append(trainingday)
+
+        self._connection.commit()
+        cursor.close()
+
+        return result
+
+
 
     def find_by_id(self, id):
         """Suchen einer trainingday nach der übergebenen ID. 
@@ -93,8 +125,8 @@ class TrainingdayMapper(Mapper):
                 davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
                 trainingday.setId(1)
 
-        command = "INSERT INTO trainingday (PK_Trainingday, weekday, starttime, endtime) VALUES (%s,%s,%s,%s)"
-        data = (trainingday.getId(), trainingday.getWeekday(), trainingday.getStarttime(), trainingday.getEndtime())
+        command = "INSERT INTO trainingday (PK_Trainingday, weekday, starttime, endtime, team) VALUES (%s,%s,%s,%s,%s)"
+        data = (trainingday.getId(), trainingday.getWeekday(), trainingday.getStarttime(), trainingday.getEndtime(), trainingday.getTeam())
         cursor.execute(command, data)
 
         self._connection.commit()
