@@ -12,7 +12,9 @@ import VolleytrainAPI from '../api/VolleytrainAPI';
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { DndProvider } from 'react-dnd';
 import Matchfield2 from './Matchfield2';
-
+import arrow_n from './media/arrow_n.png'
+import arrow_l from './media/arrow_l.png'
+import arrow_r from './media/arrow_r.png'
 
 
 const Exercises = () => {
@@ -172,7 +174,30 @@ const Exercises = () => {
                 }
                 </Grid>
                 <Typography variant="subtitle2">Linien:</Typography>
-                <Button onClick={() => childRef.current.addPlayer(2)}>Click me</Button>
+                    <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="center">
+                        <img src={arrow_n} className={classes.arrow}/>
+                        <Typography variant="subtitle2">Ballweg</Typography>
+                    </Grid>
+                    <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="center">
+                        <img src={arrow_l} className={classes.arrow}/>
+                        <Typography variant="subtitle2">Laufweg</Typography>
+                    </Grid>
+                    <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="center">
+                        <img src={arrow_r} className={classes.arrow}/>
+                        <Typography variant="subtitle2">Rotation</Typography>
+                    </Grid>
                 <Typography variant="subtitle2">Objekte:</Typography>
                 </Grid>
             </Grid>
@@ -198,6 +223,12 @@ const styles = makeStyles({
         color: "black"
     },
     playerButton: {
+        marginBottom: 5,
+        marginTop: 5,
+        marginLeft: 5,
+        marginRight: 5,
+    },
+    arrow: {
         marginBottom: 5,
         marginTop: 5,
         marginLeft: 5,
