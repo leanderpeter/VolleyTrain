@@ -1,44 +1,72 @@
 import React from 'react';
-import { Grid, TextField, Typography, withStyles } from '@material-ui/core';
+import { TextField, Typography, withStyles, Button } from '@material-ui/core';
 import ExerciseBO from '../../api/ExerciseBO'
 import VolleytrainAPI from '../../api/VolleytrainAPI'
-
+import ContextErrorMessage from '../dialogs/ContextErrorMessage';
+import LoadingProgress from '../dialogs/LoadingProgress';
 
 class ExerciseForm extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
+            loadingInProgress: false,
+            error: null,
             name: "",
             nameEdited: false,
             nameValidationFailed: false,
             goal: "",
             goalEdited: false,
             goalValidationFailed: false,
+            duration: "",
+            durationEdited: false,
+            durationValidationFailed: false,
+            description: "",
+            descriptionEdited: false,
+            descriptionValidationFailed: false,
+            notes: "",
+            notesEdited: false,
+            notesValidationFailed: false,
         }
     }
 
-    addExercise(){
+    addExercise = () => {
         let exercise = new ExerciseBO()
-        exercise.setID(2)
         exercise.setTraining(1)
-        exercise.setDuration(10)
-        exercise.setName("nam")
-        exercise.setGoal("goal")
-        exercise.setDescription("desc")
-        exercise.setNotes("notes")
+        exercise.setDuration(this.state.duration !=='' ? this.state.duration : null)
+        exercise.setName(this.state.name)
+        exercise.setGoal(this.state.goal)
+        exercise.setDescription(this.state.description)
+        exercise.setNotes(this.state.notes)
 
-        //VolleytrainAPI.getAPI().addExercise(exercise)
-
-        //VolleytrainAPI.getAPI().getExerciseByID(1).then(res=>console.log(res))
-        //VolleytrainAPI.getAPI().getExercises().then(res=>console.log(res))
-        
-        //VolleytrainAPI.getAPI().updateExercise(exercise)
-        //VolleytrainAPI.getAPI().deleteExercise(2)
+        VolleytrainAPI.getAPI().addExercise(exercise).then(() =>
+            this.setState({
+                error: null,
+                loadingInProgress: false,
+                name: "",
+                duration: "",
+                goal: "",
+                description: "",
+                notes: ""
+            })
+            ).catch(e =>
+                this.setState({
+                    error: e,
+                    loadingInProgress: false,
+                    name: "",
+                    duration: "",
+                    goal: "",
+                    description: "",
+                    notes: ""
+                }));
+        this.setState({
+            error: null,
+            loadingInProgress: true
+        });
     }
 
     handleInputChange = (event) => {
-        this.addExercise()
+        
         const value = event.target.value;
     
         let error = false;
@@ -55,7 +83,19 @@ class ExerciseForm extends React.Component {
 
     render () {
         const { classes } = this.props;
-        const { name, goal } = this.state;
+        const { 
+            name, 
+            goal, 
+            duration, 
+            description, 
+            notes, 
+            error, 
+            loadingInProgress,
+            nameEdited, 
+            nameValidationFailed, 
+            descriptionEdited, 
+            descriptionValidationFailed, 
+        } = this.state;
 
         return ( 
             <div className={classes.root}>
@@ -67,8 +107,23 @@ class ExerciseForm extends React.Component {
                 <TextField 
                     id="name"
                     label="Übungsname"
-                    className={classes.inputName}
+                    className={classes.mediumInput}
                     value={name}
+                    onChange={this.handleInputChange}
+                    InputProps={{
+                        classes: {
+                        notchedOutline: classes.notchedOutline,
+                        },
+                    }}
+                    variant="outlined" 
+                    error={nameValidationFailed}
+                />
+
+                <TextField 
+                    id="goal"
+                    label="Übungsziel"
+                    className={classes.bigInput}
+                    value={goal}
                     onChange={this.handleInputChange}
                     InputProps={{
                         classes: {
@@ -79,10 +134,47 @@ class ExerciseForm extends React.Component {
                 />
 
                 <TextField 
-                    id="goal"
-                    label="Übungsziel"
-                    className={classes.inputGoal}
-                    value={goal}
+                    id="duration"
+                    label="Übungsdauer in Minuten"
+                    className={classes.smallInput}
+                    value={duration}
+                    onChange={this.handleInputChange}
+                    InputProps={{
+                        classes: {
+                        notchedOutline: classes.notchedOutline,
+                        },
+                    }}
+                    variant="outlined" 
+                    error={isNaN(duration)}
+                    helperText={isNaN(duration)?'Nur Zahlen sind erlaubt':''}
+                />
+
+                <TextField 
+                    id="description"
+                    label="Beschreibung"
+                    multiline
+                    rows={2}
+                    rowsMax={Infinity}
+                    className={classes.bigInput}
+                    value={description}
+                    onChange={this.handleInputChange}
+                    InputProps={{
+                        classes: {
+                        notchedOutline: classes.notchedOutline,
+                        },
+                    }}
+                    variant="outlined" 
+                    error={descriptionValidationFailed}
+                />
+
+                <TextField 
+                    id="notes"
+                    label="Notizen"
+                    multiline
+                    rows={2}
+                    rowsMax={Infinity}
+                    className={classes.bigInput}
+                    value={notes}
                     onChange={this.handleInputChange}
                     InputProps={{
                         classes: {
@@ -91,7 +183,20 @@ class ExerciseForm extends React.Component {
                     }}
                     variant="outlined" 
                 />
-            <hr/>
+                <hr/>
+
+                <Button
+                 className={classes.saveButton} 
+                 onClick={this.addExercise} 
+                 disabled={
+                    isNaN(duration) || !nameEdited || nameValidationFailed || 
+                    !descriptionEdited || descriptionValidationFailed
+                    }
+                 >
+                    Übung Erstellen
+                </Button>
+                <LoadingProgress show={loadingInProgress} />
+                <ContextErrorMessage error={error} contextErrorMsg = {'Die Übung konnten nicht gespeichert werden'} onReload={this.addExercise} /> 
             </div>
         )  
     }
@@ -112,13 +217,22 @@ const styles = theme => ({
     notchedOutline: {
         borderColor: '#3ECCA5 !important'
     },
-    inputName:{
+    mediumInput:{
         width: "40%",
         marginBottom: "30px"
     },
-    inputGoal:{
+    bigInput:{
         width: "90%",
         marginBottom: "30px"
+    },
+    smallInput:{
+        width: "30%",
+        marginBottom: "30px"
+    },
+    saveButton:{
+        background: "linear-gradient(80.45deg, #071168 -35.38%, #1F9F80 -9.15%, #BFCE0D 114.78%)",
+        borderRadius: "9px",
+        color: "white",
     }
 });
 
