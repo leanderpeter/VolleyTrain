@@ -196,7 +196,11 @@ class ExerciseForm extends React.Component {
                     Übung Erstellen
                 </Button>
                 <LoadingProgress show={loadingInProgress} />
-                <ContextErrorMessage error={error} contextErrorMsg = {'Die Übung konnten nicht gespeichert werden'} onReload={this.addExercise} /> 
+                <ContextErrorMessage 
+                    error={error} 
+                    contextErrorMsg = {'Die Übung konnten nicht gespeichert werden'} 
+                    onReload={this.addExercise} 
+                    /> 
             </div>
         )  
     }
