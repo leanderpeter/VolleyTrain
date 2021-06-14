@@ -106,6 +106,7 @@ class ExerciseForm extends React.Component {
 
                 <TextField 
                     id="name"
+                    required
                     label="Übungsname"
                     className={classes.mediumInput}
                     value={name}
@@ -151,6 +152,7 @@ class ExerciseForm extends React.Component {
 
                 <TextField 
                     id="description"
+                    required
                     label="Beschreibung"
                     multiline
                     rows={2}
