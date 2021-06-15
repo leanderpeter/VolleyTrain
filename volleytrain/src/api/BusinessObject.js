@@ -6,9 +6,9 @@ export default class BusinessObject {
 	/*
 	Null constructor
 	*/
-	constructor(anID, aCreationDate){
-		this.id = anID;
-		this.creation_date = aCreationDate;
+	constructor(){
+		this.id = null;
+		this.creation_date = null;
 	}
 
 	/*

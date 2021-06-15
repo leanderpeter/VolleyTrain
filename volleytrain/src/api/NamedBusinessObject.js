@@ -6,9 +6,9 @@ Basisklasse fuer alle BO's welche einen Namen besitzen
 
 export default class NamedBusinessObject extends BusinessObject{
 
-	constructor(aName){
+	constructor(){
         super();
-        this.name = aName;
+        this.name = null;
     }
     
 	/*
