@@ -304,7 +304,7 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 LOCK TABLES `matchfield_has_player` WRITE;
 /*!40000 ALTER TABLE `matchfield_has_player` DISABLE KEYS */;
-INSERT INTO `matchfield_has_player` VALUES (1,1,100.3,123.2),(2,2,123.3,123.4),(3,3,123.3,123.4);
+INSERT INTO `matchfield_has_player` VALUES (1,1,100.3,123.2),(2,2,123.3,123.4),(3,3,123.3,123.4),(1,2,23.3,123.4),(1,3,223.3,123.4),(1,4,323.3,123.4),(1,5,123.3,23.4);
 /*!40000 ALTER TABLE `matchfield_has_player` ENABLE KEYS */;
 UNLOCK TABLES;
 

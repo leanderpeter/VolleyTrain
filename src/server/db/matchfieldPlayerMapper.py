@@ -103,13 +103,14 @@ class MatchfieldPlayerMapper(Mapper):
         tuples = cursor.fetchall()
         result = []
         try:
-            (Matchfield_PK_Matchfield, Player_PK_Player, x, y) = tuples[0]
-            obj = MatchfieldPlayerBO()
-            obj.setMatchfieldPK(Matchfield_PK_Matchfield)
-            obj.setPlayerPK(Player_PK_Player)
-            obj.setXPosition(x)
-            obj.setYPosition(y)
-            result.append(obj)
+            for i in range(len(tuples)):
+                (Matchfield_PK_Matchfield, Player_PK_Player, x, y) = tuples[i]
+                obj = MatchfieldPlayerBO()
+                obj.setMatchfieldPK(Matchfield_PK_Matchfield)
+                obj.setPlayerPK(Player_PK_Player)
+                obj.setXPosition(x)
+                obj.setYPosition(y)
+                result.append(obj)
 
         except IndexError:
             """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf

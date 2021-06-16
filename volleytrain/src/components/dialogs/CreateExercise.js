@@ -19,6 +19,9 @@ export default function CreateExercise({Players}) {
     //show or hide Exercise Component state
     const [showComp, setShowComp] = React.useState(false);
 
+    //show or hide Button Component state
+    const [showButton, setShowButton] = React.useState(true);
+
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -29,6 +32,7 @@ export default function CreateExercise({Players}) {
 
     const handleExerciseCompCall = () => {
         setShowComp(true);
+        setShowButton(false)
     }
 
     const handleExerciseLibraryCall = () => {
@@ -39,9 +43,12 @@ export default function CreateExercise({Players}) {
 
     return (
     <div>
-        <Button variant="outlined" color="primary" onClick={handleClickOpen} style={{marginLeft: '240px',}}>
-        weitere Übung hinzufügen
-        </Button>
+        {showButton ? 
+                <Button variant="outlined" color="primary" onClick={handleClickOpen} style={{marginLeft: '440px',}}>
+                    weitere Übung hinzufügen
+                </Button>
+        : null
+        }
         <Dialog
         open={open}
         TransitionComponent={Transition}

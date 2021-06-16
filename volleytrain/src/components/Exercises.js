@@ -34,9 +34,7 @@ const Exercises = ({Players, MatchfieldID}) => {
     const [Positions, setPositions] = useState([])
 
     //combine the jsons MatchfieldPlayers and Players
-    var combi = MatchfieldPlayers.map(x => Object.assign(x, players.find(y => y.id == x._player_pk)));
-    //combine the jsons Combi and Positions
-    var PlayerData = combi.map(x => Object.assign(x, Positions.find(y => y.id == x._position_pk)));
+    var PlayerData = MatchfieldPlayers.map((item, i) => Object.assign({}, item, Players[i]));
 
     PlayerData = [
         {id: 1, surname:"Leander", name: "HW", team: 2, left: 333},
@@ -48,7 +46,7 @@ const Exercises = ({Players, MatchfieldID}) => {
     var i;
     var posPlayer = [];
     //check if data is loaded
-    if (MatchfieldPlayers.length > 0 && Players.length > 0){
+    if (MatchfieldPlayers.length > 0 && PlayerData.length > 0){
         for (i = 0; i < PlayerData.length; i++) {
             if ("top" in PlayerData[i]){
                 const obj = {
@@ -72,8 +70,6 @@ const Exercises = ({Players, MatchfieldID}) => {
             }
         }
     }
-
-    console.log(MatchfieldPlayers)
     
     // init styling
     const classes = styles();
@@ -85,8 +81,10 @@ const Exercises = ({Players, MatchfieldID}) => {
                 setMatchfieldPlayers(MatchfieldPlayerBOs)
                 setLoadingInProgress(false)
                 setError(null)
+                console.log(MatchfieldPlayerBOs)
             }
-        ).catch(e => {
+        ).then(MatchfieldPlayerBOs => {console.log(MatchfieldPlayerBOs)})
+        .catch(e => {
             setMatchfieldPlayers([])
             setLoadingInProgress(false)
             setError(e)
