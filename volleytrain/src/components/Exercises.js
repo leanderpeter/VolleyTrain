@@ -17,13 +17,13 @@ import arrow_l from './media/arrow_l.png'
 import arrow_r from './media/arrow_r.png'
 
 
-const Exercises = () => {
+const Exercises = ({Players, MatchfieldID}) => {
     // In order to gain access to the child component instance,
     // you need to assign it to a `ref`, so we call `useRef()` to get one
     const childRef = useRef();
 
     // Init states for resources from Backend Players
-    const [players, setPlayers] = useState([]);
+    const [players, setPlayers] = useState(Players);
     const [error, setError] = useState(null);
     const [loadingInProgress, setLoadingInProgress] = useState(null);
 
@@ -38,46 +38,49 @@ const Exercises = () => {
     //combine the jsons Combi and Positions
     var PlayerData = combi.map(x => Object.assign(x, Positions.find(y => y.id == x._position_pk)));
 
+    PlayerData = [
+        {id: 1, surname:"Leander", name: "HW", team: 2, left: 333},
+        {id: 2, surname:"Ans", name: "HW", team: 2,  top: 220, left: 333},
+        {id: 3, surname:"Ju", name: "HW", team: 2,  top: 320, left: 333},
+        {id: 4, surname:"Fasal", name: "HW", team: 2,  top: 420, left: 333},
+    ]
+
     var i;
     var posPlayer = [];
     //check if data is loaded
-    if (MatchfieldPlayers.length > 0 && players.length > 0){
+    if (MatchfieldPlayers.length > 0 && Players.length > 0){
         for (i = 0; i < PlayerData.length; i++) {
-            const obj = {
-                top: Math.floor(PlayerData[i].top),
-                left: Math.floor(PlayerData[i].left),
-                name: PlayerData[i].name,
-                surname: PlayerData[i].surname,
-                id: PlayerData[i].id,
-            }
+            if ("top" in PlayerData[i]){
+                const obj = {
+                    top: Math.floor(PlayerData[i].top),
+                    left: Math.floor(PlayerData[i].left),
+                    name: PlayerData[i].name,
+                    surname: PlayerData[i].surname,
+                    id: PlayerData[i].id,
+                }
             posPlayer.push(obj)
+            } else {
+                console.log("Top is null, randomize")
+                const obj = {
+                    top: 1,
+                    left: 1,
+                    name: PlayerData[i].name,
+                    surname: PlayerData[i].surname,
+                    id: PlayerData[i].id,
+                }
+            posPlayer.push(obj)
+            }
         }
     }
-    
 
+    console.log(MatchfieldPlayers)
+    
     // init styling
     const classes = styles();
 
-    const getPlayers = () => {
-        VolleytrainAPI.getAPI().getPlayers().then(
-            playerBOs => {
-                setPlayers(playerBOs)
-                setLoadingInProgress(false)
-                setError(null)
-            }
-        ).catch(e => {
-            setPlayers([])
-            setLoadingInProgress(false)
-            setError(e)
-        })
-        // setze laden auf wahr
-        setLoadingInProgress(true)
-        setError(null)
-    }
-
     // get all Matchfield_Player_Position Data
-    const getMatchfieldPlayers = () => {
-        VolleytrainAPI.getAPI().getAllMatchfieldPlayerBO().then(
+    const getMatchfieldPlayers = (id) => {
+        VolleytrainAPI.getAPI().getPlayerByMatchfieldID(id).then(
             MatchfieldPlayerBOs => {
                 setMatchfieldPlayers(MatchfieldPlayerBOs)
                 setLoadingInProgress(false)
@@ -92,29 +95,9 @@ const Exercises = () => {
         setLoadingInProgress(true)
         setError(null)
     }
-
-    //get all position Data
-    const getPosition = () => {
-        VolleytrainAPI.getAPI().getAllPositions().then(
-            positionBOS => {
-                setPositions(positionBOS)
-                setLoadingInProgress(false)
-                setError(null)
-            }
-        ).catch(e => {
-            setPositions([])
-            setLoadingInProgress(false)
-            setError(e)
-        })
-        // setze laden auf wahr
-        setLoadingInProgress(true)
-        setError(null)
-    }
     
     useEffect(() => {
-        getMatchfieldPlayers();
-        getPosition()
-        getPlayers();
+        getMatchfieldPlayers(MatchfieldID);
     }, []);
 
     return (

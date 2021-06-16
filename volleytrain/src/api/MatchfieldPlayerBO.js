@@ -1,5 +1,6 @@
+import PositionBO from "./PositionBO";
 
-export default class MatchfieldPlayerBO{
+export default class MatchfieldPlayerBO extends PositionBO{
 
 	constructor(amatchfield_pk, aplayer_pk, aposition_pk){
         this.matchfield_pk = amatchfield_pk;
@@ -42,6 +43,7 @@ export default class MatchfieldPlayerBO{
     setPosition_pk(aposition_pk){
         this.position_pk = aposition_pk;
     }
+
     static fromJSON(matchfieldPlayers) {
 		let results = null;
 		if (Array.isArray(matchfieldPlayers)) {

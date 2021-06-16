@@ -10,7 +10,6 @@ from server.db.userMapper import UserMapper
 from server.db.exerciseMapper import ExerciseMapper
 from server.bo.playerBO import Player
 from server.db.playerMapper import PlayerMapper
-from server.db.positionMapper import PositionMapper
 from server.db.matchfieldPlayerMapper import MatchfieldPlayerMapper
 
 class volleytrainAdministration(object):
@@ -158,10 +157,10 @@ class volleytrainAdministration(object):
         with PlayerMapper() as mapper:
             mapper.update(player)
 
-    def getAllPositions(self):
-        with PositionMapper() as mapper:
-            return mapper.find_all()
-
     def getAllMatchfieldPlayers(self):
         with MatchfieldPlayerMapper() as mapper:
             return mapper.find_all()
+
+    def getByPlayerPosByMatchfieldId(self, id):
+        with MatchfieldPlayerMapper() as mapper:
+            return mapper.find_by_Matchfield(id)

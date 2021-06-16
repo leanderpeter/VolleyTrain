@@ -16,10 +16,10 @@ import Header from './components/layout/Header';
 import TrainingSchedule from './components/TrainingSchedule';
 import Team from './components/pages/Team';
 import TeamOverview from './components/pages/TeamOverview'
-import TeamBO from './api/TeamBO';
 import ExerciseForm from './components/pages/exerciseForm';
 import Exercises from './components/Exercises';
-
+import CreateExercise from './components/dialogs/CreateExercise';
+import BlankPage from './components/pages/BlankPage';
 /*
 Main page of the volleytrain. First firebase to verify users. Then routing to the pages via react-router-dom
 */
@@ -133,6 +133,8 @@ class App extends React.Component {
       return "";
    }
 
+   
+
 
   // lifecycle method
   componentDidMount() {
@@ -166,13 +168,12 @@ class App extends React.Component {
                 <Route path='/team' render={props => (
                   <Team {...props}/>
                   )}/>
-                <Route path='/exerciseForm' component ={ExerciseForm}>
-                  <ExerciseForm/>
+                <Route path='/exerciseForm' component ={CreateExercise}>
+                  <CreateExercise/>
                 </Route>
-                <Route path='/exercises' component ={Exercises}>
-                  <Exercises/>
+                <Route path='/exercises' component ={BlankPage}>
+                  <BlankPage/>
                 </Route>
-
               </>
               :
               <>

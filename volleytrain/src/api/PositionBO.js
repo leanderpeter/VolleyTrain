@@ -1,12 +1,9 @@
-import BusinessObject from './BusinessObject';
 
+export default class PositionBO {
 
-export default class PositionBO extends BusinessObject{
-
-	constructor(ax, ay){
-        super();
-        this.top = ax;
-        this.left = ay;
+	constructor(){
+        this.top = null;
+        this.left = null;
     }
     /*
 	erhalte 
@@ -21,22 +18,5 @@ export default class PositionBO extends BusinessObject{
         this.top = ay;
         this.left = ax;
     }
-
-    static fromJSON(positions) {
-		let results = null;
-		if (Array.isArray(positions)) {
-			results = [];
-			positions.forEach((c) => {
-				Object.setPrototypeOf(c, PositionBO.prototype);
-				results.push(c);
-			})
-		} else {
-			// Es gibt wohl nur ein Objekt
-			let c = positions;
-			Object.setPrototypeOf(c, PositionBO.prototype);
-			results = c;
-		}
-		return results;
-	}
 
 }
