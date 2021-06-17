@@ -15,12 +15,16 @@ import Matchfield2 from './Matchfield2';
 import arrow_n from './media/arrow_n.png'
 import arrow_l from './media/arrow_l.png'
 import arrow_r from './media/arrow_r.png'
+import Player from './Player';
 
 
 const Exercises = ({Players, MatchfieldID}) => {
     // In order to gain access to the child component instance,
     // you need to assign it to a `ref`, so we call `useRef()` to get one
     const childRef = useRef();
+
+    // init rating state
+    const [rating, setRating] = useState(0)
 
     // Init states for resources from Backend Players
     const [players, setPlayers] = useState(Players);
@@ -30,50 +34,52 @@ const Exercises = ({Players, MatchfieldID}) => {
     // init state for resources MatchfieldPlayerBO
     const [MatchfieldPlayers, setMatchfieldPlayers] = useState([])
 
-    // init state for resources Position Data
-    const [Positions, setPositions] = useState([])
-
-    //combine the jsons MatchfieldPlayers and Players
-    var PlayerData = MatchfieldPlayers.map((item, i) => Object.assign({}, item, Players[i]));
-
-    //console.log('Positions: '+MatchfieldPlayers.length)
-    //console.log('Players: '+Players.length)
-    console.log(MatchfieldPlayers)
-
-
-    if (MatchfieldPlayers.length > 0){
-        var PlayerData = MatchfieldPlayers.map(x => Object.assign(x, Players.find(y => y.id == x._player_pk)));
-        console.log(PlayerData)
+    var player_key_array = []
+    var i;
+    for (i=0; i < MatchfieldPlayers.length; i++){
+        player_key_array.push(MatchfieldPlayers[i]._player_pk)
     }
 
-    var i;
-    var posPlayer = [];
-    //check if data is loaded
-    if (MatchfieldPlayers.length > 0 && PlayerData.length > 0){
-        for (i = 0; i < PlayerData.length; i++) {
-            if ("top" in PlayerData[i]){
-                const obj = {
-                    top: Math.floor(PlayerData[i].top),
-                    left: Math.floor(PlayerData[i].left),
-                    name: PlayerData[i].name,
-                    surname: PlayerData[i].surname,
-                    id: PlayerData[i].id,
+    var posPlayer = []
+
+    if (MatchfieldPlayers.length > 0 && Players.length > 0 && player_key_array.length > 0){
+        var i;
+        for (i=0; i < Players.length; i++){
+            var j;
+            for (j=0; j < MatchfieldPlayers.length; j++){
+                if (Players[i].id == MatchfieldPlayers[j]._player_pk){
+                    //"Here we concat given players with given positions"
+                    // create a player object with matchfield positions and push it into the player array
+                    const obj = {
+                        id:Players[i].id,
+                        surname:Players[i].surname,
+                        name:Players[i].name,
+                        team:Players[i].team,
+                        top:Math.floor(MatchfieldPlayers[j].top),
+                        left:Math.floor(MatchfieldPlayers[j].left),
+                        visible:false,
+                    }
+                    posPlayer.push(obj)
+                } else if (!(player_key_array.includes(Players[i].id))){
+                    //"Here we check if theres a Player id without a position"
+                    // create a player object with random positions and push it into the player array
+                    const obj = {
+                        id:Players[i].id,
+                        surname:Players[i].surname,
+                        name:Players[i].name,
+                        team:Players[i].team,
+                        top:Math.random(),
+                        left:Math.random(),
+                        visible:false,
+                    }
+                    // add the playerId to the player_key_array
+                    player_key_array.push(Players[i].id)
+                    posPlayer.push(obj)
                 }
-            posPlayer.push(obj)
-            } else {
-                console.log("Top is null, randomize")
-                const obj = {
-                    top: 1,
-                    left: 1,
-                    name: PlayerData[i].name,
-                    surname: PlayerData[i].surname,
-                    id: PlayerData[i].id,
-                }
-            posPlayer.push(obj)
             }
         }
     }
-    
+
     // init styling
     const classes = styles();
 
@@ -84,9 +90,8 @@ const Exercises = ({Players, MatchfieldID}) => {
                 setMatchfieldPlayers(MatchfieldPlayerBOs)
                 setLoadingInProgress(false)
                 setError(null)
-                console.log(MatchfieldPlayerBOs)
             }
-        ).then(MatchfieldPlayerBOs => {console.log(MatchfieldPlayerBOs)})
+        )
         .catch(e => {
             setMatchfieldPlayers([])
             setLoadingInProgress(false)
@@ -131,8 +136,8 @@ const Exercises = ({Players, MatchfieldID}) => {
                 <Typography variant="h6">Uebung bewerten:</Typography>
                 <Rating
                     name="simple-controlled"
-                    value={3}
-                    onChange={(event, newValue) => {}}
+                    value={rating}
+                    onChange={(event, newValue) => {setRating(newValue);}}
                     size="large"
                     />
                 <Typography variant="h6">Feldelemente:</Typography>
