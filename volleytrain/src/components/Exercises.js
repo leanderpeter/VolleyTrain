@@ -36,12 +36,15 @@ const Exercises = ({Players, MatchfieldID}) => {
     //combine the jsons MatchfieldPlayers and Players
     var PlayerData = MatchfieldPlayers.map((item, i) => Object.assign({}, item, Players[i]));
 
-    PlayerData = [
-        {id: 1, surname:"Leander", name: "HW", team: 2, left: 333},
-        {id: 2, surname:"Ans", name: "HW", team: 2,  top: 220, left: 333},
-        {id: 3, surname:"Ju", name: "HW", team: 2,  top: 320, left: 333},
-        {id: 4, surname:"Fasal", name: "HW", team: 2,  top: 420, left: 333},
-    ]
+    //console.log('Positions: '+MatchfieldPlayers.length)
+    //console.log('Players: '+Players.length)
+    console.log(MatchfieldPlayers)
+
+
+    if (MatchfieldPlayers.length > 0){
+        var PlayerData = MatchfieldPlayers.map(x => Object.assign(x, Players.find(y => y.id == x._player_pk)));
+        console.log(PlayerData)
+    }
 
     var i;
     var posPlayer = [];

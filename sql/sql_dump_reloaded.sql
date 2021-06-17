@@ -271,7 +271,7 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 LOCK TABLES `player` WRITE;
 /*!40000 ALTER TABLE `player` DISABLE KEYS */;
-INSERT INTO `player` VALUES (1,'Max','Musterspieler',1),(2,'Clara','Klarheit',2),(3,'Jürgen','Diesdas',3);
+INSERT INTO `player` VALUES (1,'Max','Musterspieler',1),(2,'Clara','Klarheit',1),(3,'Jürgen','Diesdas',1),(4,'Johannes','Steil',1),(5,'Sebastian','Puff',1),(6,'Sophia','Müller',1);
 /*!40000 ALTER TABLE `player` ENABLE KEYS */;
 UNLOCK TABLES;
 
