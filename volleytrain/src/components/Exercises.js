@@ -1,4 +1,4 @@
-import React, {useRef, useState, useEffect} from 'react';
+import React, {useRef, useState, useEffect, useLayoutEffect} from 'react';
 import {
     Button,
     Typography,
@@ -14,13 +14,13 @@ import Matchfield2 from './Matchfield2';
 import arrow_n from './media/arrow_n.png'
 import arrow_l from './media/arrow_l.png'
 import arrow_r from './media/arrow_r.png'
-import Player from './Player';
 
 
 const Exercises = ({Players, MatchfieldID}) => {
     // In order to gain access to the child component instance,
     // you need to assign it to a `ref`, so we call `useRef()` to get one
     const childRef = useRef();
+    const divRef = useRef();
 
     // init rating state
     const [rating, setRating] = useState(null)
@@ -28,7 +28,10 @@ const Exercises = ({Players, MatchfieldID}) => {
     // Init states for resources from Backend Players
     const [players, setPlayers] = useState(Players);
     const [error, setError] = useState(null);
-    const [loadingInProgress, setLoadingInProgress] = useState(null);
+    const [loading, setLoadingInProgress] = useState(null);
+
+    // init loading state for matchfield
+    const [playerLoading, setPlayerLoadingInProgress] = useState(true);
 
     // init state for resources MatchfieldPlayerBO
     const [MatchfieldPlayers, setMatchfieldPlayers] = useState([])
@@ -36,16 +39,23 @@ const Exercises = ({Players, MatchfieldID}) => {
     const [height, setHeight] = useState(0)
 
 
-    useEffect(() => {
-        setHeight(childRef.current.clientHeight)
-    })
+    // getting the dimensions of matchfield compoent
+    const [dimensions, setDimensions] = useState({ width:0, height: 0 });
+    
+    useLayoutEffect(() => {
+        if (divRef.current) {
+        setDimensions({
+            width: divRef.current.offsetWidth,
+            height: divRef.current.offsetHeight
+        });
+        }
+    }, []);
+    
 
-    if (height > 0){
-        console.log(height)
-    }
+    console.log(dimensions)
     
     var posPlayer = []
-    if (MatchfieldPlayers.length > 0 && Players.length > 0){
+    if (MatchfieldPlayers.length > 0 && Players.length > 0 && dimensions.width > 0){
 
         /**
          * In this for loop we fill the array @player_key_array with all
@@ -73,15 +83,17 @@ const Exercises = ({Players, MatchfieldID}) => {
                 if (Players[i].id == MatchfieldPlayers[j]._player_pk){
                     //"Here we concat given players with given positions"
                     // create a player object with matchfield positions and push it into the player array
+                    console.log(MatchfieldPlayers[j].top)
                     const obj = {
                         id:Players[i].id,
                         surname:Players[i].surname,
                         name:Players[i].name,
                         team:Players[i].team,
-                        top:Math.floor(MatchfieldPlayers[j].top),
-                        left:Math.floor(MatchfieldPlayers[j].left),
+                        top:parseFloat(MatchfieldPlayers[j].top)*dimensions.height,
+                        left:parseFloat(MatchfieldPlayers[j].left)*dimensions.width,
                         visible:false,
                     }
+                    console.log(obj)
                     posPlayer.push(obj)
                 } else if (!(player_key_array.includes(Players[i].id))){
                     //"Here we check if theres a Player id without a position"
@@ -101,10 +113,12 @@ const Exercises = ({Players, MatchfieldID}) => {
                 }
             }
         }
+        // loading finished
     }
 
     // init styling
     const classes = styles();
+
 
     // get all Matchfield_Player_Position Data
     const getMatchfieldPlayers = (id) => {
@@ -145,8 +159,13 @@ const Exercises = ({Players, MatchfieldID}) => {
                     justify="center"
                     alignItems="center"
                     style={{ borderRight: '0.2em solid black', padding: '0.5em'}}>
-                    <div ref={childRef}>
-                        <Matchfield2 ref={childRef} PlayerList={posPlayer}/>
+                    <div ref={childRef} className={classes.wrapper}>
+                        <div className={classes.above} ref={divRef}>
+                            <Matchfield2 PlayerList={[]}/>
+                        </div>
+                        <div className={classes.under}>
+                            <Matchfield2 ref={childRef} PlayerList={posPlayer}/>
+                        </div>
                     </div>       
                 </Grid>
                 <Grid item xs={2}
@@ -245,8 +264,16 @@ const styles = makeStyles({
         marginTop: 5,
         marginLeft: 5,
         marginRight: 5,
+    },
+    wrapper:{
+        position: "relative",
+    },
+    above:{
+        position: "absolute",
+        top: 0,
+        right: 0,
     }
-});
+}); 
 
 
 
