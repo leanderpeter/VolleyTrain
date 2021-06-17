@@ -6,7 +6,6 @@ import Avatar from '@material-ui/core/Avatar';
 
 function PlayerButton(props){
   const classes = styles();
-  console.log(props)
   return(
     <div className={classes.root}>
       <Grid>

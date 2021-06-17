@@ -55,7 +55,8 @@ export default class VolleytrainAPI {
 	#getAllTrainings = () => `${this.#VolleyTrainServerBaseURL}/trainings`;
 	
 	//MatchfieldPlayerBO
-	#getAllMatchfieldPlayerBO = () => `${this.#VolleyTrainServerBaseURL}/matchfieldPlayers`;
+	#getAllMatchfieldPlayerURL = () => `${this.#VolleyTrainServerBaseURL}/matchfieldPlayers`;
+	#getMatchfieldPlayerByIdURL = (id) => `${this.#VolleyTrainServerBaseURL}/matchfieldPlayersById/${id}`;
 
 	//positions
 	#getAllPositionsURL = () => `${this.#VolleyTrainServerBaseURL}/position`;
@@ -279,24 +280,22 @@ export default class VolleytrainAPI {
 
 	//Training
 	getAllMatchfieldPlayerBO() {
-		return this.#fetchAdvanced(this.#getAllMatchfieldPlayerBO())
+		return this.#fetchAdvanced(this.#getAllMatchfieldPlayerURL())
 		.then((responseJSON) => {
 			let matchfieldPlayerBO = MatchfieldPlayerBO.fromJSON(responseJSON);
 			return new Promise(function(resolve) {
 				resolve(matchfieldPlayerBO)
 			})
 		})
-	}	
-
-	//Training
-	getAllPositions() {
-		return this.#fetchAdvanced(this.#getAllPositionsURL())
-		.then((responseJSON) => {
-			let positionBO = PositionBO.fromJSON(responseJSON);
-			return new Promise(function(resolve) {
-				resolve(positionBO)
+	}
+	
+	getPlayerByMatchfieldID(id){
+		return this.#fetchAdvanced(this.#getMatchfieldPlayerByIdURL(id)).then((responseJSON) => {
+			let matchfieldPlayerBO = MatchfieldPlayerBO.fromJSON(responseJSON);
+			return new Promise(function (resolve){
+				resolve(matchfieldPlayerBO)
 			})
 		})
-	}	
+	}
 
 }
