@@ -4,7 +4,7 @@ import {
     withStyles,
 } from '@material-ui/core';
 import field from './media/field.png';
-import { forwardRef, useCallback, useState } from 'react';
+import { forwardRef, useCallback, useEffect, useState } from 'react';
 import { useDrop } from 'react-dnd';
 import { ItemTypes } from './ItemTypes';
 import update from 'immutability-helper';
@@ -18,41 +18,56 @@ const DragStyles = {
   position: 'relative',
 };
 
-const Matchfield2= forwardRef(({PlayerList, PositionList}, ref) => {
+const Matchfield2= forwardRef(({PlayerList}, ref) => {
     const classes = styles();
-    
-      const [boxes, setBoxes] = useState([]);
-      const moveBox = useCallback((id, left, top) => {
-          setBoxes(update(boxes, {
-              [id]: {
-                  $merge: { left, top },
-              },
-          }));
-      }, [boxes, setBoxes]);
-      const [, drop] = useDrop(() => ({
-          accept: ItemTypes.BOX,
-          drop(item, monitor) {
-              const delta = monitor.getDifferenceFromInitialOffset();
-              const left = Math.round(item.left + delta.x);
-              const top = Math.round(item.top + delta.y);
-              moveBox(item.id, left, top);
-              console.log(item.id, left, top)
-              return undefined;
-          },
-      }), [moveBox]);
-  
-    useImperativeHandle(ref, () => ({
 
+    // init loading state for placing players
+    const [loading, setLoading] = useState(true)
+
+    const [boxes, setBoxes] = useState([]);
+    const moveBox = useCallback((id, left, top) => {
+        setBoxes(update(boxes, { [id]: { $merge: { left, top },},
+        }));
+    }, [boxes, setBoxes]);
+    const [, drop] = useDrop(() => ({
+        accept: ItemTypes.BOX,
+        drop(item, monitor) {
+            const delta = monitor.getDifferenceFromInitialOffset();
+            const left = Math.round(item.left + delta.x);
+            const top = Math.round(item.top + delta.y);
+            moveBox(item.id, left, top);
+            console.log(item.id, left, top)
+            return undefined;
+        },
+    }), [moveBox]);
+
+
+    useImperativeHandle(ref, () => ({
       addPlayer(playerID) {
+        console.log("SET!")
         playerID = playerID - 1
-        if (PlayerList[playerID].top === null){
-          PlayerList[playerID].left = Math.floor(Math.random() * 200);
-          PlayerList[playerID].top = Math.floor(Math.random() * 200);
-        }
         setBoxes([...boxes, PlayerList[playerID]])
+    }}));
+
+    // placing players with position
+    if (PlayerList.length > 0 && loading){
+      setLoading(false)
+      var PlayerWithPositions = [];
+      var i;
+      for (i=0; i < PlayerList.length; i++){
+        if (!(PlayerList[i].top == null)){
+          PlayerWithPositions.push(PlayerList[i])
+        }
       }
-  
-    }));
+      setBoxes(PlayerWithPositions)
+      
+    }
+    
+
+    useEffect(() => {
+      //console.log(PlayerList)
+    })
+
     return (
       <div>
         <div ref={drop} className={classes.box}>
@@ -60,7 +75,6 @@ const Matchfield2= forwardRef(({PlayerList, PositionList}, ref) => {
           {Object.keys(boxes).map((key) => {
             const { left, top, name, surname } = boxes[key];
             return (<Player id={key} left={left} top={top} surname={surname} name={name}>
-              
               </Player>);
             })}
         </div>

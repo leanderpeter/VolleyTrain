@@ -1,5 +1,4 @@
 import React, {useRef, useState, useEffect} from 'react';
-import PropTypes from 'prop-types';
 import {
     Button,
     Typography,
@@ -24,7 +23,7 @@ const Exercises = ({Players, MatchfieldID}) => {
     const childRef = useRef();
 
     // init rating state
-    const [rating, setRating] = useState(0)
+    const [rating, setRating] = useState(null)
 
     // Init states for resources from Backend Players
     const [players, setPlayers] = useState(Players);
@@ -34,15 +33,39 @@ const Exercises = ({Players, MatchfieldID}) => {
     // init state for resources MatchfieldPlayerBO
     const [MatchfieldPlayers, setMatchfieldPlayers] = useState([])
 
-    var player_key_array = []
-    var i;
-    for (i=0; i < MatchfieldPlayers.length; i++){
-        player_key_array.push(MatchfieldPlayers[i]._player_pk)
+    const [height, setHeight] = useState(0)
+
+
+    useEffect(() => {
+        setHeight(childRef.current.clientHeight)
+    })
+
+    if (height > 0){
+        console.log(height)
     }
-
+    
     var posPlayer = []
+    if (MatchfieldPlayers.length > 0 && Players.length > 0){
 
-    if (MatchfieldPlayers.length > 0 && Players.length > 0 && player_key_array.length > 0){
+        /**
+         * In this for loop we fill the array @player_key_array with all
+         * the Player IDs from the MatchfieldPlayers (Position Object)
+         * to later determine if a player already has a position object
+         */
+        var player_key_array = []
+        var s;
+        for (s=0; s < MatchfieldPlayers.length; s++){
+            player_key_array.push(MatchfieldPlayers[s]._player_pk)
+        }
+
+        /**
+         * In this 2 for loops we first iterate over all @Players
+         * In the nested loop we iterate over @MatchfieldPlayers and check 
+         * if theres a Position in @MatchfieldPlayers for @Players.
+         * if so we create a PlayerXPosition Object
+         * if not we create a PlayerXPosition Object with random positions
+         */
+
         var i;
         for (i=0; i < Players.length; i++){
             var j;
@@ -68,9 +91,9 @@ const Exercises = ({Players, MatchfieldID}) => {
                         surname:Players[i].surname,
                         name:Players[i].name,
                         team:Players[i].team,
-                        top:Math.random(),
-                        left:Math.random(),
-                        visible:false,
+                        top:null,
+                        left:null,
+                        visible:true,
                     }
                     // add the playerId to the player_key_array
                     player_key_array.push(Players[i].id)
@@ -122,12 +145,10 @@ const Exercises = ({Players, MatchfieldID}) => {
                     justify="center"
                     alignItems="center"
                     style={{ borderRight: '0.2em solid black', padding: '0.5em'}}>
-                    <div>
+                    <div ref={childRef}>
                         <Matchfield2 ref={childRef} PlayerList={posPlayer}/>
-                    </div>     
-                              
+                    </div>       
                 </Grid>
-                
                 <Grid item xs={2}
                     container
                     direction="column"
@@ -152,9 +173,11 @@ const Exercises = ({Players, MatchfieldID}) => {
                     <>
                     {posPlayer.map(player => 
                         <div className="test_player">
+                            {player.visible ? 
                             <Button onClick={() => childRef.current.addPlayer(player.id)} className={classes.playerButton}>
                                 <PlayerButton key={player.id} player={player}/>
                             </Button>
+                            : null}
                         </div>
                     )}
                     </>
