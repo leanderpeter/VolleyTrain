@@ -43,7 +43,52 @@ class PlayerMapper(Mapper):
         pass
 
     def find_by_id(self, id):
-        pass
+
+        result = []
+        cursor = self._cnx.cursor()
+        command = "SELECT * FROM user WHERE id like '{}'".format(id)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        for (id, surname, name, teamId, role, t_number) in tuples:
+            player = Player()
+            player.setId(id)
+            player.setName(name)
+            player.setSurname(surname)
+            player.setTeamId(teamId)
+            player.setRole(role)
+            player.setT_number(t_number)
+
+            result.append(player)
+
+        self._connection.commit()
+        cursor.close()
+
+        return result
+
+    def find_by_teamid(self, teamId):
+
+        result = []
+        cursor = self._cnx.cursor()
+        command = "SELECT * FROM user WHERE teamId like '{}'".format(teamId)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        for (id, surname, name, teamId, role, t_number) in tuples:
+            player = Player()
+            player.setId(id)
+            player.setName(name)
+            player.setSurname(surname)
+            player.setTeamId(teamId)
+            player.setRole(role)
+            player.setT_number(t_number)
+
+            result.append(player)
+
+        self._connection.commit()
+        cursor.close()
+
+        return result
 
     def insert(self, player):
         """Einfügen eines Player Objekts in die DB

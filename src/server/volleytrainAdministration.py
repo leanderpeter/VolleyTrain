@@ -57,6 +57,10 @@ class volleytrainAdministration(object):
         with PlayerMapper() as mapper:
             return mapper.find_by_id(id)
 
+    def getPlayerByTeamId(self, teamId):
+        with PlayerMapper() as mapper:
+            return mapper.find_by_teamid(teamId)
+
     def savePlayer(self, player):
         with PlayerMapper() as mapper:
             mapper.update(player)
