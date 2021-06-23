@@ -15,26 +15,26 @@ class Player(NamedBusinessObject):
         self._role = None
         self._t_number = 0
     
-    def setTeamId(self, teamId):
-        self._teamId = teamId
+    def setTeamId(self, new_teamId):
+        self._teamId = new_teamId
 
     def getTeamId(self):
         return self._teamId
 
-    def setSurname(self, sname):
-        self._surname = sname
+    def setSurname(self, new_name):
+        self._surname = new_name
     
     def getSurname(self):
         return self._surname
 
-    def setRole(self, role):
-        self._role = role
+    def setRole(self, new_role):
+        self._role = new_role
 
     def getRole(self):
         return self._role
 
-    def setT_number(self, t_number):
-        self._t_number = t_number
+    def setT_number(self, new_t_number):
+        self._t_number = new_t_number
 
     def getT_number(self):
         return self._t_number

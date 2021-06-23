@@ -86,9 +86,9 @@ class UserOperation(Resource):
 
 # Player API
 
-@volleyTrain.route("/players")
+@volleyTrain.route("/playerss")
 class PlayerOperations(Resource):
-    @volleyTrain.marshal_with(player, code=200)
+    @volleyTrain.marshal_list_with(player, code=200)
     @volleyTrain.expect(player)
     #@secured
     def post(self):
@@ -108,6 +108,7 @@ class PlayerOperation(Resource):
     # @secured
     @volleyTrain.marshal_list_with(player)
     def get(self):
+        """Get all Player"""
         adm = volleytrainAdministration()
         players = adm.getAllPlayer()
         return players

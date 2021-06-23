@@ -45,8 +45,8 @@ class PlayerMapper(Mapper):
     def find_by_id(self, id):
 
         result = []
-        cursor = self._cnx.cursor()
-        command = "SELECT * FROM user WHERE id like '{}'".format(id)
+        cursor = self._connection.cursor()
+        command = "SELECT * FROM player WHERE PK_Player like '{}'".format(id)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
@@ -69,8 +69,8 @@ class PlayerMapper(Mapper):
     def find_by_teamid(self, teamId):
 
         result = []
-        cursor = self._cnx.cursor()
-        command = "SELECT * FROM user WHERE teamId like '{}'".format(teamId)
+        cursor = self._connection.cursor()
+        command = "SELECT * FROM player WHERE teamId like '{}'".format(teamId)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
@@ -110,7 +110,7 @@ class PlayerMapper(Mapper):
                 davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
                 player.setId(1)
 
-        command = "INSERT INTO players (PK_Player, surname, name, Team_PK_Team, role, t_number) " \
+        command = "INSERT INTO player (PK_Player, surname, name, Team_PK_Team, role, t_number) " \
                   "VALUES (%s,%s,%s,%s,%s,%s)"
         data = (player.getId(), player.getSurname(), player.getName(), player.getTeamId(),
                 player.getRole(), player.getT_number())
@@ -128,7 +128,7 @@ class PlayerMapper(Mapper):
         """
         cursor = self._connection.cursor()
 
-        command = "UPDATE players " + " SET surname=%s, SET name=%s, SET Team_PK_Team, " \
+        command = "UPDATE player " + " SET surname=%s, SET name=%s, SET Team_PK_Team=%s, " \
                                       "role=%s, t_number=%s WHERE PK_Player=%s"
         data = (player.getSurname(), player.getName(), player.getTeamId(), player.getRole(),
                 player.getT_number()), player.getId()
@@ -149,7 +149,7 @@ class PlayerMapper(Mapper):
         """
         cursor = self._connection.cursor()
 
-        command = "DELETE FROM players WHERE PK_Players={}".format(player.getId())
+        command = "DELETE FROM player WHERE PK_Player={}".format(player.getId())
         cursor.execute(command)
 
         self._connection.commit()
@@ -159,9 +159,27 @@ class PlayerMapper(Mapper):
 
 
 '''Only for testing purpose'''
-
+"""
 if (__name__ == "__main__"):
     with PlayerMapper() as mapper:
         result = mapper.find_all()
         for player in result:
             print(player)
+"""
+"""
+if (__name__ == "__main__"):
+    p = Player()
+    p.setSurname("Christoph")
+    p.setName("Kunz")
+    p.setTeamId(1)
+    p.setRole("Angreifer")
+    p.setT_number(3)
+    with PlayerMapper() as mapper:
+        mapper.insert(p)
+"""
+"""
+if __name__ == "__main__":
+    with PlayerMapper() as mapper:
+        i = mapper.find_by_id(3)
+        mapper.delete(i)
+"""

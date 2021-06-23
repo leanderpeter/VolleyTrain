@@ -14,11 +14,11 @@ class BusinessObject(ABC):
     def getId(self):
         return self._id
     
-    def setId(self, id):
-        self._id = id
+    def setId(self, new_id):
+        self._id = new_id
     
-    def setCreationDate(self, date):
-        self._creationDate = date
+    def setCreationDate(self, new_date):
+        self._creationDate = new_date
     
     def getCreationDate(self):
         return self._creationDate

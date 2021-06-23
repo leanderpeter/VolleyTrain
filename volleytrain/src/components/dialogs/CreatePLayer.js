@@ -1,4 +1,4 @@
-import { withStyles, Button, Dialog, DialogTitle, DialogContent, Typography, Grid, TextField, Select, MenuItem } from '@material-ui/core';
+/**import { withStyles, Button, Dialog, DialogTitle, DialogContent, Typography, Grid, TextField, Select, MenuItem } from '@material-ui/core';
 import React from 'react';
 import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined';
 import SaveAltIcon from '@material-ui/icons/SaveAlt';
@@ -37,7 +37,7 @@ class CreatePlayer extends React.Component{
 
     render() {
         const {classes, dialogOpen, onClose } = this.props;
-        const { createButtonDisabled, trainingdays, weekday, starttime, endtime } = this.state;
+        const { createButtonDisabled} = this.state;
 
 
         return(
@@ -80,4 +80,4 @@ class CreatePlayer extends React.Component{
             </div>
         )
     }
-}
+}*/
