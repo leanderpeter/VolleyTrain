@@ -46,6 +46,12 @@ const Matchfield2= forwardRef(({PlayerList}, ref) => {
       addPlayer(playerID) {
         console.log("SET!")
         playerID = playerID - 1
+        console.log(PlayerList[playerID])
+        if (PlayerList[playerID].left === null){
+          PlayerList[playerID].left = 40;
+          PlayerList[playerID].top = 220;
+          PlayerList[playerID].visible = false;
+        }
         setBoxes([...boxes, PlayerList[playerID]])
     }}));
 
