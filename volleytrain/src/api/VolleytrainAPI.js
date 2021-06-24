@@ -24,9 +24,9 @@ export default class VolleytrainAPI {
 
 	//getPlayers: all
 	#getPlayersURL = () => `${this.#VolleytrainServerBaseURL}/players`;
-	#addPlayerURL = () => `${this.#ElectivServerBaseURL}/player`;
-	#deletePlayerURL = (id) => `${this.#ElectivServerBaseURL}/player/${id}`;
-	#updatePlayerURL= () => `${this.#ElectivServerBaseURL}/player`;
+	#addPlayerURL = () => `${this.#VolleytrainServerBaseURL}/playerss`;
+	#deletePlayerURL = (id) => `${this.#VolleytrainServerBaseURL}/player/${id}`;
+	#updatePlayerURL= () => `${this.#VolleytrainServerBaseURL}/player`;
 
 
 	/*
