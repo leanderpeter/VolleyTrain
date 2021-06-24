@@ -1,4 +1,11 @@
-import React, {useRef, useState, useEffect, useLayoutEffect} from 'react';
+import React, {
+    forwardRef,
+    useRef, 
+    useState, 
+    useEffect, 
+    useLayoutEffect,
+    useCallback,
+    useImperativeHandle} from 'react';
 import {
     Button,
     Typography,
@@ -8,14 +15,23 @@ import Grid from '@material-ui/core/Grid';
 import Rating from '@material-ui/lab/Rating';
 import PlayerButton from './PlayerButton';
 import VolleytrainAPI from '../api/VolleytrainAPI';
-import { HTML5Backend } from 'react-dnd-html5-backend'
-import { DndProvider } from 'react-dnd';
-import Matchfield2 from './Matchfield2';
+//import Matchfield2 from './Matchfield2';
 import arrow_n from './media/arrow_n.png'
 import arrow_l from './media/arrow_l.png'
 import arrow_r from './media/arrow_r.png'
 import { PositionHandler } from './MatchfieldHandler/PositionHandler';
 import LoadingProgress from './dialogs/LoadingProgress';
+import update from 'immutability-helper';
+import { useDrop } from 'react-dnd';
+import { ItemTypes } from './ItemTypes';
+import Player from './Player';
+import field from './media/field.png';
+
+//create your forceUpdate hook
+function useForceUpdate(){
+    const [value, setValue] = useState(0); // integer state
+    return () => setValue(value => value + 1); // update the state to force render
+}
 
 
 const Exercises = ({Players, MatchfieldID}) => {
@@ -28,7 +44,7 @@ const Exercises = ({Players, MatchfieldID}) => {
     const [rating, setRating] = useState(null)
 
     // Init states for resources from Backend Players
-    const [players, setPlayers] = useState(Players);
+    const [players, setPlayers] = useState([]);
     const [error, setError] = useState(null);
     const [loading, setLoadingInProgress] = useState(null);
 
@@ -54,7 +70,6 @@ const Exercises = ({Players, MatchfieldID}) => {
     //PosPlayer State
     var posPlayer = PositionHandler(MatchfieldPlayers, Players, dimensions)
 
-
     // init styling
     const classes = styles();
 
@@ -62,12 +77,13 @@ const Exercises = ({Players, MatchfieldID}) => {
         var i;
         for (i=0; i < posPlayer.length; i++){
             if (posPlayer[i].id === playerID){
-                posPlayer[i].visible = false
+                posPlayer[i].visible = false            
             }
         }
-        //setPlayerPositions(posPlayer)
+        console.log(posPlayer, 'changed')
     }
 
+    console.log(players)
 
     // get all Matchfield_Player_Position Data
     const getMatchfieldPlayers = (id) => {
@@ -76,6 +92,7 @@ const Exercises = ({Players, MatchfieldID}) => {
                 setMatchfieldPlayers(MatchfieldPlayerBOs)
                 setLoadingInProgress(false)
                 setError(null)
+                setPlayers(posPlayer)
             }
         )
         .catch(e => {
@@ -92,11 +109,82 @@ const Exercises = ({Players, MatchfieldID}) => {
         getMatchfieldPlayers(MatchfieldID);
     }, []);
 
+    /**
+     * Below here is only Matchfield function/logic
+     * 
+     * 
+     * 
+     * 
+     * 
+     */
+
+    // init loading state for placing players
+    const [Playerloading, setPlayerLoading] = useState(true)
+
+
+    const [boxes, setBoxes] = useState([]);
+    const moveBox = useCallback((id, left, top) => {
+        setBoxes(update(boxes, { [id]: { $merge: { left, top },},
+        }));
+    }, [boxes, setBoxes]);
+
+
+    const [, drop] = useDrop(() => ({
+        accept: ItemTypes.BOX,
+        drop(item, monitor) {
+            const delta = monitor.getDifferenceFromInitialOffset();
+            const left = Math.round(item.left + delta.x);
+            const top = Math.round(item.top + delta.y);
+            moveBox(item.id, left, top);
+            console.log(item.id, left, top)
+            return undefined;
+        },
+    }), [moveBox]);
+    
+    const addPlayer = (playerID) => {
+        console.log("SET!")
+        playerID = playerID - 1
+        if (posPlayer[playerID].left === null){
+            posPlayer[playerID].left = 40;
+            posPlayer[playerID].top = 220;
+            posPlayer[playerID].visible = false;
+        }
+        setBoxes([...boxes, posPlayer[playerID]])
+    }
+    
+
+    
+    // placing players with position
+    if (posPlayer.length > 0 && Playerloading){
+        setPlayerLoading(false)
+        var PlayerWithPositions = [];
+        var i;
+        for (i=0; i < posPlayer.length; i++){
+            if (!(posPlayer[i].top == null)){
+                PlayerWithPositions.push(posPlayer[i])
+        }
+        }
+        setBoxes(PlayerWithPositions)
+        
+    }
+
+
+    /**
+     * 
+     * 
+     * 
+     * 
+     * 
+     * Above here is only Matchfield function/logic
+     */
+
+
+
     if (LoadingProgress){
 
         return (
         <div>
-            <DndProvider backend={HTML5Backend}>
+            
             <div className={classes.root}>
                 <Grid container spacing={3}>
                     <Grid item xs={1}
@@ -111,11 +199,20 @@ const Exercises = ({Players, MatchfieldID}) => {
                         alignItems="center"
                         style={{ borderRight: '0.2em solid black', padding: '0.5em'}}>
                         <div className={classes.wrapper}>
-                            <div className={classes.above} ref={divRef} >
-                                <Matchfield2  PlayerList={[]}/>
+                            <div className={classes.above} >
+                                
                             </div>
                             <div className={classes.under}>
-                                <Matchfield2 ref={childRef} PlayerList={posPlayer}/>
+                                        <div ref={divRef}>
+                                        <div ref={drop} className={classes.box}>
+                                            <img src={field} alt="Field" className={classes.field}/>
+                                            {Object.keys(boxes).map((key) => {
+                                            const { left, top, name, surname } = boxes[key];
+                                            return (<Player id={key} left={left} top={top} surname={surname} name={name}>
+                                                </Player>);
+                                            })}
+                                        </div>
+                                        </div>
                             </div>
                         </div>       
                     </Grid>
@@ -144,7 +241,7 @@ const Exercises = ({Players, MatchfieldID}) => {
                         {posPlayer.map(player => 
                             <div className="test_player">
                                 {player.visible ? 
-                                <Button onClick={() => {childRef.current.addPlayer(player.id); setVisible(player.id)}} className={classes.playerButton}>
+                                <Button onClick={() => {addPlayer(player.id); setVisible(player.id);}} className={classes.playerButton}>
                                     <PlayerButton key={player.id} player={player}/>
                                 </Button>
                                 : null}
@@ -168,12 +265,7 @@ const Exercises = ({Players, MatchfieldID}) => {
                         container
                         direction="row"
                         justify="flex-start"
-                        alignItems="center">
-                            <img src={arrow_l} className={classes.arrow}/>
-                            <Typography variant="subtitle2">Laufweg</Typography>
-                        </Grid>
-                        <Grid
-                        container
+                        alignItems='center'
                         direction="row"
                         justify="flex-start"
                         alignItems="center">
@@ -184,7 +276,6 @@ const Exercises = ({Players, MatchfieldID}) => {
                     </Grid>
                 </Grid>
             </div>
-            </DndProvider>
         </div>
         );} else {
 
@@ -195,6 +286,9 @@ const Exercises = ({Players, MatchfieldID}) => {
         )
     }
   };
+
+
+
 
 /** Function specific styles */
 const styles = makeStyles({

@@ -7,6 +7,9 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import Exercises from '../Exercises';
+import { HTML5Backend } from 'react-dnd-html5-backend'
+import { DndProvider } from 'react-dnd';
+
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -78,6 +81,8 @@ export default function CreateExercise({Players}) {
 
 const ExerciseComp = ({Players, MatchfieldID}) => (
     <div id="ExerciseComp">
+    <DndProvider backend={HTML5Backend}>
       <Exercises Players={Players} MatchfieldID={MatchfieldID}/>
+    </DndProvider>
     </div>
 )
