@@ -41,7 +41,7 @@ class Player(NamedBusinessObject):
 
 
     def __str__(self):
-        return "User: {}, {}, {}, {}, {}, {}".format(self.getId(),self._surname, self._name, self._teamId,
+        return "Player: {}, {}, {}, {}, {}, {}".format(self.getId(),self._surname, self._name, self._teamId,
                                                      self._role, self._t_number)
 
     @staticmethod
@@ -49,11 +49,11 @@ class Player(NamedBusinessObject):
         ''' turn a python dict into a user object
         '''
 
-        obj = Player()
-        obj.setId(dictionary["id"])  # part of the Business object mother class
-        obj.setSurname(dictionary["surname"])
-        obj.setName(dictionary["name"])
-        obj.setTeamId(dictionary["teamId"])
-        obj.setRole(dictionary["role"])
-        obj.setT_number(dictionary["t_number"])
-        return obj
+        player = Player()
+        player.setId(dictionary["id"])  # part of the Business object mother class
+        player.setSurname(dictionary["surname"])
+        player.setName(dictionary["name"])
+        player.setTeamId(dictionary["teamId"])
+        player.setRole(dictionary["role"])
+        player.setT_number(dictionary["t_number"])
+        return player

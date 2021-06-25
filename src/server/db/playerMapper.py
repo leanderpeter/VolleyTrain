@@ -128,12 +128,12 @@ class PlayerMapper(Mapper):
         """
         cursor = self._connection.cursor()
 
-        command = "UPDATE player " + " SET surname=%s, SET name=%s, SET Team_PK_Team=%s, " \
-                                      "role=%s, t_number=%s WHERE PK_Player=%s"
-        data = (player.getSurname(), player.getName(), player.getTeamId(), player.getRole(),
-                player.getT_number()), player.getId()
+        command = "UPDATE player SET surname=%s, SET name=%s, SET Team_PK_Team=%s, " \
+                                      "role=%s, t_number=%s WHERE PK_Player=%s" \
+        .format(player.getId(), player.getSurname(), player.getName(), player.getTeamId(), player.getRole(),
+                player.getT_number())
 
-        cursor.execute(command, data)
+        cursor.execute(command)
 
         self._connection.commit()
         cursor.close()
@@ -176,10 +176,21 @@ if (__name__ == "__main__"):
     p.setT_number(3)
     with PlayerMapper() as mapper:
         mapper.insert(p)
-"""
-"""
+
 if __name__ == "__main__":
     with PlayerMapper() as mapper:
-        i = mapper.find_by_id(3)
+        user = mapper.find_by_id(4)
+        for i in user:
+            print(i.getName())
+
+if __name__ == "__main__":
+    with PlayerMapper() as mapper:
+        i = mapper.find_by_id(4)
         mapper.delete(i)
+
+if __name__ == "__main__":
+    with PlayerMapper() as mapper:
+        player = mapper.find_by_id(4)
+        player.setName("Christine")
+        mapper.update(player)
 """
