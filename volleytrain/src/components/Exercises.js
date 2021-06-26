@@ -85,7 +85,7 @@ const Exercises = ({Players, MatchfieldID}) => {
      * Set visibility of player to false 
      * if PlayerDeleteId is changed
     */
-
+    
     useEffect(() => {
         if (!(PlayerDeleteId == null)){
             players[PlayerDeleteId].visible = true
@@ -108,7 +108,6 @@ const Exercises = ({Players, MatchfieldID}) => {
         .then(function(MatchfieldPlayerBOs){
             //PosPlayer State
             var posPlayer = PositionHandler(MatchfieldPlayerBOs, Players, dimensions)
-            console.log(dimensions)
             setPlayers(posPlayer)
         })
         .catch(e => {
@@ -121,6 +120,10 @@ const Exercises = ({Players, MatchfieldID}) => {
         setError(null)
     }
     
+    const saveExercise = (players) => {
+        console.log(players)
+    }
+
     useEffect(() => {
         if (dimensions.width > 5){
             getMatchfieldPlayers(MatchfieldID);
@@ -154,16 +157,11 @@ const Exercises = ({Players, MatchfieldID}) => {
     // init loading state for placing players
     const [Playerloading, setPlayerLoading] = useState(true)
 
-    // boxes/player state
-    const [boxes, setBoxes] = useState([]);
-
     // move players on matchfield
     const moveBox = useCallback((id, left, top) => {
-        setBoxes(update(boxes, { [id]: { $merge: { left, top },},
+        setPlayers(update(players, { [id]: { $merge: { left, top },},
         }));
-        setPlayers(boxes)
-        forceUpdate();
-    }, [boxes, setBoxes]);
+    }, [players, setPlayers]);
 
 
     const [, drop] = useDrop(() => ({
@@ -173,17 +171,14 @@ const Exercises = ({Players, MatchfieldID}) => {
             const left = Math.round(item.left + delta.x);
             const top = Math.round(item.top + delta.y);
             moveBox(item.id, left, top);
-            console.log(item.id, left, top)
             return undefined;
         },
     }), [moveBox]);
     
     const addPlayer = (playerID) => {
-        console.log(playerID)
         playerID = playerID - 1
         players[playerID].visible = false;
         setPlayers(players)
-        setBoxes(players)
         forceUpdate();
     }
 
@@ -205,12 +200,10 @@ const Exercises = ({Players, MatchfieldID}) => {
                     PlayerWithPositions.push(players[i])
             }
             }
-            setBoxes(PlayerWithPositions)
+            setPlayers(PlayerWithPositions)
         }
     }
 
-
-    console.log(boxes)
     console.log(players)
 
     /**
@@ -250,8 +243,8 @@ const Exercises = ({Players, MatchfieldID}) => {
                                         <div ref={drop} className={classes.box}>
                                             <img src={field} alt="Field" className={classes.field}/>
 
-                                            {Object.keys(boxes).map((key) => {
-                                            const { left, top, name, surname, visible } = boxes[key];
+                                            {Object.keys(players).map((key) => {
+                                            const { left, top, name, surname, visible } = players[key];
 
                                             return (
                                                 <div>
@@ -266,9 +259,15 @@ const Exercises = ({Players, MatchfieldID}) => {
                                             })}
                                         </div>
                                     </div>
-                            
                         </div>
-                    </div>       
+                    </div>
+                    <Grid
+                    container
+                    direction="row"
+                    justify="center"
+                    alignItems="flex-end">
+                        <Button onClick={saveExercise}>Uebung Speichern</Button>
+                    </Grid>
                 </Grid>
                 <Grid item xs={2}
                     container
