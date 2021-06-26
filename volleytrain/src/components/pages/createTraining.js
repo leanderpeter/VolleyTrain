@@ -7,8 +7,8 @@ import {
 } from '@material-ui/core';
 import {Link} from 'react-router-dom';
 
-import newTrainingIcon from '../../assets/newTrainingIcon.png';
-import editTrainingIcon from '../../assets/editTrainingIcon.png';
+import newTrainingIcon from '../../assets/newTrainingIcon.svg';
+import editTrainingIcon from '../../assets/editTrainingIcon.svg';
 
 
 const CreateTraining = () => {
