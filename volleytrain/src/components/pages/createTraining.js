@@ -8,6 +8,8 @@ import {
 import {Link} from 'react-router-dom';
 
 import newTrainingIcon from '../../assets/newTrainingIcon.png';
+import editTrainingIcon from '../../assets/editTrainingIcon.png';
+
 
 const CreateTraining = () => {
 
@@ -28,7 +30,7 @@ const CreateTraining = () => {
                             </Typography>
                         </Link>
                         <Link to="/home"  className={classes.container} >
-                            <img src={newTrainingIcon} alt='' className={classes.img} />
+                            <img src={editTrainingIcon} alt='' className={classes.img} />
                             <Typography className={classes.title} >
                                 Bestehenden Trainingsplan bearbeiten
                             </Typography>
