@@ -5,7 +5,8 @@ import React, {
     useEffect, 
     useLayoutEffect,
     useCallback,
-    useImperativeHandle} from 'react';
+    useImperativeHandle,
+    useReducer} from 'react';
 import {
     Button,
     Typography,
@@ -51,7 +52,13 @@ const Exercises = ({Players, MatchfieldID}) => {
     // getting the dimensions of matchfield compoent
     const [dimensions, setDimensions] = useState({ width:0, height: 0 });
     
-    
+    /**
+     * In this Layout effect we set the width and height of the 
+     * matchfield component. Width and height is used to set the players
+     * because the position data comes normalized from the backend.
+     * 
+     * Hint: Maybe redundant, see useEffect with forceUpdate below.
+     */
     useLayoutEffect(() => {
         if (divRef.current) {
         setDimensions({
@@ -60,13 +67,18 @@ const Exercises = ({Players, MatchfieldID}) => {
         });
         }
     }, []);
-    
-
-    console.log(dimensions)
 
     // init styling
     const classes = styles();
 
+
+    /**
+     * here we set the visibilty of the player object 
+     * to true or false
+     * If the player button on the righthand side is clicked, 
+     * the visibilty is set to false
+     * 
+     */
     const setVisible = (playerID) => {
         var i;
         for (i=0; i < players.length; i++){
@@ -74,9 +86,9 @@ const Exercises = ({Players, MatchfieldID}) => {
                 players[i].visible = false            
             }
         }
-        console.log(players, 'changed')
     }
 
+    
     // get all Matchfield_Player_Position Data
     const getMatchfieldPlayers = (id) => {
         VolleytrainAPI.getAPI().getPlayerByMatchfieldID(id).then(
@@ -109,9 +121,17 @@ const Exercises = ({Players, MatchfieldID}) => {
         
     }, [, dimensions]);
 
+    const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
+
     useEffect(()=>{
         if (dimensions.width < 5){
-            
+            forceUpdate()
+            if (divRef.current) {
+                setDimensions({
+                    width: divRef.current.offsetWidth,
+                    height: divRef.current.offsetHeight
+                });
+            }
         }
     });
 
@@ -148,7 +168,6 @@ const Exercises = ({Players, MatchfieldID}) => {
     }), [moveBox]);
     
     const addPlayer = (playerID) => {
-        console.log("SET!")
         playerID = playerID - 1
         if (players[playerID].left === null){
             players[playerID].left = Math.floor(Math.random() * dimensions.width);
