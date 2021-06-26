@@ -28,11 +28,21 @@ import { ItemTypes } from './ItemTypes';
 import Player from './Player';
 import field from './media/field.png';
 import LoadingComp from './dialogs/LoadingComp';
+import { deepOrange, deepPurple } from '@material-ui/core/colors';
 
 const Exercises = ({Players, MatchfieldID}) => {
+
+    // force update handler
+    const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
+
+    // delete PlayerID handler from child component
+    // gets called in Player.js component
+    const [PlayerDeleteId, setPlayerDeleteId] = useState(null);
+
     // In order to gain access to the child component instance,
     // you need to assign it to a `ref`, so we call `useRef()` to get one
     const divRef = useRef();
+
 
     // init rating state
     const [rating, setRating] = useState(null)
@@ -71,7 +81,21 @@ const Exercises = ({Players, MatchfieldID}) => {
     // init styling
     const classes = styles();
 
+    /** 
+     * Set visibility of player to false 
+     * if PlayerDeleteId is changed
+    */
 
+    useEffect(() => {
+        if (!(PlayerDeleteId == null)){
+            players[PlayerDeleteId].visible = true
+            setPlayers(players)
+            forceUpdate()
+        }
+        
+    }, [, PlayerDeleteId]);
+
+    console.log(players)
     /**
      * here we set the visibilty of the player object 
      * to true or false
@@ -88,7 +112,7 @@ const Exercises = ({Players, MatchfieldID}) => {
         }
     }
 
-    
+
     // get all Matchfield_Player_Position Data
     const getMatchfieldPlayers = (id) => {
         VolleytrainAPI.getAPI().getPlayerByMatchfieldID(id).then(
@@ -121,7 +145,7 @@ const Exercises = ({Players, MatchfieldID}) => {
         
     }, [, dimensions]);
 
-    const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
+
 
     useEffect(()=>{
         if (dimensions.width < 5){
@@ -209,7 +233,6 @@ const Exercises = ({Players, MatchfieldID}) => {
      */
 
 
-
     return (
     <div>
         <div className={classes.root}>
@@ -225,6 +248,7 @@ const Exercises = ({Players, MatchfieldID}) => {
                     justify="center"
                     alignItems="center"
                     style={{ borderRight: '0.2em solid black', padding: '0.5em'}}>
+                        {loading ? <LoadingComp show={loading}/> : null}
                     <div className={classes.wrapper}>
                         <div className={classes.above} >
                             <div className={classes.box}>
@@ -237,14 +261,13 @@ const Exercises = ({Players, MatchfieldID}) => {
                                             <img src={field} alt="Field" className={classes.field}/>
                                             {Object.keys(boxes).map((key) => {
                                             const { left, top, name, surname } = boxes[key];
-                                            return (<Player id={key} left={left} top={top} surname={surname} name={name}>
+                                            return (<Player id={key} left={left} top={top} surname={surname} name={name} passPlayerDeleteId={setPlayerDeleteId}>
                                                 </Player>);
                                             })}
                                         </div>
                                     </div>
                             
                         </div>
-                            <LoadingComp show={loading}/>
                     </div>       
                 </Grid>
                 <Grid item xs={2}
@@ -308,7 +331,6 @@ const Exercises = ({Players, MatchfieldID}) => {
 
 
 
-
 /** Function specific styles */
 const styles = makeStyles({
     root: {
@@ -351,13 +373,26 @@ const styles = makeStyles({
         //border: '1px solid black',
         
     },
-      field: {
-          height: '100%',
-          width: '100%',
-          position: 'relative',
-          border: '1px solid black',
-          
-    }
+    field: {
+        height: '100%',
+        width: '100%',
+        position: 'relative',
+        border: '1px solid black',
+    },
+    field_player: {
+        marginBottom: 5,
+        marginTop: 5,
+        marginLeft: 5,
+        marginRight: 5,
+    },
+    orange: {
+        color: deepOrange[500],
+        backgroundColor: deepOrange[100],
+    },
+    purple: {
+    color: deepPurple[500],
+    backgroundColor: deepPurple[100],
+    },
 }); 
 
 
