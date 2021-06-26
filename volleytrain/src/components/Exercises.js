@@ -26,18 +26,12 @@ import { useDrop } from 'react-dnd';
 import { ItemTypes } from './ItemTypes';
 import Player from './Player';
 import field from './media/field.png';
-
-//create your forceUpdate hook
-function useForceUpdate(){
-    const [value, setValue] = useState(0); // integer state
-    return () => setValue(value => value + 1); // update the state to force render
-}
+import LoadingComp from './dialogs/LoadingComp';
 
 
 const Exercises = ({Players, MatchfieldID}) => {
     // In order to gain access to the child component instance,
     // you need to assign it to a `ref`, so we call `useRef()` to get one
-    const childRef = useRef();
     const divRef = useRef();
 
     // init rating state
@@ -58,6 +52,7 @@ const Exercises = ({Players, MatchfieldID}) => {
     // getting the dimensions of matchfield compoent
     const [dimensions, setDimensions] = useState({ width:0, height: 0 });
     
+    
     useLayoutEffect(() => {
         if (divRef.current) {
         setDimensions({
@@ -66,24 +61,22 @@ const Exercises = ({Players, MatchfieldID}) => {
         });
         }
     }, []);
+    
 
-    //PosPlayer State
-    var posPlayer = PositionHandler(MatchfieldPlayers, Players, dimensions)
+    console.log(dimensions)
 
     // init styling
     const classes = styles();
 
     const setVisible = (playerID) => {
         var i;
-        for (i=0; i < posPlayer.length; i++){
-            if (posPlayer[i].id === playerID){
-                posPlayer[i].visible = false            
+        for (i=0; i < players.length; i++){
+            if (players[i].id === playerID){
+                players[i].visible = false            
             }
         }
-        console.log(posPlayer, 'changed')
+        console.log(players, 'changed')
     }
-
-    console.log(players)
 
     // get all Matchfield_Player_Position Data
     const getMatchfieldPlayers = (id) => {
@@ -92,11 +85,16 @@ const Exercises = ({Players, MatchfieldID}) => {
                 setMatchfieldPlayers(MatchfieldPlayerBOs)
                 setLoadingInProgress(false)
                 setError(null)
-                setPlayers(posPlayer)
+                return MatchfieldPlayerBOs
             }
         )
+        .then(function(MatchfieldPlayerBOs){
+            //PosPlayer State
+            var posPlayer = PositionHandler(MatchfieldPlayerBOs, Players, dimensions)
+            setPlayers(posPlayer)
+        })
         .catch(e => {
-            setMatchfieldPlayers([])
+            //setMatchfieldPlayers([])
             setLoadingInProgress(false)
             setError(e)
         })
@@ -108,6 +106,7 @@ const Exercises = ({Players, MatchfieldID}) => {
     useEffect(() => {
         getMatchfieldPlayers(MatchfieldID);
     }, []);
+
 
     /**
      * Below here is only Matchfield function/logic
@@ -144,30 +143,27 @@ const Exercises = ({Players, MatchfieldID}) => {
     const addPlayer = (playerID) => {
         console.log("SET!")
         playerID = playerID - 1
-        if (posPlayer[playerID].left === null){
-            posPlayer[playerID].left = 40;
-            posPlayer[playerID].top = 220;
-            posPlayer[playerID].visible = false;
+        if (players[playerID].left === null){
+            players[playerID].left = Math.floor(Math.random() * dimensions.width);
+            players[playerID].top = Math.floor(Math.random() * dimensions.height);
+            players[playerID].visible = false;
         }
-        setBoxes([...boxes, posPlayer[playerID]])
+        setBoxes([...boxes, players[playerID]])
     }
-    
 
-    
+
     // placing players with position
-    if (posPlayer.length > 0 && Playerloading){
+    if (players.length > 0 && Playerloading){
         setPlayerLoading(false)
         var PlayerWithPositions = [];
         var i;
-        for (i=0; i < posPlayer.length; i++){
-            if (!(posPlayer[i].top == null)){
-                PlayerWithPositions.push(posPlayer[i])
+        for (i=0; i < players.length; i++){
+            if (!(players[i].top == null)){
+                PlayerWithPositions.push(players[i])
         }
         }
         setBoxes(PlayerWithPositions)
-        
     }
-
 
     /**
      * 
@@ -180,30 +176,29 @@ const Exercises = ({Players, MatchfieldID}) => {
 
 
 
-    if (LoadingProgress){
-
-        return (
-        <div>
-            
-            <div className={classes.root}>
-                <Grid container spacing={3}>
-                    <Grid item xs={1}
-                        container
-                        direction="column"
-                        justify="center"
-                        alignItems="center"/>
-                    <Grid item xs={9} 
-                        container
-                        direction="row"
-                        justify="center"
-                        alignItems="center"
-                        style={{ borderRight: '0.2em solid black', padding: '0.5em'}}>
-                        <div className={classes.wrapper}>
-                            <div className={classes.above} >
-                                
+    return (
+    <div>
+        <div className={classes.root}>
+            <Grid container spacing={3}>
+                <Grid item xs={1}
+                    container
+                    direction="column"
+                    justify="center"
+                    alignItems="center"/>
+                <Grid item xs={9} 
+                    container
+                    direction="row"
+                    justify="center"
+                    alignItems="center"
+                    style={{ borderRight: '0.2em solid black', padding: '0.5em'}}>
+                    <div className={classes.wrapper}>
+                        <div className={classes.above} >
+                            <div className={classes.box}>
+                                <img src={field} alt="Field" className={classes.field} ref={divRef}/>
                             </div>
-                            <div className={classes.under}>
-                                        <div ref={divRef}>
+                        </div>
+                        <div className={classes.under}>
+                                    <div>
                                         <div ref={drop} className={classes.box}>
                                             <img src={field} alt="Field" className={classes.field}/>
                                             {Object.keys(boxes).map((key) => {
@@ -212,80 +207,70 @@ const Exercises = ({Players, MatchfieldID}) => {
                                                 </Player>);
                                             })}
                                         </div>
-                                        </div>
-                            </div>
-                        </div>       
-                    </Grid>
-                    <Grid item xs={2}
-                        container
-                        direction="column"
-                        justify="flex-start"
-                        alignItems="flex-start">
-                    <Typography variant="h6">Uebung bewerten:</Typography>
-                    <Rating
-                        name="simple-controlled"
-                        value={rating}
-                        onChange={(event, newValue) => {setRating(newValue);}}
-                        size="large"
-                        />
-                    <Typography variant="h6">Feldelemente:</Typography>
-                    <Typography variant="subtitle2">Spieler:</Typography>
-                    <Grid
-                        container
-                        spacing={1}
-                        direction="row"
-                        justify=""
-                        alignItems="center">
-                    {posPlayer.length > 0 ?
-                        <>
-                        {posPlayer.map(player => 
-                            <div className="test_player">
-                                {player.visible ? 
-                                <Button onClick={() => {addPlayer(player.id); setVisible(player.id);}} className={classes.playerButton}>
-                                    <PlayerButton key={player.id} player={player}/>
-                                </Button>
-                                : null}
-                            </div>
-                        )}
-                        </>
-                        :
-                        console.log("No info")
-                    }
-                    </Grid>
-                    <Typography variant="subtitle2">Linien:</Typography>
-                        <Grid
-                        container
-                        direction="row"
-                        justify="flex-start"
-                        alignItems="center">
-                            <img src={arrow_n} className={classes.arrow}/>
-                            <Typography variant="subtitle2">Ballweg</Typography>
-                        </Grid>
-                        <Grid
-                        container
-                        direction="row"
-                        justify="flex-start"
-                        alignItems='center'
-                        direction="row"
-                        justify="flex-start"
-                        alignItems="center">
-                            <img src={arrow_r} className={classes.arrow}/>
-                            <Typography variant="subtitle2">Rotation</Typography>
-                        </Grid>
-                    <Typography variant="subtitle2">Objekte:</Typography>
-                    </Grid>
+                                    </div>
+                            
+                        </div>
+                            <LoadingComp show={loading}/>
+                    </div>       
                 </Grid>
-            </div>
-        </div>
-        );} else {
+                <Grid item xs={2}
+                    container
+                    direction="column"
+                    justify="flex-start"
+                    alignItems="flex-start">
+                <Typography variant="h6">Uebung bewerten:</Typography>
+                <Rating
+                    name="simple-controlled"
+                    value={rating}
+                    onChange={(event, newValue) => {setRating(newValue);}}
+                    size="large"
+                    />
+                <Typography variant="h6">Feldelemente:</Typography>
+                <Typography variant="subtitle2">Spieler:</Typography>
+                <Grid
+                    container
+                    spacing={1}
+                    direction="row"
+                    justify=""
+                    alignItems="center">
 
-        return (
-            <div>
-                <p>Loading</p>
-            </div>
-        )
-    }
-  };
+                    {players.map(player => 
+                        <div className="test_player">
+                            {player.visible ? 
+                            <Button onClick={() => {addPlayer(player.id); setVisible(player.id);}} className={classes.playerButton}>
+                                <PlayerButton key={player.id} player={player}/>
+                            </Button>
+                            : null}
+                        </div>
+                    )}
+                </Grid>
+                <Typography variant="subtitle2">Linien:</Typography>
+                    <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="center">
+                        <img src={arrow_n} className={classes.arrow}/>
+                        <Typography variant="subtitle2">Ballweg</Typography>
+                    </Grid>
+                    <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems='center'
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="center">
+                        <img src={arrow_r} className={classes.arrow}/>
+                        <Typography variant="subtitle2">Rotation</Typography>
+                    </Grid>
+                <Typography variant="subtitle2">Objekte:</Typography>
+                </Grid>
+            </Grid>
+        </div>
+    </div>
+    );
+};
 
 
 
