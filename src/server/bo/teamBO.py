@@ -1,18 +1,18 @@
 from contextlib import nullcontext
 from server.bo.NamedBusinessObject import NamedBusinessObject
 
+
 class Team(NamedBusinessObject):
 
     def __init__(self):
         super().__init__()
         self._trainer = None
 
-    def setTrainer(self, trainer):
+    def set_trainer(self, trainer):
         self._trainer = trainer
 
-    def getTrainer(self):
+    def get_trainer(self):
         return self._trainer
-        
 
     @staticmethod
     def from_dict(dictionary=dict()):
@@ -20,10 +20,8 @@ class Team(NamedBusinessObject):
         '''
 
         obj = Team()
-        obj.setId(dictionary["id"])  # part of the Business object mother class
-        obj.setName(dictionary["name"])
-        obj.setTrainer(dictionary["trainer"])
+        # part of the Business object mother class
+        obj.set_id(dictionary["id"])
+        obj.set_name(dictionary["name"])
+        obj.set_trainer(dictionary["trainer"])
         return obj
-
-
-    

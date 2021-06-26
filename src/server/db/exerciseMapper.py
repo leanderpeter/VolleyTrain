@@ -5,7 +5,6 @@ from server.bo.ExerciseBO import Exercise
 class ExerciseMapper(Mapper):
     """mapper class to insert/replace/change exercise object in the realtional database"""
 
-
     def __init__(self):
         super().__init__()
 
@@ -25,8 +24,8 @@ class ExerciseMapper(Mapper):
 
         for (id, name, training, duration, notes, description, goal) in tuples:
             exercise = Exercise()
-            exercise.setId(id)
-            exercise.setName(name)
+            exercise.set_id(id)
+            exercise.set_name(name)
             exercise.setTraining(training)
             exercise.setDuration(duration)
             exercise.setNotes(notes)
@@ -52,14 +51,16 @@ class ExerciseMapper(Mapper):
         """
         result = None
         cursor = self._connection.cursor()
-        command = "SELECT PK_Exercise, name, Training_PK_Training, duration, notes, description, goal FROM exercise WHERE PK_Exercise={}".format(id)
+        command = "SELECT PK_Exercise, name, Training_PK_Training, duration, notes, description, goal FROM exercise WHERE PK_Exercise={}".format(
+            id)
         cursor.execute(command)
         tuples = cursor.fetchall()
         try:
-            (id, name, training, duration, notes, description, goal) = tuples[0]
+            (id, name, training, duration, notes,
+             description, goal) = tuples[0]
             exercise = Exercise()
-            exercise.setId(id)
-            exercise.setName(name)
+            exercise.set_id(id)
+            exercise.set_name(name)
             exercise.setTraining(training)
             exercise.setDuration(duration)
             exercise.setNotes(notes)
@@ -70,7 +71,7 @@ class ExerciseMapper(Mapper):
 
         except IndexError:
             """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
-			keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
+                        keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
             result = None
 
         self._connection.commit()
@@ -93,14 +94,15 @@ class ExerciseMapper(Mapper):
             if maxid[0] is not None:
                 """Wenn wir eine maximale ID festellen konnten, zählen wir diese
                 um 1 hoch und weisen diesen Wert als ID dem exercise-Objekt zu."""
-                exercise.setId(maxid[0] + 1)
+                exercise.set_id(maxid[0] + 1)
             else:
                 """Wenn wir KEINE maximale ID feststellen konnten, dann gehen wir
                 davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
-                exercise.setId(1)
+                exercise.set_id(1)
 
         command = "INSERT INTO exercise (PK_Exercise, name, Training_PK_Training, duration, notes, description, goal) VALUES (%s,%s,%s,%s,%s,%s,%s)"
-        data = (exercise.getId(),  exercise.getName(), exercise.getTraining(), exercise.getDuration(), exercise.getNotes(), exercise.getDescription(), exercise.getGoal())
+        data = (exercise.get_id(),  exercise.get_name(), exercise.getTraining(
+        ), exercise.getDuration(), exercise.getNotes(), exercise.getDescription(), exercise.getGoal())
         cursor.execute(command, data)
 
         self._connection.commit()
@@ -116,8 +118,10 @@ class ExerciseMapper(Mapper):
         """
         cursor = self._connection.cursor()
 
-        command = "UPDATE exercise set " + "name=%s, duration=%s, notes=%s, description=%s, goal=%s WHERE PK_Exercise=%s"
-        data = (exercise.getName(), exercise.getDuration(), exercise.getNotes(), exercise.getDescription(), exercise.getGoal(), exercise.getId())
+        command = "UPDATE exercise set " + \
+            "name=%s, duration=%s, notes=%s, description=%s, goal=%s WHERE PK_Exercise=%s"
+        data = (exercise.get_name(), exercise.getDuration(), exercise.getNotes(
+        ), exercise.getDescription(), exercise.getGoal(), exercise.get_id())
 
         cursor.execute(command, data)
 
@@ -133,12 +137,14 @@ class ExerciseMapper(Mapper):
         """
         cursor = self._connection.cursor()
 
-        command = "DELETE FROM exercise WHERE PK_exercise={}".format(exerciseId)
+        command = "DELETE FROM exercise WHERE PK_exercise={}".format(
+            exerciseId)
         cursor.execute(command)
 
         self._connection.commit()
         cursor.close()
         return exerciseId
+
 
 '''Only for testing purpose'''
 

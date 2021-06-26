@@ -2,6 +2,7 @@ from contextlib import nullcontext
 from server.bo.BusinessObject import BusinessObject
 from datetime import datetime
 
+
 class Trainingday(BusinessObject):
 
     def __init__(self):
@@ -11,28 +12,28 @@ class Trainingday(BusinessObject):
         self._endtime = datetime.time
         self._team = None
 
-    def setWeekday(self, day):
+    def set_weekday(self, day):
         self._weekday = day
 
-    def getWeekday(self):
+    def get_weekday(self):
         return self._weekday
 
-    def setStarttime(self, time):
+    def set_starttime(self, time):
         self._starttime = time
 
-    def getStarttime(self):
+    def get_starttime(self):
         return self._starttime
 
-    def setEndtime(self, time):
+    def set_endtime(self, time):
         self._endtime = time
 
-    def getEndtime(self):
+    def get_endtime(self):
         return self._endtime
 
-    def setTeam(self, team):
+    def set_team(self, team):
         self._team = team
 
-    def getTeam(self):
+    def get_team(self):
         return self._team
 
     @staticmethod
@@ -41,12 +42,10 @@ class Trainingday(BusinessObject):
         '''
 
         obj = Trainingday()
-        obj.setId(dictionary["id"])  # part of the Business object mother class
-        obj.setWeekday(dictionary["weekday"])
-        obj.setStarttime(dictionary["starttime"])
-        obj.setEndtime(dictionary["endtime"])
-        obj.setTeam(dictionary["team"])
+        # part of the Business object mother class
+        obj.set_id(dictionary["id"])
+        obj.set_weekday(dictionary["weekday"])
+        obj.set_starttime(dictionary["starttime"])
+        obj.set_endtime(dictionary["endtime"])
+        obj.set_team(dictionary["team"])
         return obj
-
-
-    

@@ -22,12 +22,12 @@ class PlayerMapper(Mapper):
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        for (id,surname, name, teamId) in tuples:
+        for (id, surname, name, team_id) in tuples:
             user = Player()
-            user.setId(id)
-            user.setName(name)
-            user.setSurname(surname)
-            user.setTeamId(teamId)
+            user.set_id(id)
+            user.set_name(name)
+            user.set_surname(surname)
+            user.setTeamId(team_id)
 
             result.append(user)
 
@@ -56,7 +56,6 @@ class PlayerMapper(Mapper):
 
     def delete(self, user):
         pass
-
 
 
 '''Only for testing purpose'''

@@ -25,11 +25,11 @@ class TrainingdayMapper(Mapper):
 
         for (id, weekday, starttime, endtime, team) in tuples:
             trainingday = Trainingday()
-            trainingday.setId(id)
-            trainingday.setWeekday(weekday)
-            trainingday.setStarttime(starttime)
-            trainingday.setEndtime(endtime)
-            trainingday.setTeam(team)
+            trainingday.set_id(id)
+            trainingday.set_weekday(weekday)
+            trainingday.set_starttime(starttime)
+            trainingday.set_endtime(endtime)
+            trainingday.set_team(team)
 
             result.append(trainingday)
 
@@ -57,11 +57,11 @@ class TrainingdayMapper(Mapper):
 
         for (id, weekday, starttime, endtime, team) in tuples:
             trainingday = Trainingday()
-            trainingday.setId(id)
-            trainingday.setWeekday(weekday)
-            trainingday.setStarttime(starttime)
-            trainingday.setEndtime(endtime)
-            trainingday.setTeam(team)
+            trainingday.set_id(id)
+            trainingday.set_weekday(weekday)
+            trainingday.set_starttime(starttime)
+            trainingday.set_endtime(endtime)
+            trainingday.set_team(team)
 
             result.append(trainingday)
 
@@ -69,8 +69,6 @@ class TrainingdayMapper(Mapper):
         cursor.close()
 
         return result
-
-
 
     def find_by_id(self, id):
         """Suchen einer trainingday nach der übergebenen ID. 
@@ -81,27 +79,27 @@ class TrainingdayMapper(Mapper):
         """
         result = None
         cursor = self._connection.cursor()
-        command = "SELECT * FROM trainingday WHERE PK_Trainingday='{}'".format(id)
+        command = "SELECT * FROM trainingday WHERE PK_Trainingday='{}'".format(
+            id)
         cursor.execute(command)
         tuples = cursor.fetchall()
         try:
             (id, weekday, starttime, endtime) = tuples[0]
             trainingday = Trainingday()
-            trainingday.setId(id)
-            trainingday.setWeekday(weekday)
-            trainingday.setStarttime(starttime)
-            trainingday.setEndtime(endtime)
+            trainingday.set_id(id)
+            trainingday.set_weekday(weekday)
+            trainingday.set_starttime(starttime)
+            trainingday.set_endtime(endtime)
             result = trainingday
 
         except IndexError:
             """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
-			keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
+                        keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
             result = None
 
         self._connection.commit()
         cursor.close()
         return result
-
 
     def insert(self, trainingday):
         """Einfügen eines trainingday Objekts in die DB
@@ -119,14 +117,15 @@ class TrainingdayMapper(Mapper):
             if maxid[0] is not None:
                 """Wenn wir eine maximale ID festellen konnten, zählen wir diese
                 um 1 hoch und weisen diesen Wert als ID dem trainingday-Objekt zu."""
-                trainingday.setId(maxid[0] + 1)
+                trainingday.set_id(maxid[0] + 1)
             else:
                 """Wenn wir KEINE maximale ID feststellen konnten, dann gehen wir
                 davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
-                trainingday.setId(1)
+                trainingday.set_id(1)
 
         command = "INSERT INTO trainingday (PK_Trainingday, weekday, starttime, endtime, team) VALUES (%s,%s,%s,%s,%s)"
-        data = (trainingday.getId(), trainingday.getWeekday(), trainingday.getStarttime(), trainingday.getEndtime(), trainingday.getTeam())
+        data = (trainingday.get_id(), trainingday.get_weekday(
+        ), trainingday.get_starttime(), trainingday.get_endtime(), trainingday.get_team())
         cursor.execute(command, data)
 
         self._connection.commit()
@@ -134,14 +133,11 @@ class TrainingdayMapper(Mapper):
 
         return trainingday
 
-
     def update(self):
         pass
 
-
     def delete(self):
         pass
-
 
 
 '''Only for testing purpose'''

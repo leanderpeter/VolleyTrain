@@ -13,11 +13,12 @@ from server.db.playerMapper import PlayerMapper
 from server.db.positionMapper import PositionMapper
 from server.db.matchfieldPlayerMapper import MatchfieldPlayerMapper
 
+
 class volleytrainAdministration(object):
 
     def __init__(self):
         pass
-    
+
     """ User / Trainer """
 
     def createUser(self, surname, name, email, googleId):
@@ -25,7 +26,7 @@ class volleytrainAdministration(object):
         """
         user = User()
         user.setSurname(surname)
-        user.setName(name)
+        user.set_name(name)
         user.setEmail(email)
         user.setGoogleUserId(googleId)
 
@@ -47,7 +48,7 @@ class volleytrainAdministration(object):
     def getAllPlayer(self):
         with PlayerMapper() as mapper:
             return mapper.find_all()
-    
+
     """ Training """
 
     def createTraining(self, training):
@@ -61,65 +62,62 @@ class volleytrainAdministration(object):
     def getTrainingById(self, id):
         with TrainingMapper() as mapper:
             return mapper.find_by_id(id)
-    
+
     def saveTraining(self, training):
         with TrainingMapper() as mapper:
             return mapper.update(training)
-    
+
     def deleteTraining(self, training):
         with TrainingMapper() as mapper:
             return mapper.delete(training)
 
+    def create_team(self, name, trainer):
 
-    def createTeam(self, name, trainer):
-        
         team = Team()
-        team.setName(name)
-        team.setTrainer(trainer)
+        team.set_name(name)
+        team.set_trainer(trainer)
 
         with TeamMapper() as mapper:
             return mapper.insert(team)
 
-    def getAllTeams(self):
+    def get_all_teams(self):
         with TeamMapper() as mapper:
             return mapper.find_all()
 
-    def getTeamById(self, id):
+    def get_team_by_id(self, id):
         with TeamMapper() as mapper:
             return mapper.find_by_id(id)
 
-    def getTeamByName(self, name):
+    def get_team_by_name(self, name):
         with TeamMapper() as mapper:
             return mapper.find_by_name(name)
 
-    def deleteTeam(self, team):
+    def delete_team(self, team):
         with TeamMapper() as mapper:
             return mapper.delete(team)
 
-    def saveTeam(self, team):
+    def save_team(self, team):
         with TeamMapper() as mapper:
             return mapper.update(team)
 
+    def create_trainingday(self, weekday, starttime, endtime, team):
 
-    def createTrainingday(self, weekday, starttime, endtime, team):
-        
         trainingday = Trainingday()
-        trainingday.setWeekday(weekday)
-        trainingday.setStarttime(starttime)
-        trainingday.setEndtime(endtime)
-        trainingday.setTeam(team)
-        
+        trainingday.set_weekday(weekday)
+        trainingday.set_starttime(starttime)
+        trainingday.set_endtime(endtime)
+        trainingday.set_team(team)
+
         with TrainingdayMapper() as mapper:
             return mapper.insert(trainingday)
 
-    def getAllTraingdays(self):
+    def get_all_trainingdays(self):
         with TrainingdayMapper() as mapper:
             return mapper.find_all()
 
-    def getTrainingdaysByTeamId(self, id):
+    def get_trainingdays_by_team_id(self, id):
         with TrainingdayMapper() as mapper:
             return mapper.find_by_team_id(id)
-
 
     def createExercise(self, exercise):
         """ Create a Exercise object and inject it into the database """
@@ -147,7 +145,7 @@ class volleytrainAdministration(object):
         """ Create a Player object and inject it into the database
         """
         player = Player()
-        player.setName(name)
+        player.set_name(name)
         player.setRole(role)
         player.setT_number(t_number)
 

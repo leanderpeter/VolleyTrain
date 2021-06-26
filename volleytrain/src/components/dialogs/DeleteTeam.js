@@ -15,49 +15,26 @@ import React from "react";
 import ArrowBackOutlinedIcon from "@material-ui/icons/ArrowBackOutlined";
 import VolleytrainAPI from "../../api/VolleytrainAPI";
 import TrainingTime from "../assets/TrainingTime";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Redirect,
+  Route,
+  Link,
+  useRouteMatch,
+  useParams,
+} from "react-router-dom";
 import TeamBO from "../../api/TeamBO";
 
-class CreateTeam extends React.Component {
+class DeleteTeam extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      teamname: "",
-      showOptions: false,
-      teamDisabled: false,
-      teamnameError: false,
-    };
+    this.state = {};
   }
 
-  handleChange = (e) => {
-    this.setState({
-      teamname: e.target.value,
-    });
-  };
-
-  createTeam = () => {
-    if (this.state.teamname != "") {
-      let team = new TeamBO();
-      team.setID(1);
-      team.setName(this.state.teamname);
-      team.setTrainer(this.props.currentUser.getID());
-      VolleytrainAPI.getAPI().addTeam(team);
-
-      this.setState({
-        showOptions: true,
-        teamDisabled: true,
-        teamnameError: false,
-      });
-    } else {
-      this.setState({
-        teamnameError: true,
-      });
-    }
-  };
-
   render() {
-    const { classes, dialogOpen, onClose } = this.props;
-    const { teamname, teamDisabled, showOptions, teamnameError } = this.state;
+    const { classes, dialogOpen, onClose, team, deleteTeam } = this.props;
 
     return (
       <div>
@@ -74,7 +51,7 @@ class CreateTeam extends React.Component {
               </Grid>
               <Grid item xs={8}>
                 <Typography variant="h5" color="primary">
-                  <b>Neues Team erstellen</b>
+                  <b>Team löschen</b>
                 </Typography>
               </Grid>
             </Grid>
@@ -82,36 +59,29 @@ class CreateTeam extends React.Component {
           <Divider />
           <DialogContent>
             <Grid container spacing={2}>
-              <Grid className={classes.border} item xs={8}>
-                <TextField
-                  error={teamnameError}
-                  required
-                  disabled={teamDisabled}
-                  label="Teamname"
-                  color="primary"
-                  value={teamname}
-                  onChange={this.handleChange}
-                  helperText={
-                    teamnameError
-                      ? "Du musst deinem Team einen Namen geben."
-                      : ""
-                  }
-                  fullWidth
-                />
+              <Grid item xs={12}>
+                <Typography variant="h6" color="secondary">
+                  Möchtest du die <b>{team.getName()}</b> wirklich löschen?
+                </Typography>
               </Grid>
-              <Grid item xs={4}>
-                <Button
-                  disabled={teamDisabled}
-                  className={classes.button}
-                  onClick={this.createTeam}
-                  fullWidth
-                >
-                  {teamDisabled ? "Team erstellt!" : "Team erstellen"}
+              <Grid item xs={6}>
+                <Link to={{ pathname: "/home" }}>
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    onClick={deleteTeam}
+                  >
+                    {" "}
+                    <b>LÖSCHEN</b>
+                  </Button>
+                </Link>
+              </Grid>
+              <Grid item xs={6}>
+                <Button color="secondary" variant="outlined" onClick={onClose}>
+                  {" "}
+                  <b>ABBRECHEN</b>
                 </Button>
               </Grid>
-              {showOptions ? (
-                <TrainingTime teamname={teamname} onClose={onClose} />
-              ) : null}
             </Grid>
           </DialogContent>
         </Dialog>
@@ -146,4 +116,4 @@ const styles = (theme) => ({
   },
 });
 
-export default withStyles(styles)(CreateTeam);
+export default withStyles(styles)(DeleteTeam);

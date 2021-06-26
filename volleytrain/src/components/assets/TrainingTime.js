@@ -39,6 +39,8 @@ class TrainingTime extends React.Component{
         trainingday.setEndtime(this.state.endtime);
         trainingday.setTeam(this.state.teamid)
         VolleytrainAPI.getAPI().addTrainingday(trainingday);
+
+        this.handleDeleteTime();
     }
 
 
@@ -104,8 +106,8 @@ class TrainingTime extends React.Component{
 
 
     render() {
-        const {classes} = this.props
-        const {weekdays, starttime, endtime, selectedDay, showTrainingtime, teamname, teamid} = this.state
+        const {classes, onClose} = this.props
+        const {weekdays, starttime, endtime, selectedDay, showTrainingtime, team, teamname, teamid} = this.state
 
         return(
             <div>
@@ -116,7 +118,7 @@ class TrainingTime extends React.Component{
                         <Typography color="primary">Wochentag:</Typography>
                     </Grid>
                             <Grid className={classes.border} item xs={3}>
-                                <Select onChange={this.handleDayChange} value={selectedDay} fullWidth>
+                                <Select required onChange={this.handleDayChange} value={selectedDay} fullWidth>
                                     {weekdays.map((day) => (
                                         <MenuItem value={day}>{day}</MenuItem>
                                     ))}
@@ -127,15 +129,14 @@ class TrainingTime extends React.Component{
                                 <Typography color="primary">Beginn:</Typography>
                             </Grid>
                             <Grid item xs={3} className={classes.border}>
-                                <TextField type="time" onChange={this.handleStarttimeChange} value={starttime} fullWidth />
-                                {console.log(starttime, endtime, selectedDay)}
+                                <TextField required type="time" onChange={this.handleStarttimeChange} value={starttime} fullWidth />
                             </Grid>
                             <Grid item xs={6} />
                             <Grid item xs={3}>
                                 <Typography color="primary">Ende:</Typography>
                             </Grid>
                             <Grid item xs={3} className={classes.border}>
-                                <TextField type="time" onChange={this.handleEndtimeChange} value={endtime} fullWidth />
+                                <TextField required type="time" onChange={this.handleEndtimeChange} value={endtime} fullWidth />
                             </Grid>
 
                             <Grid item xs={6} />
@@ -151,11 +152,9 @@ class TrainingTime extends React.Component{
                                         {showTrainingtime ? "Trainingszeit löschen" : "Trainingszeit hinzufügen"}
                                     </Button>
                                 </Grid>
-                                {showTrainingtime ? 
                                 <Grid item xs={5}>
-                                    <Button className={classes.button} onClick={showTrainingtime ? this.saveTrainingday : null}>{showTrainingtime ? "Trainingszeit speichern" : "Team anzeigen"}</Button>
+                                    <Button className={classes.button} onClick={showTrainingtime ? this.saveTrainingday : onClose }>{showTrainingtime ? "Trainingszeit speichern" : "Teams anzeigen"}</Button>
                                 </Grid>
-                                : null}
                                 <Grid item xs={1} />
                          
             </div>

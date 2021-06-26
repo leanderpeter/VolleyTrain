@@ -25,7 +25,7 @@ class PositionMapper(Mapper):
 
         for (id, x, y) in tuples:
             pos = Position()
-            pos.setId(id)
+            pos.set_id(id)
             pos.setXPosition(x)
             pos.setYPosition(y)
             result.append(pos)
@@ -47,14 +47,15 @@ class PositionMapper(Mapper):
         """
         result = None
         cursor = self._connection.cursor()
-        command = "SELECT * FROM position WHERE Matchfield_PK_Matchfield='{}'".format(id)
+        command = "SELECT * FROM position WHERE Matchfield_PK_Matchfield='{}'".format(
+            id)
         cursor.execute(command)
         tuples = cursor.fetchall()
         try:
             pass
         except IndexError:
             """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
-			keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
+                        keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
             result = None
 
         self._connection.commit()
@@ -102,7 +103,6 @@ class PositionMapper(Mapper):
         :param user -> user-Objekt
         """
         pass
-
 
 
 '''Only for testing purpose'''

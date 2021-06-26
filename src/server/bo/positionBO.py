@@ -1,6 +1,7 @@
 
 from server.bo.BusinessObject import BusinessObject
 
+
 class Position(BusinessObject):
     '''Position Business Object 
     Position has following properties:
@@ -13,7 +14,7 @@ class Position(BusinessObject):
         super().__init__()
         self._x = None
         self._y = None
-    
+
     def setXPosition(self, x):
         self._x = x
 
@@ -27,7 +28,7 @@ class Position(BusinessObject):
         return _y
 
     def __str__(self):
-        return "Position: {}, {}, {}".format(self.getId(),self._x, self._y)
+        return "Position: {}, {}, {}".format(self.get_id(), self._x, self._y)
 
     @staticmethod
     def from_dict(dictionary=dict()):
@@ -35,7 +36,8 @@ class Position(BusinessObject):
         '''
 
         obj = Position()
-        obj.setId(dictionary["id"])  # part of the Business object mother class
+        # part of the Business object mother class
+        obj.set_id(dictionary["id"])
         obj.setXPosition(dictionary["x"])
         obj.setYPosition(dictionary["y"])
         return obj

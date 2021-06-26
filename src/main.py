@@ -15,8 +15,9 @@ from server.bo.userBO import User
 from server.bo.TrainingBO import Training
 from server.bo.ExerciseBO import Exercise
 
-#SecurityDecorator
+# SecurityDecorator
 from SecurityDecorator import secured
+
 
 class NullableInteger(fields.Integer):
     """Diese Klasse ermöglicht die Umsetzung eines Integers, welcher auch den Wert null bzw. None haben kann 
@@ -24,16 +25,19 @@ class NullableInteger(fields.Integer):
     __schema_type__ = ['integer', 'null']
     __schema_example__ = 'nullable integer'
 
+
 """Instancing our flask app"""
 app = Flask(__name__)
 
-CORS(app, support_credentials=True, resources={r'/volleyTrain/*': {"origins": "*"}})
+CORS(app, support_credentials=True, resources={
+     r'/volleyTrain/*': {"origins": "*"}})
 
 api = Api(app, version='1.0', title='volleytrain API',
           description='Web App for creating trainings for volleyball')
 
 """Namespaces"""
-volleyTrain = api.namespace('volleyTrain', description='Functions of volleyTrain') 
+volleyTrain = api.namespace(
+    'volleyTrain', description='Functions of volleyTrain')
 
 """Hier wird definiert, wie die Businessobjects beim Marshelling definiert 
 werden sollen"""
@@ -61,7 +65,7 @@ training = api.inherit('training', nbo, {
     'team_id': fields.Integer(attribute='_team_id', description='ID des beteiligten Team'),
     'user_id': fields.Integer(attribute='_user_id', description='ID des User/Trainer')
 })
- 
+
 team = api.inherit('team', nbo, {
     'trainer': fields.Integer(attribute='_trainer', deschription='id of user as trainer'),
 })
@@ -92,8 +96,8 @@ matchfieldPlayers = api.inherit('matchfieldPlayers', {
 })
 
 
-
 """ UserOperations """
+
 
 @volleyTrain.route('/user/<int:id>')
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -108,8 +112,7 @@ class UserByIDOperation(Resource):
 
 @volleyTrain.route('/user')
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-
-class UserOperation(Resource): 
+class UserOperation(Resource):
     @secured
     @volleyTrain.marshal_with(user)
     @volleyTrain.expect(user)
@@ -126,6 +129,7 @@ class UserOperation(Resource):
         email = request.args.get("email")
         adm.createUser(api.payload)
         return user
+
 
 @volleyTrain.route('/players')
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -151,6 +155,7 @@ class UserByIDOperation(Resource):
 
 """ TrainingOperations """
 
+
 @volleyTrain.route('/trainings')
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class TrainingListOperations(Resource):
@@ -162,7 +167,7 @@ class TrainingListOperations(Resource):
         return trainings
 
     @volleyTrain.marshal_with(training, code=200)
-    @volleyTrain.expect(training) 
+    @volleyTrain.expect(training)
     @secured
     def post(self):
         adm = volleytrainAdministration()
@@ -172,9 +177,10 @@ class TrainingListOperations(Resource):
         print(proposal)
         if proposal is not None:
             training = adm.createTraining(proposal)
-            return training, 200       
+            return training, 200
         else:
-            return '', 500 
+            return '', 500
+
 
 @volleyTrain.route('/training')
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -193,6 +199,7 @@ class TrainingOperations(Resource):
         else:
             return '', 500
 
+
 @volleyTrain.route('/training/<int:training_id>')
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @volleyTrain.param('training_id', 'Dies ist die ID von Training')
@@ -203,7 +210,7 @@ class TrainingOperations(Resource):
         adm = volleytrainAdministration()
         training = adm.getTrainingById(training_id)
         return training
-    
+
     @volleyTrain.marshal_with(training)
     @secured
     def delete(self, training_id):
@@ -224,7 +231,7 @@ class TeamOperations(Resource):
     @volleyTrain.marshal_list_with(team)
     def get(self):
         adm = volleytrainAdministration()
-        teams = adm.getAllTeams()
+        teams = adm.get_all_teams()
         return teams
 
     @secured
@@ -235,26 +242,34 @@ class TeamOperations(Resource):
         proposal = Team.from_dict(api.payload)
 
         if proposal is not None:
-            p = adm.createTeam(proposal.getName(), proposal.getTrainer())
+            p = adm.create_team(proposal.get_name(), proposal.get_trainer())
             return p, 200
         else:
             return '', 500
 
-    @secured
-    def delete(self):
-        adm = volleytrainAdministration()
-        adm.deleteTeam(team)
 
-    
-@volleyTrain.route('/team/<int:id>')
+@volleyTrain.route('/team/<int:team_id>')
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class TeamByIDOperation(Resource):
     @secured
     @volleyTrain.marshal_list_with(team)
-    def get(self, id):
+    def get(self, team_id):
         adm = volleytrainAdministration()
-        team = adm.getTeamById(id)
+        team = adm.get_team_by_id(team_id)
         return team
+
+    @secured
+    @volleyTrain.marshal_with(team)
+    def delete(self, team_id):
+        adm = volleytrainAdministration()
+        team = adm.get_team_by_id(team_id)
+
+        if team is not None:
+            adm.delete_team(team)
+            return 'Successfully deleted', 200
+        else:
+            return 'Deleting failed', 500
+
 
 @volleyTrain.route('/team/<string:name>')
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -263,9 +278,8 @@ class TeamByIDOperation(Resource):
     @volleyTrain.marshal_list_with(team)
     def get(self, name):
         adm = volleytrainAdministration()
-        team = adm.getTeamByName(name)
+        team = adm.get_team_by_name(name)
         return team
-
 
 
 @volleyTrain.route('/trainingday')
@@ -275,7 +289,7 @@ class TrainingdayOperations(Resource):
     @volleyTrain.marshal_list_with(trainingday)
     def get(self):
         adm = volleytrainAdministration()
-        trainingday = adm.getAllTraingdays()
+        trainingday = adm.get_all_trainingdays()
         return trainingday
 
     @secured
@@ -286,10 +300,12 @@ class TrainingdayOperations(Resource):
         proposal = Trainingday.from_dict(api.payload)
 
         if proposal is not None:
-            p = adm.createTrainingday(proposal.getWeekday(), proposal.getStarttime(), proposal.getEndtime(), proposal.getTeam())
+            p = adm.create_trainingday(proposal.get_weekday(
+            ), proposal.get_starttime(), proposal.get_endtime(), proposal.get_team())
             return p, 200
         else:
             return '', 500
+
 
 @volleyTrain.route('/trainingday/<int:id>')
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -298,7 +314,7 @@ class TrainingdayByTeamIDOperation(Resource):
     @volleyTrain.marshal_list_with(trainingday)
     def get(self, id):
         adm = volleytrainAdministration()
-        trainingday = adm.getTrainingdaysByTeamId(id)
+        trainingday = adm.get_trainingdays_by_team_id(id)
         return trainingday
 
 
@@ -317,6 +333,7 @@ class ExerciseByIDOperation(Resource):
         adm = volleytrainAdministration()
         adm.deleteExercise(id)
 
+
 @volleyTrain.route('/exercise')
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ExerciseOperation(Resource):
@@ -331,13 +348,13 @@ class ExerciseOperation(Resource):
         adm = volleytrainAdministration()
         exercise = Exercise.from_dict(api.payload)
         print(exercise)
-        
+
         if exercise is not None:
             created_exercise = adm.createExercise(exercise)
-            return created_exercise , 200
+            return created_exercise, 200
         else:
             return '', 500
-   
+
     @volleyTrain.marshal_list_with(exercise)
     @secured
     def get(self):
@@ -362,6 +379,7 @@ class ExerciseOperation(Resource):
             return response, 200
         else:
             return '', 500
+
 
 @volleyTrain.route('/position')
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
