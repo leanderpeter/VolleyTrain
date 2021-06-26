@@ -5,6 +5,7 @@ import {
     makeStyles,
     Grid
 } from '@material-ui/core';
+import {Link} from 'react-router-dom';
 
 import newTrainingIcon from '../../assets/newTrainingIcon.png';
 
@@ -20,18 +21,18 @@ const CreateTraining = () => {
                         Trainingsplan
                     </Typography>
                     <Grid>
-                        <div className={classes.container} >
+                        <Link to="/home" className={classes.container} >
                             <img src={newTrainingIcon} alt='' className={classes.img} />
                             <Typography className={classes.title} >
                                 Neuen Trainingsplan anlegen
                             </Typography>
-                        </div>
-                        <div className={classes.container} >
+                        </Link>
+                        <Link to="/home"  className={classes.container} >
                             <img src={newTrainingIcon} alt='' className={classes.img} />
                             <Typography className={classes.title} >
                                 Bestehenden Trainingsplan bearbeiten
                             </Typography>
-                        </div>
+                        </Link>
                     </Grid>
                 </Grid>
         </div>
@@ -68,8 +69,9 @@ const styles = makeStyles({
     },
     title:{
         fontSize:"250%",
-        margin: "auto"
-
+        margin: "auto",
+        color: "black",
+        outline:"None",
     }
   });
 
