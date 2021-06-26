@@ -168,8 +168,8 @@ class App extends React.Component {
                 <Route path='/team' render={props => (
                   <Team {...props}/>
                   )}/>
-                <Route path='/exerciseForm' component ={CreateExercise}>
-                  <CreateExercise/>
+                <Route path='/exerciseForm' component ={BlankPage}>
+                  <BlankPage/>
                 </Route>
                 <Route path='/exercises' component ={BlankPage}>
                   <BlankPage/>
