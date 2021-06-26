@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
-import { Container, ThemeProvider, CssBaseline} from '@material-ui/core';
+import { withStyles, ThemeProvider, CssBaseline, Container } from '@material-ui/core';
 import firebase from 'firebase/app'; //Firebase module
 import 'firebase/auth'; //Firebase module
 import Grid from '@material-ui/core/Grid';
@@ -16,9 +16,10 @@ import Header from './components/layout/Header';
 import TrainingSchedule from './components/TrainingSchedule';
 import Team from './components/pages/Team';
 import TeamOverview from './components/pages/TeamOverview'
-import TeamBO from './api/TeamBO';
 import ExerciseForm from './components/pages/exerciseForm';
-
+import Exercises from './components/Exercises';
+import CreateExercise from './components/dialogs/CreateExercise';
+import BlankPage from './components/pages/BlankPage';
 /*
 Main page of the volleytrain. First firebase to verify users. Then routing to the pages via react-router-dom
 */
@@ -113,7 +114,6 @@ class App extends React.Component {
         });
     
     setTimeout(()=>{
-      console.log(this.state);
     },1000);
     }
     
@@ -133,6 +133,8 @@ class App extends React.Component {
       return "";
    }
 
+   
+
 
   // lifecycle method
   componentDidMount() {
@@ -142,7 +144,8 @@ class App extends React.Component {
   }
 
   render() {
-    const { currentUser, appError, authError, authLoading, currentStudent, currentPerson } = this.state;
+    const {classes} = this.props;
+    const { currentUser } = this.state;
 
     return (
       <ThemeProvider theme={theme}>
@@ -165,10 +168,12 @@ class App extends React.Component {
                 <Route path='/team' render={props => (
                   <Team {...props}/>
                   )}/>
-                <Route path='/exerciseForm' component ={ExerciseForm}>
-                  <ExerciseForm/>
+                <Route path='/exerciseForm' component ={CreateExercise}>
+                  <CreateExercise/>
                 </Route>
-
+                <Route path='/exercises' component ={BlankPage}>
+                  <BlankPage/>
+                </Route>
               </>
               :
               <>
@@ -189,4 +194,17 @@ class App extends React.Component {
   }
 }
 
-export default App;
+/** Component specific styles */
+const styles = theme => ({
+  root: {
+      
+  },
+  formControl: {
+      minWidth: 180
+  },
+  form: {
+      marginTop: theme.spacing(1)
+  }
+});
+
+export default (withStyles(styles)(App));

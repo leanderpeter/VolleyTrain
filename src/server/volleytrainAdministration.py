@@ -1,18 +1,16 @@
 
 from server.bo.TrainingBO import Training
-
 from server.db.TrainingMapper import TrainingMapper
 from server.bo.teamBO import Team
 from server.bo.trainingdayBO import Trainingday
-
 from server.db.teamMapper import TeamMapper
 from server.db.trainingdayMapper import TrainingdayMapper
 from server.bo.userBO import User
 from server.db.userMapper import UserMapper
 from server.db.exerciseMapper import ExerciseMapper
-from server.bo.PlayerBO import Player
-from server.db.PlayerMapper import PlayerMapper
-
+from server.bo.playerBO import Player
+from server.db.playerMapper import PlayerMapper
+from server.db.matchfieldPlayerMapper import MatchfieldPlayerMapper
 
 class volleytrainAdministration(object):
 
@@ -44,14 +42,16 @@ class volleytrainAdministration(object):
     def saveUser(self, user):
         with UserMapper() as mapper:
             return mapper.update(user)
+
+    def getAllPlayer(self):
+        with PlayerMapper() as mapper:
+            return mapper.find_all()
     
     """ Training """
 
-    def createTraining(self, name, team_id, user_id):
-        training = Training()
-        training.setName(name)
-        training.setTeamId(team_id)
-        training.setUserId(user_id)
+    def createTraining(self, training):
+        with TrainingMapper() as mapper:
+            return mapper.insert(training)
 
     def getAllTrainings(self):
         with TrainingMapper() as mapper:
@@ -60,6 +60,14 @@ class volleytrainAdministration(object):
     def getTrainingById(self, id):
         with TrainingMapper() as mapper:
             return mapper.find_by_id(id)
+    
+    def saveTraining(self, training):
+        with TrainingMapper() as mapper:
+            return mapper.update(training)
+    
+    def deleteTraining(self, training):
+        with TrainingMapper() as mapper:
+            return mapper.delete(training)
 
 
     def createTeam(self, name, trainingsday, addDayOne, addDayTwo, addDayThree):
@@ -148,3 +156,11 @@ class volleytrainAdministration(object):
     def savePlayer(self, player):
         with PlayerMapper() as mapper:
             mapper.update(player)
+
+    def getAllMatchfieldPlayers(self):
+        with MatchfieldPlayerMapper() as mapper:
+            return mapper.find_all()
+
+    def getByPlayerPosByMatchfieldId(self, id):
+        with MatchfieldPlayerMapper() as mapper:
+            return mapper.find_by_Matchfield(id)
