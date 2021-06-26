@@ -60,7 +60,8 @@ const styles = makeStyles({
         marginBottom: '15px',
         height:"200px",
         display: "flex",
-        marginBottom: "30px"
+        marginBottom: "30px",
+        textDecorationLine: 'none',
     },
     img:{
         marginTop: "auto",
@@ -71,7 +72,6 @@ const styles = makeStyles({
         fontSize:"250%",
         margin: "auto",
         color: "black",
-        outline:"None",
     }
   });
 
