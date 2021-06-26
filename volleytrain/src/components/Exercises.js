@@ -88,7 +88,7 @@ const Exercises = ({Players, MatchfieldID}) => {
     
     useEffect(() => {
         if (!(PlayerDeleteId == null)){
-            players[PlayerDeleteId].visible = true
+            players[PlayerDeleteId].visibleOnSelection = true
             setPlayers(players)
             forceUpdate()
         }
@@ -177,7 +177,7 @@ const Exercises = ({Players, MatchfieldID}) => {
     
     const addPlayer = (playerID) => {
         playerID = playerID - 1
-        players[playerID].visible = false;
+        players[playerID].visibleOnSelection = false;
         setPlayers(players)
         forceUpdate();
     }
@@ -204,7 +204,10 @@ const Exercises = ({Players, MatchfieldID}) => {
         }
     }
 
-    console.log(players)
+    // prevent matchfield drag
+    const preventDragHandler = (e) => {
+        e.preventDefault();
+      }
 
     /**
      * 
@@ -214,7 +217,6 @@ const Exercises = ({Players, MatchfieldID}) => {
      * 
      * Above here is only Matchfield function/logic
      */
-
 
     return (
     <div>
@@ -235,20 +237,19 @@ const Exercises = ({Players, MatchfieldID}) => {
                     <div className={classes.wrapper}>
                         <div className={classes.above} >
                             <div className={classes.box}>
-                                <img src={field} alt="Field" className={classes.field} ref={divRef}/>
+                                <img src={field} alt="Field" className={classes.field} ref={divRef} onDragStart={preventDragHandler}/>
                             </div>
                         </div>
                         <div className={classes.under}>
                                     <div>
                                         <div ref={drop} className={classes.box}>
-                                            <img src={field} alt="Field" className={classes.field}/>
+                                            <img src={field} alt="Field" className={classes.field} onDragStart={preventDragHandler}/>
 
                                             {Object.keys(players).map((key) => {
-                                            const { left, top, name, surname, visible } = players[key];
-
+                                            const { left, top, name, surname, visibleOnSelection} = players[key];
                                             return (
                                                 <div>
-                                                    {visible ?
+                                                    {visibleOnSelection ?
                                                     null
                                                     : 
                                                     <Player id={key} left={left} top={top} surname={surname} name={name} passPlayerDeleteId={setPlayerDeleteId}>
@@ -292,7 +293,7 @@ const Exercises = ({Players, MatchfieldID}) => {
 
                     {players.map(player => 
                         <div className="test_player">
-                            {player.visible ? 
+                            {player.visibleOnSelection ? 
                             <Button onClick={() => {addPlayer(player.id)}} className={classes.playerButton}>
                                 <PlayerButton key={player.id} player={player}/>
                             </Button>
