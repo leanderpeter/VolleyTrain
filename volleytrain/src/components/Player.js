@@ -46,10 +46,6 @@ function Player({ id, left, top, surname, name, passPlayerDeleteId}){
         return <div ref={drag}/>;
     }
 
-
-
-
-
   return(
     <div ref={drag} style={{...DragStyle, left, top }} role="Box" className={classes.root}>
       <Grid>

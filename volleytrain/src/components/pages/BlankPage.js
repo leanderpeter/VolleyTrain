@@ -16,8 +16,6 @@ const BlankPage = () => {
         {surname: "sebastian",teamId: "1",name: "MM",id: 9, creation_date: "2021-06-16T12:25:23.901053"},
     ]
 
-    console.log('HI')
-
     return (
         <div>
             <CreateExercise Players={PlayerMock}/>

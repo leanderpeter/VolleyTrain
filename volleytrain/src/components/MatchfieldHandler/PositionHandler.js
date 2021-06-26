@@ -36,7 +36,7 @@ export function PositionHandler(MatchfieldPlayers, Players, dimensions) {
                     team:Players[i].team,
                     top:parseFloat(MatchfieldPlayers[j].top)*dimensions.height,
                     left:parseFloat(MatchfieldPlayers[j].left)*dimensions.width,
-                    visible:false,
+                    visibleOnSelection:false,
                 }
                 //console.log(obj)
                 posPlayer.push(obj)
@@ -48,9 +48,9 @@ export function PositionHandler(MatchfieldPlayers, Players, dimensions) {
                     surname:Players[i].surname,
                     name:Players[i].name,
                     team:Players[i].team,
-                    top:null,
-                    left:null,
-                    visible:true,
+                    top: Math.floor(Math.random() * dimensions.height),
+                    left: Math.floor(Math.random() * dimensions.width),
+                    visibleOnSelection:true,
                 }
                 
                 // add the playerId to the player_key_array

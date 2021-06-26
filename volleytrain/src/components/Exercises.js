@@ -85,32 +85,14 @@ const Exercises = ({Players, MatchfieldID}) => {
      * Set visibility of player to false 
      * if PlayerDeleteId is changed
     */
-
+    
     useEffect(() => {
         if (!(PlayerDeleteId == null)){
             players[PlayerDeleteId].visible = true
             setPlayers(players)
             forceUpdate()
         }
-        
     }, [, PlayerDeleteId]);
-
-    console.log(players)
-    /**
-     * here we set the visibilty of the player object 
-     * to true or false
-     * If the player button on the righthand side is clicked, 
-     * the visibilty is set to false
-     * 
-     */
-    const setVisible = (playerID) => {
-        var i;
-        for (i=0; i < players.length; i++){
-            if (players[i].id === playerID){
-                players[i].visible = false            
-            }
-        }
-    }
 
 
     // get all Matchfield_Player_Position Data
@@ -138,6 +120,10 @@ const Exercises = ({Players, MatchfieldID}) => {
         setError(null)
     }
     
+    const saveExercise = (players) => {
+        console.log(players)
+    }
+
     useEffect(() => {
         if (dimensions.width > 5){
             getMatchfieldPlayers(MatchfieldID);
@@ -171,12 +157,11 @@ const Exercises = ({Players, MatchfieldID}) => {
     // init loading state for placing players
     const [Playerloading, setPlayerLoading] = useState(true)
 
-
-    const [boxes, setBoxes] = useState([]);
+    // move players on matchfield
     const moveBox = useCallback((id, left, top) => {
-        setBoxes(update(boxes, { [id]: { $merge: { left, top },},
+        setPlayers(update(players, { [id]: { $merge: { left, top },},
         }));
-    }, [boxes, setBoxes]);
+    }, [players, setPlayers]);
 
 
     const [, drop] = useDrop(() => ({
@@ -186,25 +171,22 @@ const Exercises = ({Players, MatchfieldID}) => {
             const left = Math.round(item.left + delta.x);
             const top = Math.round(item.top + delta.y);
             moveBox(item.id, left, top);
-            console.log(item.id, left, top)
             return undefined;
         },
     }), [moveBox]);
     
     const addPlayer = (playerID) => {
         playerID = playerID - 1
-        if (players[playerID].left === null){
-            players[playerID].left = Math.floor(Math.random() * dimensions.width);
-            players[playerID].top = Math.floor(Math.random() * dimensions.height);
-            players[playerID].visible = false;
-        }
-        setBoxes([...boxes, players[playerID]])
+        players[playerID].visible = false;
+        setPlayers(players)
+        forceUpdate();
     }
 
     useEffect(() => {
         // Runs after EVERY rendering
         PlacePlayersWithPosition(players);
-      });
+        //PlaceVisiblePlayers(players);
+    },[, players]);
 
 
     const PlacePlayersWithPosition = (players) => {
@@ -218,10 +200,11 @@ const Exercises = ({Players, MatchfieldID}) => {
                     PlayerWithPositions.push(players[i])
             }
             }
-            setBoxes(PlayerWithPositions)
+            setPlayers(PlayerWithPositions)
         }
     }
 
+    console.log(players)
 
     /**
      * 
@@ -259,16 +242,32 @@ const Exercises = ({Players, MatchfieldID}) => {
                                     <div>
                                         <div ref={drop} className={classes.box}>
                                             <img src={field} alt="Field" className={classes.field}/>
-                                            {Object.keys(boxes).map((key) => {
-                                            const { left, top, name, surname } = boxes[key];
-                                            return (<Player id={key} left={left} top={top} surname={surname} name={name} passPlayerDeleteId={setPlayerDeleteId}>
-                                                </Player>);
+
+                                            {Object.keys(players).map((key) => {
+                                            const { left, top, name, surname, visible } = players[key];
+
+                                            return (
+                                                <div>
+                                                    {visible ?
+                                                    null
+                                                    : 
+                                                    <Player id={key} left={left} top={top} surname={surname} name={name} passPlayerDeleteId={setPlayerDeleteId}>
+                                                    </Player>
+                                                    }
+                                                </div>
+                                                );
                                             })}
                                         </div>
                                     </div>
-                            
                         </div>
-                    </div>       
+                    </div>
+                    <Grid
+                    container
+                    direction="row"
+                    justify="center"
+                    alignItems="flex-end">
+                        <Button onClick={saveExercise}>Uebung Speichern</Button>
+                    </Grid>
                 </Grid>
                 <Grid item xs={2}
                     container
@@ -294,7 +293,7 @@ const Exercises = ({Players, MatchfieldID}) => {
                     {players.map(player => 
                         <div className="test_player">
                             {player.visible ? 
-                            <Button onClick={() => {addPlayer(player.id); setVisible(player.id);}} className={classes.playerButton}>
+                            <Button onClick={() => {addPlayer(player.id)}} className={classes.playerButton}>
                                 <PlayerButton key={player.id} player={player}/>
                             </Button>
                             : null}
