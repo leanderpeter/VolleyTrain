@@ -28,7 +28,6 @@ import Player from './Player';
 import field from './media/field.png';
 import LoadingComp from './dialogs/LoadingComp';
 
-
 const Exercises = ({Players, MatchfieldID}) => {
     // In order to gain access to the child component instance,
     // you need to assign it to a `ref`, so we call `useRef()` to get one
@@ -104,9 +103,17 @@ const Exercises = ({Players, MatchfieldID}) => {
     }
     
     useEffect(() => {
-        getMatchfieldPlayers(MatchfieldID);
-    }, []);
+        if (dimensions.width > 5){
+            getMatchfieldPlayers(MatchfieldID);
+        }
+        
+    }, [, dimensions]);
 
+    useEffect(()=>{
+        if (dimensions.width < 5){
+            
+        }
+    });
 
     /**
      * Below here is only Matchfield function/logic
@@ -151,19 +158,27 @@ const Exercises = ({Players, MatchfieldID}) => {
         setBoxes([...boxes, players[playerID]])
     }
 
+    useEffect(() => {
+        // Runs after EVERY rendering
+        PlacePlayersWithPosition(players);
+      });
 
-    // placing players with position
-    if (players.length > 0 && Playerloading){
-        setPlayerLoading(false)
-        var PlayerWithPositions = [];
-        var i;
-        for (i=0; i < players.length; i++){
-            if (!(players[i].top == null)){
-                PlayerWithPositions.push(players[i])
+
+    const PlacePlayersWithPosition = (players) => {
+        // placing players with position
+        if (players.length > 0 && Playerloading){
+            setPlayerLoading(false)
+            var PlayerWithPositions = [];
+            var i;
+            for (i=0; i < players.length; i++){
+                if (!(players[i].top == null)){
+                    PlayerWithPositions.push(players[i])
+            }
+            }
+            setBoxes(PlayerWithPositions)
         }
-        }
-        setBoxes(PlayerWithPositions)
     }
+
 
     /**
      * 
