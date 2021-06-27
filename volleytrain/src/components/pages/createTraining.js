@@ -23,7 +23,7 @@ const CreateTraining = () => {
                         Trainingsplan
                     </Typography>
                     <Grid>
-                        <Link to="/home" className={classes.container} >
+                        <Link to="/teammanagement" className={classes.container} >
                             <img src={newTrainingIcon} alt='' className={classes.img} />
                             <Typography className={classes.title} >
                                 Neuen Trainingsplan anlegen
@@ -49,7 +49,6 @@ const styles = makeStyles({
     },
     heading: {
         fontSize: '21px',
-        marginBottom: '20px',
         textDecorationLine: 'underline',
         textDecorationColor: '#0B3298',
         marginBottom: "100px"
