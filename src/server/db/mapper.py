@@ -27,7 +27,7 @@ class Mapper(AbstractContextManager, ABC):
             also auf einem Local Development Server. Hierbei stellen wir eine einfache Verbindung zu einer lokal
             installierten mySQL-Datenbank her."""
 
-            self._connection = connector.connect(user='TestNutzer', password='P@s$w0rd123!',
+            self._connection = connector.connect(user='root', password='root',
                                                  host='127.0.0.1',
                                                  database='volleytrain')
 
@@ -46,21 +46,21 @@ class Mapper(AbstractContextManager, ABC):
         pass
 
     @abstractmethod
-    def find_by_id(self):
+    def find_by_id(self, id):
         """Reads a tuple with a given ID"""
         pass
 
     @abstractmethod
-    def insert(self):
+    def insert(self, object):
         """Add the given object to the database"""
         pass
 
     @abstractmethod
-    def update(self):
+    def update(self, object):
         """Update an already given object in the DB"""
         pass
 
     @abstractmethod
-    def delete(self):
+    def delete(self, object):
         """Delete an object from the DB"""
         pass
