@@ -22,6 +22,9 @@ import {
 } from "react-router-dom";
 import Team from "./Team";
 import AddIcon from "@material-ui/icons/Add";
+import TrainingdayBO from "../../api/TrainingdayBO";
+
+import TeamBO from "../../api/TeamBO";
 
 class TeamOverview extends React.Component {
   constructor(props) {
@@ -30,6 +33,7 @@ class TeamOverview extends React.Component {
     this.state = {
       dialogOpen: false,
       teams: [],
+      teamid: null,
       error: null,
       loadingInProgress: false,
     };
@@ -58,6 +62,46 @@ class TeamOverview extends React.Component {
           loadingInProgress: false,
         })
       );
+  };
+
+  createTeam = (teamname) => {
+    let team = new TeamBO();
+    team.setID(1);
+    team.setName(teamname);
+    team.setTrainer(this.props.currentUser.getID());
+    VolleytrainAPI.getAPI()
+      .addTeam(team)
+      .then(() => {
+        this.getCurrentTeam(team.getName());
+      });
+  };
+
+  getCurrentTeam = (teamname) => {
+    VolleytrainAPI.getAPI()
+      .getTeamByName(teamname)
+      .then((teamBO) => {
+        this.setState({ teamid: teamBO.getID() });
+      })
+      .catch((e) => {
+        this.setState({
+          team: [],
+          teamid: null,
+          error: e,
+        });
+      });
+    this.setState({
+      error: null,
+    });
+  };
+
+  saveTrainingday = (weekday, starttime, endtime) => {
+    let trainingday = new TrainingdayBO();
+    trainingday.setID(1);
+    trainingday.setWeekday(weekday);
+    trainingday.setStarttime(starttime);
+    trainingday.setEndtime(endtime);
+    trainingday.setTeam(this.state.teamid);
+    VolleytrainAPI.getAPI().addTrainingday(trainingday);
   };
 
   handleClose = () => {
@@ -119,6 +163,8 @@ class TeamOverview extends React.Component {
           dialogOpen={dialogOpen}
           onClose={this.handleClose}
           currentUser={currentUser}
+          createTeam={this.createTeam}
+          saveTrainingday={this.saveTrainingday}
         />
       </div>
     );

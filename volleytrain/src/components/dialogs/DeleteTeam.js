@@ -6,25 +6,10 @@ import {
   DialogContent,
   Typography,
   Grid,
-  TextField,
-  Select,
-  MenuItem,
-  Divider,
 } from "@material-ui/core";
 import React from "react";
 import ArrowBackOutlinedIcon from "@material-ui/icons/ArrowBackOutlined";
-import VolleytrainAPI from "../../api/VolleytrainAPI";
-import TrainingTime from "../assets/TrainingTime";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Redirect,
-  Route,
-  Link,
-  useRouteMatch,
-  useParams,
-} from "react-router-dom";
-import TeamBO from "../../api/TeamBO";
+import { Link } from "react-router-dom";
 
 class DeleteTeam extends React.Component {
   constructor(props) {
@@ -50,20 +35,14 @@ class DeleteTeam extends React.Component {
                 </Button>
               </Grid>
               <Grid item xs={8}>
-                <Typography variant="h5" color="primary">
-                  <b>Team löschen</b>
+                <Typography variant="h6" color="primary">
+                  Möchtest du die <b>{team.getName()}</b> wirklich löschen?
                 </Typography>
               </Grid>
             </Grid>
           </DialogTitle>
-          <Divider />
           <DialogContent>
             <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <Typography variant="h6" color="secondary">
-                  Möchtest du die <b>{team.getName()}</b> wirklich löschen?
-                </Typography>
-              </Grid>
               <Grid item xs={6}>
                 <Link to={{ pathname: "/home" }}>
                   <Button

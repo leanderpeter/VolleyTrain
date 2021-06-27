@@ -12,10 +12,9 @@ import {
   Divider,
 } from "@material-ui/core";
 import React from "react";
-import ArrowBackOutlinedIcon from "@material-ui/icons/ArrowBackOutlined";
-import VolleytrainAPI from "../../api/VolleytrainAPI";
-import TrainingTime from "../assets/TrainingTime";
-import TeamBO from "../../api/TeamBO";
+import ArrowBackOutlinedIcon from "@material-ui/icons/Add";
+import AddIcon from "@material-ui/icons/Add";
+import CheckIcon from "@material-ui/icons/Check";
 
 class CreateTeam extends React.Component {
   constructor(props) {
@@ -23,11 +22,37 @@ class CreateTeam extends React.Component {
 
     this.state = {
       teamname: "",
-      showOptions: false,
+      timeDisabled: true,
       teamDisabled: false,
       teamnameError: false,
+      trainingday: 1,
+      weekdays: [
+        "montags",
+        "dienstags",
+        "mittwochs",
+        "donnerstags",
+        "freitags",
+        "samstags",
+        "sonntags",
+      ],
+      weekday: "",
+      starttime: "",
+      endtime: "",
     };
   }
+
+  resetState = () => {
+    this.setState({
+      teamname: "",
+      timeDisabled: true,
+      teamDisabled: false,
+      teamnameError: false,
+      trainingday: 1,
+      weekday: "",
+      starttime: "",
+      endtime: "",
+    });
+  };
 
   handleChange = (e) => {
     this.setState({
@@ -35,18 +60,73 @@ class CreateTeam extends React.Component {
     });
   };
 
+  handleDayChange = (e) => {
+    this.setState({
+      weekday: e.target.value,
+    });
+  };
+
+  handleStarttimeChange = (e) => {
+    this.setState({
+      starttime: e.target.value,
+    });
+  };
+
+  handleEndtimeChange = (e) => {
+    this.setState({
+      endtime: e.target.value,
+    });
+  };
+
+  handleDeleteTime = () => {
+    this.setState({
+      weekday: "",
+      starttime: "",
+      endtime: "",
+    });
+  };
+
+  clearTeamname = () => {
+    this.setState({
+      teamname: "",
+    });
+  };
+
+  createTrainingday = () => {
+    if (
+      this.state.weekday != "" &&
+      this.state.starttime != "" &&
+      this.state.endtime != ""
+    ) {
+      this.props.saveTrainingday(
+        this.state.weekday,
+        this.state.starttime,
+        this.state.endtime
+      );
+      this.handleDeleteTime();
+
+      let daycount = this.state.trainingday + 1;
+      this.setState({ timeError: false, trainingday: daycount });
+    } else {
+      this.setState({ timeError: true });
+    }
+  };
+
   createTeam = () => {
-    if (this.state.teamname != "") {
-      let team = new TeamBO();
-      team.setID(1);
-      team.setName(this.state.teamname);
-      team.setTrainer(this.props.currentUser.getID());
-      VolleytrainAPI.getAPI().addTeam(team);
+    if (this.state.teamDisabled) {
+      this.createTrainingday();
+    } else if (this.state.teamname != "" && this.state.teamDisabled === false) {
+      this.props.createTeam(this.state.teamname);
+      if (this.state.weekday != "") {
+        setTimeout(() => {
+          this.createTrainingday();
+        }, 10);
+      }
 
       this.setState({
-        showOptions: true,
         teamDisabled: true,
         teamnameError: false,
+        timeError: false,
       });
     } else {
       this.setState({
@@ -57,7 +137,17 @@ class CreateTeam extends React.Component {
 
   render() {
     const { classes, dialogOpen, onClose } = this.props;
-    const { teamname, teamDisabled, showOptions, teamnameError } = this.state;
+    const {
+      teamname,
+      teamDisabled,
+      timeError,
+      teamnameError,
+      weekday,
+      starttime,
+      endtime,
+      weekdays,
+      trainingday,
+    } = this.state;
 
     return (
       <div>
@@ -82,36 +172,120 @@ class CreateTeam extends React.Component {
           <Divider />
           <DialogContent>
             <Grid container spacing={2}>
-              <Grid className={classes.border} item xs={8}>
+              <Grid item xs={12} />
+              <Grid item xs={3}>
+                <Typography color="primary">Teamname:</Typography>
+              </Grid>
+              <Grid className={classes.border} item xs={4}>
                 <TextField
                   error={teamnameError}
                   required
                   disabled={teamDisabled}
-                  label="Teamname"
                   color="primary"
                   value={teamname}
                   onChange={this.handleChange}
-                  helperText={
-                    teamnameError
-                      ? "Du musst deinem Team einen Namen geben."
-                      : ""
-                  }
                   fullWidth
                 />
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={5}>
+                <Typography className={classes.error}>
+                  {teamnameError
+                    ? "Du musst deinem Team einen Namen geben."
+                    : ""}
+                </Typography>
+              </Grid>
+              <Grid item xs={12} />
+            </Grid>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <Typography color="secondary">
+                  <b>{teamDisabled ? trainingday + ". Trainingstag" : null}</b>
+                </Typography>
+              </Grid>
+              <Grid item xs={3}>
+                <Typography color="primary">Wochentag:</Typography>
+              </Grid>
+              <Grid className={classes.border} item xs={4}>
+                <Select
+                  error={timeError}
+                  required
+                  onChange={this.handleDayChange}
+                  value={weekday}
+                  fullWidth
+                >
+                  {weekdays.map((day) => (
+                    <MenuItem value={day}>{day}</MenuItem>
+                  ))}
+                </Select>
+              </Grid>
+              <Grid item xs={5}>
+                <Typography className={classes.error}>
+                  {timeError ? "Du musst einen Tag auswählen." : ""}
+                </Typography>
+              </Grid>
+              <Grid item xs={3} />
+              <Grid item xs={2}>
+                <Typography color="primary">Beginn:</Typography>
+              </Grid>
+              <Grid item xs={2} className={classes.border}>
+                <TextField
+                  error={timeError}
+                  required
+                  type="time"
+                  onChange={this.handleStarttimeChange}
+                  value={starttime}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={5}>
+                <Typography className={classes.error}>
+                  {timeError ? "Du musst eine Uhrzeit auswählen." : ""}
+                </Typography>
+              </Grid>
+              <Grid item xs={3} />
+              <Grid item xs={2}>
+                <Typography color="primary">Ende:</Typography>
+              </Grid>
+              <Grid item xs={2} className={classes.border}>
+                <TextField
+                  error={timeError}
+                  required
+                  type="time"
+                  onChange={this.handleEndtimeChange}
+                  value={endtime}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={5}>
+                <Typography className={classes.error}>
+                  {timeError ? "Du musst eine Uhrzeit auswählen." : ""}
+                </Typography>
+              </Grid>
+              <Grid item xs={12} />
+              <Grid item xs={6}>
                 <Button
+                  color="secondary"
+                  disabled={!teamDisabled}
+                  variant={teamDisabled ? "contained" : "text"}
+                  onClick={this.createTrainingday}
+                  fullWidth
+                >
+                  <AddIcon className={classes.backButton} color="primary" />
+                  Trainingszeit hinzufügen
+                </Button>
+              </Grid>
+              <Grid item xs={6}>
+                <Button
+                  color="primary"
                   disabled={teamDisabled}
-                  className={classes.button}
+                  variant={teamDisabled ? "text" : "contained"}
                   onClick={this.createTeam}
                   fullWidth
                 >
-                  {teamDisabled ? "Team erstellt!" : "Team erstellen"}
+                  <CheckIcon className={classes.backButton} color="secondary" />
+                  {teamDisabled ? "Team erstellt" : "Team erstellen"}
                 </Button>
               </Grid>
-              {showOptions ? (
-                <TrainingTime teamname={teamname} onClose={onClose} />
-              ) : null}
             </Grid>
           </DialogContent>
         </Dialog>
@@ -143,6 +317,10 @@ const styles = (theme) => ({
     borderRadius: "9px",
     fontWeight: "bold",
     fontVariant: "normal",
+  },
+  error: {
+    color: "red",
+    fontSize: "12px",
   },
 });
 
