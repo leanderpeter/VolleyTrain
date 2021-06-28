@@ -1,15 +1,11 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import Exercises from "../Exercises";
-import TeamOverview from "./TeamOverview";
-import Box from "@material-ui/core/Box";
 import VolleytrainAPI from "../../api/VolleytrainAPI";
 import {
   Button,
   Grid,
   withStyles,
   Paper,
-  GridList,
   Typography,
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
@@ -74,8 +70,6 @@ class Home extends Component {
     var datetime = date + " " + time;
     console.log(typeof datetime);
     this.setState({
-      currentDate: date,
-      currentTime: time,
       currentDatetime: datetime,
     });
   };
@@ -87,7 +81,7 @@ class Home extends Component {
   
   render() {
     const { classes } = this.props;
-    const { trainings, currentDate, currentTime, currentDatetime } = this.state;
+    const { trainings, currentDatetime } = this.state;
 
     return (
       <div>
