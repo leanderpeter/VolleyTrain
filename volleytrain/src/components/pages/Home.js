@@ -80,6 +80,11 @@ class Home extends Component {
     });
   };
 
+  componentDidMount() {
+    this.getAllTrainings();
+    this.getCurrentDateTime();
+  }
+  
   render() {
     const { classes } = this.props;
 
