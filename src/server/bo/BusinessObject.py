@@ -1,6 +1,6 @@
 
 from abc import ABC, abstractmethod
-import datetime
+from datetime import datetime
 
 class BusinessObject(ABC):
     '''Base class for all business objects
@@ -9,7 +9,7 @@ class BusinessObject(ABC):
 
     def __init__(self):
         self._id = 0
-        self._creationDate = datetime.datetime()
+        self._creation_date = datetime.now()
 
     def getId(self):
         return self._id
@@ -17,8 +17,8 @@ class BusinessObject(ABC):
     def setId(self, new_id):
         self._id = new_id
     
-    def setCreationDate(self, new_date):
-        self._creationDate = new_date
+    def setCreationDate(self, date):
+        self._creation_date = date
     
     def getCreationDate(self):
-        return self._creationDate
+        return self._creation_date

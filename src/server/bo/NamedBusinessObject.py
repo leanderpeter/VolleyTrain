@@ -7,6 +7,7 @@ class NamedBusinessObject(BusinessObject):
     '''
 
     def __init__(self):
+        super().__init__()
         self._name = None 
 
     def getName(self):

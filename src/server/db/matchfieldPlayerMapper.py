@@ -1,9 +1,9 @@
 from server.db.mapper import Mapper
-from server.bo.positionBO import Position
+from server.bo.matchfieldPlayerBO import MatchfieldPlayerBO
 
 
-class PositionMapper(Mapper):
-    """mapper class to insert/replace/change positions object in the realtional database
+class MatchfieldPlayerMapper(Mapper):
+    """mapper class to insert/replace/change MatchfieldPlayer object in the realtional database
     """
 
     def __init__(self):
@@ -18,17 +18,18 @@ class PositionMapper(Mapper):
 
         cursor = self._connection.cursor()
 
-        command = "SELECT PK_Position, x, y, email FROM positions"
+        command = "SELECT Matchfield_PK_Matchfield, Player_PK_Player, x, y FROM matchfield_has_player"
 
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        for (id,x, y) in tuples:
-            pos = Position()
-            pos.setId(id)
-            pos.setPosition(x, y)
-
-            result.append(pos)
+        for (Matchfield_PK_Matchfield, Player_PK_Player, x, y) in tuples:
+            obj = MatchfieldPlayerBO()
+            obj.setMatchfieldPK(Matchfield_PK_Matchfield)
+            obj.setPlayerPK(Player_PK_Player)
+            obj.setXPosition(x)
+            obj.setYPosition(y)
+            result.append(obj)
 
         self._connection.commit()
         cursor.close()
@@ -88,6 +89,37 @@ class PositionMapper(Mapper):
         :param user -> user-Objekt
         """
         pass
+
+    def find_by_Matchfield(self, id):
+        """Suchen einer user nach der übergebenen ID. 
+
+        :param id Primärschlüsselattribut einer user aus der Datenbank
+        :return 
+        """
+        result = None
+        cursor = self._connection.cursor()
+        command = "SELECT Matchfield_PK_Matchfield, Player_PK_Player, x, y FROM matchfield_has_player WHERE Matchfield_PK_Matchfield='{}'".format(id)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+        result = []
+        try:
+            for i in range(len(tuples)):
+                (Matchfield_PK_Matchfield, Player_PK_Player, x, y) = tuples[i]
+                obj = MatchfieldPlayerBO()
+                obj.setMatchfieldPK(Matchfield_PK_Matchfield)
+                obj.setPlayerPK(Player_PK_Player)
+                obj.setXPosition(x)
+                obj.setYPosition(y)
+                result.append(obj)
+
+        except IndexError:
+            """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
+			keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
+            result = None
+
+        self._connection.commit()
+        cursor.close()
+        return result
 
 
 

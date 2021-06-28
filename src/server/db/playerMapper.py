@@ -11,7 +11,6 @@ class PlayerMapper(Mapper):
 
     def find_all(self):
         """find all player entry
-
         :return all player objs
         """
         result = []
@@ -166,33 +165,6 @@ class PlayerMapper(Mapper):
 if (__name__ == "__main__"):
     with PlayerMapper() as mapper:
         result = mapper.find_all()
-        for player in result:
-            print(player)
-
-if (__name__ == "__main__"):
-    p = Player()
-    p.setSurname("Christoph")
-    p.setName("Kunz")
-    p.setTeamId(1)
-    p.setRole("Angreifer")
-    p.setT_number(3)
-    with PlayerMapper() as mapper:
-        mapper.insert(p)
-
-if __name__ == "__main__":
-    with PlayerMapper() as mapper:
-        user = mapper.find_by_id(4)
-        for i in user:
-            print(i.getName())
-
-if __name__ == "__main__":
-    with PlayerMapper() as mapper:
-        i = mapper.find_by_id(4)
-        mapper.delete(i)
-
-if __name__ == "__main__":
-    with PlayerMapper() as mapper:
-        player = mapper.find_by_id(4)
-        player.setName("Christine")
-        mapper.update(player)
+        for user in result:
+            print(user)
 """

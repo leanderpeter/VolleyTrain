@@ -1,18 +1,25 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
-import { withStyles, ThemeProvider, CssBaseline } from '@material-ui/core';
+import { withStyles, ThemeProvider, CssBaseline, Container } from '@material-ui/core';
 import firebase from 'firebase/app'; //Firebase module
 import 'firebase/auth'; //Firebase module
 import Grid from '@material-ui/core/Grid';
+import Link from 'react-router-dom';
 
 // import Componentents from '/components/';
-import Theme from './Theme';
+import theme from './Theme';
 import SignIn from './components/pages/SignIn';
 import VolleytrainAPI from './api/VolleytrainAPI';
 import firebaseConfig from './firebaseconfig';
 import Home from './components/pages/Home';
 import Header from './components/layout/Header';
-
+import TrainingSchedule from './components/TrainingSchedule';
+import Team from './components/pages/Team';
+import TeamOverview from './components/pages/TeamOverview'
+import ExerciseForm from './components/pages/exerciseForm';
+import Exercises from './components/Exercises';
+import CreateExercise from './components/dialogs/CreateExercise';
+import BlankPage from './components/pages/BlankPage';
 /*
 Main page of the volleytrain. First firebase to verify users. Then routing to the pages via react-router-dom
 */
@@ -126,6 +133,8 @@ class App extends React.Component {
       return "";
    }
 
+   
+
 
   // lifecycle method
   componentDidMount() {
@@ -139,7 +148,7 @@ class App extends React.Component {
     const { currentUser } = this.state;
 
     return (
-      <ThemeProvider theme={Theme}>
+      <ThemeProvider theme={theme}>
         <CssBaseline/>
         <Router>
             {
@@ -147,10 +156,24 @@ class App extends React.Component {
               <>
               <Header user={currentUser}/>
               <Redirect from='/' to='home' />
-                  <Route path='/home' component ={Home}>
-                    <Home className={classes.root}/>
-                  </Route>
-
+                <Route path='/home' component={Home}>
+                  <Home/>
+                </Route>
+                <Route path='/training' component ={Home}>
+                  <TrainingSchedule/>
+                </Route>
+                <Route path='/teamoverview' render={props => (
+							    <TeamOverview {...props}/>
+                  )}/>
+                <Route path='/team' render={props => (
+                  <Team {...props}/>
+                  )}/>
+                <Route path='/exerciseForm' component ={BlankPage}>
+                  <BlankPage/>
+                </Route>
+                <Route path='/exercises' component ={BlankPage}>
+                  <BlankPage/>
+                </Route>
               </>
               :
               <>
@@ -162,6 +185,8 @@ class App extends React.Component {
             </Grid>
               </>
             }
+
+
         </Router>
       </ThemeProvider>
     );
