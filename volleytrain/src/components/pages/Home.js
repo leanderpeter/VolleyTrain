@@ -23,7 +23,7 @@ import TrainingSchedule from "../TrainingSchedule";
 class Home extends Component {
   // Holt alle Trainings vom Backend
   getTrainings = () => {
-    getVolleytrainAPI
+    VolleytrainAPI
       .getAPI()
       .getTrainingById()
       .then((trainingBOs) =>
@@ -43,12 +43,6 @@ class Home extends Component {
 
   componentDidMount() {
     this.getTrainings();
-} 
-
-plannedTraining = () => {
-  var training = this.state.trainings,
-  var date = date.toLocaleString('de-DE')
-  var trainingdate = training.getDate(),
 } 
 
   render() {
