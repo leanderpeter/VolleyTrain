@@ -50,16 +50,21 @@ class PlayerMapper(Mapper):
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        for (id, surname, name, teamId, role, t_number) in tuples:
-            player = Player()
-            player.setId(id)
-            player.setName(name)
-            player.setSurname(surname)
-            player.setTeamId(teamId)
-            player.setRole(role)
-            player.setT_number(t_number)
+        if len(tuples) != 0:
 
-            result.append(player)
+            for (id, surname, name, teamId, role, t_number) in tuples:
+                player = Player()
+                player.setId(id)
+                player.setName(name)
+                player.setSurname(surname)
+                player.setTeamId(teamId)
+                player.setRole(role)
+                player.setT_number(t_number)
+
+                result.append(player)
+
+        else:
+            result = None
 
         self._connection.commit()
         cursor.close()
@@ -144,9 +149,8 @@ class PlayerMapper(Mapper):
         pass
 
     def delete(self, player):
-        """Löschen der Daten einer player aus der Datenbank
-        :param player -> player-Objekt
-        """
+        """Löschen eines Spieler-Objekts aus der Datenbank."""
+
         cursor = self._connection.cursor()
 
         command = "DELETE FROM player WHERE PK_Player={}".format(player.getId())
@@ -155,18 +159,16 @@ class PlayerMapper(Mapper):
         self._connection.commit()
         cursor.close()
 
-        return player
-
 
 '''Only for testing purpose'''
+
 """
 if (__name__ == "__main__"):
     with PlayerMapper() as mapper:
         result = mapper.find_all()
         for player in result:
             print(player)
-"""
-"""
+
 if (__name__ == "__main__"):
     p = Player()
     p.setSurname("Christoph")

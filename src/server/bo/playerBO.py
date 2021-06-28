@@ -10,9 +10,9 @@ class Player(NamedBusinessObject):
 
     def __init__(self):
         super().__init__()
-        self._surname = None
-        self._teamId = None
-        self._role = None
+        self._surname = ""
+        self._teamId = 0
+        self._role = ""
         self._t_number = 0
     
     def setTeamId(self, new_teamId):
@@ -40,9 +40,9 @@ class Player(NamedBusinessObject):
         return self._t_number
 
 
-    def __str__(self):
-        return "Player: {}, {}, {}, {}, {}, {}".format(self.getId(),self._surname, self._name, self._teamId,
-                                                     self._role, self._t_number)
+#    def __str__(self):
+#        return "Player: {}, {}, {}, {}, {}, {}".format(self.getId(),self._surname, self._name, self._teamId,
+#                                                     self._role, self._t_number)
 
     @staticmethod
     def from_dict(dictionary=dict()):
