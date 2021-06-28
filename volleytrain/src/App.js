@@ -21,10 +21,10 @@ import Header from "./components/layout/Header";
 import TrainingSchedule from "./components/TrainingSchedule";
 import Team from "./components/pages/Team";
 import TeamOverview from "./components/pages/TeamOverview";
-import TeamBO from "./api/TeamBO";
 import ExerciseForm from "./components/pages/exerciseForm";
 import Exercises from "./components/Exercises";
-
+import CreateExercise from "./components/dialogs/CreateExercise";
+import BlankPage from "./components/pages/BlankPage";
 /*
 Main page of the volleytrain. First firebase to verify users. Then routing to the pages via react-router-dom
 */
@@ -124,24 +124,6 @@ class App extends React.Component {
       error: null,
       loadingInProgress: true,
     });
-
-    setTimeout(() => {}, 1000);
-  };
-
-  //openbook getcookie von Galileo
-  getCookie = (name) => {
-    var i = 0; //Suchposition im Cookie
-    var suche = name + "=";
-    while (i < document.cookie.length) {
-      if (document.cookie.substring(i, i + suche.length) === suche) {
-        var ende = document.cookie.indexOf(";", i + suche.length);
-        ende = ende > -1 ? ende : document.cookie.length;
-        var cook = document.cookie.substring(i + suche.length, ende);
-        return unescape(cook);
-      }
-      i++;
-    }
-    return "";
   };
 
   // lifecycle method

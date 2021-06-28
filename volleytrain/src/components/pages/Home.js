@@ -74,7 +74,6 @@ class Home extends Component {
             </Button>
           </Paper>
         </Grid>
-        
       </Grid>
       <Divider className={classes.solid}/>
       <TrainingSchedule/>

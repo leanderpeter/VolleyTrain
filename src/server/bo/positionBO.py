@@ -1,8 +1,8 @@
 
-from server.bo.BusinessObject import BusinessObject
+from abc import ABC, abstractmethod
 
 
-class Position(BusinessObject):
+class Position(ABC):
     '''Position Business Object 
     Position has following properties:
     x
@@ -26,18 +26,3 @@ class Position(BusinessObject):
 
     def getYPosition(self):
         return _y
-
-    def __str__(self):
-        return "Position: {}, {}, {}".format(self.get_id(), self._x, self._y)
-
-    @staticmethod
-    def from_dict(dictionary=dict()):
-        ''' turn a python dict into a position object
-        '''
-
-        obj = Position()
-        # part of the Business object mother class
-        obj.set_id(dictionary["id"])
-        obj.setXPosition(dictionary["x"])
-        obj.setYPosition(dictionary["y"])
-        return obj

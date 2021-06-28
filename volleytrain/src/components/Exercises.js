@@ -1,5 +1,12 @@
-import React, {useRef, useState, useEffect} from 'react';
-import PropTypes from 'prop-types';
+import React, {
+    forwardRef,
+    useRef, 
+    useState, 
+    useEffect, 
+    useLayoutEffect,
+    useCallback,
+    useImperativeHandle,
+    useReducer} from 'react';
 import {
     Button,
     Typography,
@@ -9,98 +16,102 @@ import Grid from '@material-ui/core/Grid';
 import Rating from '@material-ui/lab/Rating';
 import PlayerButton from './PlayerButton';
 import VolleytrainAPI from '../api/VolleytrainAPI';
-import { HTML5Backend } from 'react-dnd-html5-backend'
-import { DndProvider } from 'react-dnd';
-import Matchfield2 from './Matchfield2';
+//import Matchfield2 from './Matchfield2';
+import arrow_n from './media/arrow_n.png'
+import arrow_l from './media/arrow_l.png'
+import arrow_r from './media/arrow_r.png'
+import { PositionHandler } from './MatchfieldHandler/PositionHandler';
+import LoadingProgress from './dialogs/LoadingProgress';
+import update from 'immutability-helper';
+import { useDrop } from 'react-dnd';
+import { ItemTypes } from './ItemTypes';
+import Player from './Player';
+import field from './media/field.png';
+import LoadingComp from './dialogs/LoadingComp';
+import { deepOrange, deepPurple } from '@material-ui/core/colors';
 
+const Exercises = ({Players, MatchfieldID}) => {
 
+    // force update handler
+    const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
 
-const Exercises = () => {
+    // delete PlayerID handler from child component
+    // gets called in Player.js component
+    const [PlayerDeleteId, setPlayerDeleteId] = useState(null);
+
     // In order to gain access to the child component instance,
     // you need to assign it to a `ref`, so we call `useRef()` to get one
-    const childRef = useRef();
+    const divRef = useRef();
+
+
+    // init rating state
+    const [rating, setRating] = useState(null)
 
     // Init states for resources from Backend Players
     const [players, setPlayers] = useState([]);
     const [error, setError] = useState(null);
-    const [loadingInProgress, setLoadingInProgress] = useState(null);
+    const [loading, setLoadingInProgress] = useState(null);
 
     // init state for resources MatchfieldPlayerBO
     const [MatchfieldPlayers, setMatchfieldPlayers] = useState([])
 
-    // init state for resources Position Data
-    const [Positions, setPositions] = useState([])
-
-    //combine the jsons MatchfieldPlayers and Players
-    var combi = MatchfieldPlayers.map(x => Object.assign(x, players.find(y => y.id == x._player_pk)));
-    //combine the jsons Combi and Positions
-    var PlayerData = combi.map(x => Object.assign(x, Positions.find(y => y.id == x._position_pk)));
-
-    var i;
-    var posPlayer = [];
-    //check if data is loaded
-    if (MatchfieldPlayers.length > 0 && players.length > 0){
-        for (i = 0; i < PlayerData.length; i++) {
-            const obj = {
-                top: Math.floor(PlayerData[i].top),
-                left: Math.floor(PlayerData[i].left),
-                name: PlayerData[i].name,
-                surname: PlayerData[i].surname,
-                id: PlayerData[i].id,
-            }
-            posPlayer.push(obj)
-        }
-    }
+    // Init states player Positions
+    //const [playerPositions, setPlayerPositions] = useState(posPlayer);
     
+
+    // getting the dimensions of matchfield compoent
+    const [dimensions, setDimensions] = useState({ width:0, height: 0 });
+    
+    /**
+     * In this Layout effect we set the width and height of the 
+     * matchfield component. Width and height is used to set the players
+     * because the position data comes normalized from the backend.
+     * 
+     * Hint: Maybe redundant, see useEffect with forceUpdate below.
+     */
+    useLayoutEffect(() => {
+        if (divRef.current) {
+        setDimensions({
+            width: divRef.current.offsetWidth,
+            height: divRef.current.offsetHeight
+        });
+        }
+    }, []);
 
     // init styling
     const classes = styles();
 
-    const getPlayers = () => {
-        VolleytrainAPI.getAPI().getPlayers().then(
-            playerBOs => {
-                setPlayers(playerBOs)
-                setLoadingInProgress(false)
-                setError(null)
-            }
-        ).catch(e => {
-            setPlayers([])
-            setLoadingInProgress(false)
-            setError(e)
-        })
-        // setze laden auf wahr
-        setLoadingInProgress(true)
-        setError(null)
-    }
+    /** 
+     * Set visibility of player to false 
+     * if PlayerDeleteId is changed
+    */
+    
+    useEffect(() => {
+        if (!(PlayerDeleteId == null)){
+            players[PlayerDeleteId].visibleOnSelection = true
+            setPlayers(players)
+            forceUpdate()
+        }
+    }, [, PlayerDeleteId]);
+
 
     // get all Matchfield_Player_Position Data
-    const getMatchfieldPlayers = () => {
-        VolleytrainAPI.getAPI().getAllMatchfieldPlayerBO().then(
+    const getMatchfieldPlayers = (id) => {
+        VolleytrainAPI.getAPI().getPlayerByMatchfieldID(id).then(
             MatchfieldPlayerBOs => {
                 setMatchfieldPlayers(MatchfieldPlayerBOs)
                 setLoadingInProgress(false)
                 setError(null)
+                return MatchfieldPlayerBOs
             }
-        ).catch(e => {
-            setMatchfieldPlayers([])
-            setLoadingInProgress(false)
-            setError(e)
+        )
+        .then(function(MatchfieldPlayerBOs){
+            //PosPlayer State
+            var posPlayer = PositionHandler(MatchfieldPlayerBOs, Players, dimensions)
+            setPlayers(posPlayer)
         })
-        // setze laden auf wahr
-        setLoadingInProgress(true)
-        setError(null)
-    }
-
-    //get all position Data
-    const getPosition = () => {
-        VolleytrainAPI.getAPI().getAllPositions().then(
-            positionBOS => {
-                setPositions(positionBOS)
-                setLoadingInProgress(false)
-                setError(null)
-            }
-        ).catch(e => {
-            setPositions([])
+        .catch(e => {
+            //setMatchfieldPlayers([])
             setLoadingInProgress(false)
             setError(e)
         })
@@ -109,15 +120,106 @@ const Exercises = () => {
         setError(null)
     }
     
+    const saveExercise = (players) => {
+        console.log(players)
+    }
+
     useEffect(() => {
-        getMatchfieldPlayers();
-        getPosition()
-        getPlayers();
-    }, []);
+        if (dimensions.width > 5){
+            getMatchfieldPlayers(MatchfieldID);
+        }
+        
+    }, [, dimensions]);
+
+
+
+    useEffect(()=>{
+        if (dimensions.width < 5){
+            forceUpdate()
+            if (divRef.current) {
+                setDimensions({
+                    width: divRef.current.offsetWidth,
+                    height: divRef.current.offsetHeight
+                });
+            }
+        }
+    });
+
+    /**
+     * Below here is only Matchfield function/logic
+     * 
+     * 
+     * 
+     * 
+     * 
+     */
+
+    // init loading state for placing players
+    const [Playerloading, setPlayerLoading] = useState(true)
+
+    // move players on matchfield
+    const moveBox = useCallback((id, left, top) => {
+        setPlayers(update(players, { [id]: { $merge: { left, top },},
+        }));
+    }, [players, setPlayers]);
+
+
+    const [, drop] = useDrop(() => ({
+        accept: ItemTypes.BOX,
+        drop(item, monitor) {
+            const delta = monitor.getDifferenceFromInitialOffset();
+            const left = Math.round(item.left + delta.x);
+            const top = Math.round(item.top + delta.y);
+            moveBox(item.id, left, top);
+            return undefined;
+        },
+    }), [moveBox]);
+    
+    const addPlayer = (playerID) => {
+        playerID = playerID - 1
+        players[playerID].visibleOnSelection = false;
+        setPlayers(players)
+        forceUpdate();
+    }
+
+    useEffect(() => {
+        // Runs after EVERY rendering
+        PlacePlayersWithPosition(players);
+        //PlaceVisiblePlayers(players);
+    },[, players]);
+
+
+    const PlacePlayersWithPosition = (players) => {
+        // placing players with position
+        if (players.length > 0 && Playerloading){
+            setPlayerLoading(false)
+            var PlayerWithPositions = [];
+            var i;
+            for (i=0; i < players.length; i++){
+                if (!(players[i].top == null)){
+                    PlayerWithPositions.push(players[i])
+            }
+            }
+            setPlayers(PlayerWithPositions)
+        }
+    }
+
+    // prevent matchfield drag
+    const preventDragHandler = (e) => {
+        e.preventDefault();
+      }
+
+    /**
+     * 
+     * 
+     * 
+     * 
+     * 
+     * Above here is only Matchfield function/logic
+     */
 
     return (
     <div>
-        <DndProvider backend={HTML5Backend}>
         <div className={classes.root}>
             <Grid container spacing={3}>
                 <Grid item xs={1}
@@ -131,12 +233,43 @@ const Exercises = () => {
                     justify="center"
                     alignItems="center"
                     style={{ borderRight: '0.2em solid black', padding: '0.5em'}}>
-                    <div>
-                        <Matchfield2 ref={childRef} PlayerList={posPlayer}/>
-                    </div>     
-                              
+                        {loading ? <LoadingComp show={loading}/> : null}
+                    <div className={classes.wrapper}>
+                        <div className={classes.above} >
+                            <div className={classes.box}>
+                                <img src={field} alt="Field" className={classes.field} ref={divRef} onDragStart={preventDragHandler}/>
+                            </div>
+                        </div>
+                        <div className={classes.under}>
+                                    <div>
+                                        <div ref={drop} className={classes.box}>
+                                            <img src={field} alt="Field" className={classes.field} onDragStart={preventDragHandler}/>
+
+                                            {Object.keys(players).map((key) => {
+                                            const { left, top, name, surname, visibleOnSelection} = players[key];
+                                            return (
+                                                <div>
+                                                    {visibleOnSelection ?
+                                                    null
+                                                    : 
+                                                    <Player id={key} left={left} top={top} surname={surname} name={name} passPlayerDeleteId={setPlayerDeleteId}>
+                                                    </Player>
+                                                    }
+                                                </div>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                        </div>
+                    </div>
+                    <Grid
+                    container
+                    direction="row"
+                    justify="center"
+                    alignItems="flex-end">
+                        <Button onClick={saveExercise}>Uebung Speichern</Button>
+                    </Grid>
                 </Grid>
-                
                 <Grid item xs={2}
                     container
                     direction="column"
@@ -145,8 +278,8 @@ const Exercises = () => {
                 <Typography variant="h6">Uebung bewerten:</Typography>
                 <Rating
                     name="simple-controlled"
-                    value={3}
-                    onChange={(event, newValue) => {}}
+                    value={rating}
+                    onChange={(event, newValue) => {setRating(newValue);}}
                     size="large"
                     />
                 <Typography variant="h6">Feldelemente:</Typography>
@@ -157,30 +290,46 @@ const Exercises = () => {
                     direction="row"
                     justify=""
                     alignItems="center">
-                {posPlayer.length > 0 ?
-                    <>
-                    {posPlayer.map(player => 
+
+                    {players.map(player => 
                         <div className="test_player">
-                            <Button onClick={() => childRef.current.addPlayer(player.id)} className={classes.playerButton}>
+                            {player.visibleOnSelection ? 
+                            <Button onClick={() => {addPlayer(player.id)}} className={classes.playerButton}>
                                 <PlayerButton key={player.id} player={player}/>
                             </Button>
+                            : null}
                         </div>
                     )}
-                    </>
-                    :
-                    console.log("No info")
-                }
                 </Grid>
                 <Typography variant="subtitle2">Linien:</Typography>
-                <Button onClick={() => childRef.current.addPlayer(2)}>Click me</Button>
+                    <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="center">
+                        <img src={arrow_n} className={classes.arrow}/>
+                        <Typography variant="subtitle2">Ballweg</Typography>
+                    </Grid>
+                    <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems='center'
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="center">
+                        <img src={arrow_r} className={classes.arrow}/>
+                        <Typography variant="subtitle2">Rotation</Typography>
+                    </Grid>
                 <Typography variant="subtitle2">Objekte:</Typography>
                 </Grid>
             </Grid>
         </div>
-        </DndProvider>
     </div>
     );
-  };
+};
+
+
 
 /** Function specific styles */
 const styles = makeStyles({
@@ -202,8 +351,49 @@ const styles = makeStyles({
         marginTop: 5,
         marginLeft: 5,
         marginRight: 5,
-    }
-});
+    },
+    arrow: {
+        marginBottom: 5,
+        marginTop: 5,
+        marginLeft: 5,
+        marginRight: 5,
+    },
+    wrapper:{
+        position: "relative",
+    },
+    above:{
+        position: "absolute",
+        top: 0,
+        right: 0,
+    },
+    box: {
+        height: '90%',
+        width: '90%',
+        position: 'relative',
+        //border: '1px solid black',
+        
+    },
+    field: {
+        height: '100%',
+        width: '100%',
+        position: 'relative',
+        border: '1px solid black',
+    },
+    field_player: {
+        marginBottom: 5,
+        marginTop: 5,
+        marginLeft: 5,
+        marginRight: 5,
+    },
+    orange: {
+        color: deepOrange[500],
+        backgroundColor: deepOrange[100],
+    },
+    purple: {
+    color: deepPurple[500],
+    backgroundColor: deepPurple[100],
+    },
+}); 
 
 
 

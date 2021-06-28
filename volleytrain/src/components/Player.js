@@ -1,19 +1,39 @@
-import React, {Component} from 'react';
+import React, {Component, useState} from 'react';
 import PropTypes from 'prop-types';
 import {Grid, makeStyles} from '@material-ui/core';
 import { deepOrange, deepPurple } from '@material-ui/core/colors';
 import Avatar from '@material-ui/core/Avatar';
 import { useDrag } from 'react-dnd';
 import { ItemTypes } from './ItemTypes';
-
+import Badge from '@material-ui/core/Badge';
+import DeleteIcon from '@material-ui/icons/Delete';
+import IconButton from '@material-ui/core/IconButton';
+import ClearIcon from '@material-ui/icons/Clear';
 
 const DragStyle = {
     position: 'absolute',
     cursor: 'move',
 };
 
-function Player({ id, left, top, surname, name}){
+function Player({ id, left, top, surname, name, passPlayerDeleteId}){
   const classes = styles();
+
+  const functionHandler = () => {
+    passPlayerDeleteId(id);
+  }
+
+  // hover logic
+  const [display, setDisplay] = useState(false);
+
+  const showButton = e => {
+    e.preventDefault();
+    setDisplay(true);
+  };
+
+  const hideButton = e => {
+    e.preventDefault();
+    setDisplay(false);
+  };
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: ItemTypes.BOX,
@@ -25,11 +45,28 @@ function Player({ id, left, top, surname, name}){
     if (isDragging) {
         return <div ref={drag}/>;
     }
+
   return(
     <div ref={drag} style={{...DragStyle, left, top }} role="Box" className={classes.root}>
       <Grid>
         <Grid item xs>
-          <Avatar className={classes.orange}>{name[0] + surname[0]}</Avatar>
+          <div 
+          onMouseEnter={e => showButton(e)}
+          onMouseLeave={e => hideButton(e)}
+          >
+        <Badge
+        overlap="circle"
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        badgeContent={display ? <IconButton className={display} onClick={functionHandler} size="small"aria-label="delete">
+                          <ClearIcon />
+                      </IconButton> : null}
+        >
+         <Avatar className={classes.orange}>{name[0] + surname[0]}</Avatar>
+        </Badge>
+          </div>
         </Grid>
       </Grid>
     </div>

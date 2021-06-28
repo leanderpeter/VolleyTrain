@@ -10,7 +10,6 @@ from server.db.userMapper import UserMapper
 from server.db.exerciseMapper import ExerciseMapper
 from server.bo.playerBO import Player
 from server.db.playerMapper import PlayerMapper
-from server.db.positionMapper import PositionMapper
 from server.db.matchfieldPlayerMapper import MatchfieldPlayerMapper
 
 
@@ -179,3 +178,30 @@ class volleytrainAdministration(object):
     def deleteExercise(self, exerciseId):
         with ExerciseMapper() as mapper:
             return mapper.delete(exerciseId)
+
+    def createPlayer(self, name, role, t_number):
+        """ Create a Player object and inject it into the database
+        """
+        player = Player()
+        player.set_name(name)
+        player.setRole(role)
+        player.setT_number(t_number)
+
+        with PlayerMapper() as mapper:
+            return mapper.insert(player)
+
+    def getPlayerById(self, id):
+        with PlayerMapper() as mapper:
+            return mapper.find_by_id(id)
+
+    def savePlayer(self, player):
+        with PlayerMapper() as mapper:
+            mapper.update(player)
+
+    def getAllMatchfieldPlayers(self):
+        with MatchfieldPlayerMapper() as mapper:
+            return mapper.find_all()
+
+    def getByPlayerPosByMatchfieldId(self, id):
+        with MatchfieldPlayerMapper() as mapper:
+            return mapper.find_by_Matchfield(id)
