@@ -21,29 +21,51 @@ import Divider from "@material-ui/core/Divider";
 import TrainingSchedule from "../TrainingSchedule";
 
 class Home extends Component {
-  // Holt alle Trainings vom Backend
-  getTrainings = () => {
-    VolleytrainAPI
-      .getAPI()
-      .getTrainingById()
-      .then((trainingBOs) =>
+  // Get all Trainings from backend
+  getAllTrainings = () => {
+    VolleytrainAPI.getAPI()
+      .getAllTrainings()
+      .then((trainingBOs) => {
         this.setState({
           trainings: trainingBOs,
-          loadingInProgress: false,
-        })
-      )
-      .catch((e) =>
+          error: null,
+        });
+      })
+      .catch((e) => {
         this.setState({
           trainings: [],
           error: e,
-          loadingInProgress: false,
-        })
-      );
+        });
+      });
+    this.setState({
+      error: null,
+    });
   };
 
-  componentDidMount() {
-    this.getTrainings();
-} 
+  getCurrentDateTime = () => {
+    var today = new Date();
+    var date =
+      today.getFullYear() +
+      "-" +
+      (today.getMonth() + 1) +
+      "-" +
+      today.getDate();
+    var time =
+      today.getHours() +
+      ":" +
+      today.getMinutes() +
+      ":" +
+      today.getSeconds() +
+      "." +
+      today.getMilliseconds();
+    var datetime = date + " " + time;
+    console.log(typeof datetime);
+    this.setState({
+      currentDate: date,
+      currentTime: time,
+      currentDatetime: datetime,
+    });
+  };
 
   render() {
     const { classes } = this.props;
