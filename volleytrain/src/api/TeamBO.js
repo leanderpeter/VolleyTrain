@@ -2,45 +2,19 @@ import NamedBusinessObject from './NamedBusinessObject';
 
 export default class TeamBO extends NamedBusinessObject {
 
-    constructor(aTrainingsday, aAddDayOne, aAddDayTwo, aAddDayThree){
+    constructor(aTrainer){
         super()
-        this.trainingsday = aTrainingsday;
-        this.addDayOne = aAddDayOne;
-        this.addDayTwo = aAddDayTwo;
-        this.addDayThree = aAddDayThree;
+        this.trainer = aTrainer;
     }
 
-    setTrainingsday(aDay) {
-        this.trainingsday = aDay; 
+    setTrainer(aTrainer) {
+        this.trainer = aTrainer; 
     }
 
-    getTrainingsday(){
-        return this.trainingsday;
+    getTrainer(){
+        return this.trainer;
     }
 
-    setAddDayOne(aDay){
-        this.addDayOne = aDay;
-    }
-
-    getAddDayOne(){
-        return this.addDayOne;
-    }
-
-    setAddDayTwo(aDay){
-        this.addDayTwo = aDay;
-    }
-
-    getAddDayTwo(){
-        return this.addDayTwo;
-    }
-
-    setAddDayThree(aDay){
-        this.addDayThree = aDay;
-    }
-
-    getAddDayThree(){
-        return this.addDayThree;
-    }
 
      /** 
    * Returns an Array of TeamBOs from a given JSON structure

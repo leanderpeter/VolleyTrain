@@ -21,7 +21,7 @@ def secured(function):
 
         if id_token:
             try:
-                #hier wird der firebase token verifiziert
+                # hier wird der firebase token verifiziert
                 claims = google.oauth2.id_token.verify_firebase_token(
                     id_token, firebase_request_adapter
                 )
@@ -33,20 +33,21 @@ def secured(function):
 
                     user = adm.getPersonByGoogleUserId(google_user_id)
                     if user is not None:
-                            ''' 
-                            Die Person befindet sich bereits in der Datenbank.
-                            Demnach wird das Person BO aktualisiert
-                            '''
-                            user.setEmail(email)
-                            user.setName(name)
-                            user.setSurname(surname)
-                            adm.saveUser(user)
+                        ''' 
+                        Die Person befindet sich bereits in der Datenbank.
+                        Demnach wird das Person BO aktualisiert
+                        '''
+                        user.setEmail(email)
+                        user.set_name(name)
+                        user.setSurname(surname)
+                        adm.saveUser(user)
                     else:
                         '''
                         Das System kennt die Person nicht.
                         Es wird eine neue Person angelegt
                         '''
-                        user = adm.createUser(surname, name, email, google_user_id)
+                        user = adm.createUser(
+                            surname, name, email, google_user_id)
 
                     print(request.method, request.path, 'asked by:', email)
 

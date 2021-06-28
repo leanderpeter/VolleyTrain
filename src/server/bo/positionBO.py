@@ -14,7 +14,7 @@ class Position(ABC):
         super().__init__()
         self._x = None
         self._y = None
-    
+
     def setXPosition(self, x):
         self._x = x
 
