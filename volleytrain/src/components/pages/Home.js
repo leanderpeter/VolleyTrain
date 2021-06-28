@@ -18,7 +18,7 @@ import AvTimerIcon from "@material-ui/icons/AvTimer";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import GroupIcon from "@material-ui/icons/Group";
 import Divider from "@material-ui/core/Divider";
-import TrainingSchedule from "../TrainingSchedule";
+import TrainingScheduleEntry from "../TrainingScheduleEntry";
 
 class Home extends Component {
 
@@ -87,6 +87,7 @@ class Home extends Component {
   
   render() {
     const { classes } = this.props;
+    const { trainings, currentDate, currentTime, currentDatetime } = this.state;
 
     return (
       <div>
