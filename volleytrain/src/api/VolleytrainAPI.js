@@ -24,9 +24,6 @@ export default class VolleytrainAPI {
   //getPerson: google_user_id
   //#getUserByGoogleIDURL = (google_user_id) => `${this.#VolleytrainServerBaseURL}/userbygoogle/${google_user_id}`;
 
-  //getPlayers: all
-  #getPlayersURL = () => `${this.#VolleytrainServerBaseURL}/players`;
-
   #VolleyTrainServerBaseURL = "/volleyTrain";
 
   //getPerson: google_user_id
@@ -60,11 +57,11 @@ export default class VolleytrainAPI {
   #updateExerciseURL = () => `${this.#VolleyTrainServerBaseURL}/exercise`;
   //Training
   #getAllTrainings = () => `${this.#VolleyTrainServerBaseURL}/trainings`;
-	//getPlayers: all
-	#getPlayersURL = () => `${this.#VolleytrainServerBaseURL}/players`;
-	#addPlayerURL = () => `${this.#VolleytrainServerBaseURL}/playerss`;
-	#deletePlayerURL = (id) => `${this.#VolleytrainServerBaseURL}/player/${id}`;
-	#updatePlayerURL= () => `${this.#VolleytrainServerBaseURL}/player`;
+  //getPlayers: all
+  #getPlayersURL = () => `${this.#VolleytrainServerBaseURL}/players`;
+  #addPlayerURL = () => `${this.#VolleytrainServerBaseURL}/playerss`;
+  #deletePlayerURL = (id) => `${this.#VolleytrainServerBaseURL}/player/${id}`;
+  #updatePlayerURL = () => `${this.#VolleytrainServerBaseURL}/player`;
 
   //MatchfieldPlayerBO
   #getAllMatchfieldPlayerBO = () =>
@@ -113,16 +110,6 @@ export default class VolleytrainAPI {
     );
   }
 
-  getPlayers() {
-    return this.#fetchAdvanced(this.#getPlayersURL(), { method: "GET" }).then(
-      (responseJSON) => {
-        let playerBOs = PlayerBO.fromJSON(responseJSON);
-        return new Promise(function (resolve) {
-          resolve(playerBOs);
-        });
-      }
-    );
-  }
   //Training
   getAllTrainings() {
     return this.#fetchAdvanced(this.#getAllTrainings()).then((responseJSON) => {
@@ -335,45 +322,55 @@ export default class VolleytrainAPI {
       }
     );
   }
-	//Spieler hinzufuegen
-	addPlayer(playerBO) {
-		return this.#fetchAdvanced(this.#addPlayerURL(), {
-			method: 'POST',
-			headers: {
-				'Accept': 'application/json, text/plain',
-				'Content-type': 'application/json',
-			},
-			body: JSON.stringify(playerBO)
-		}).then((responseJSON) => {
-			// zuruck kommt ein array, wir benoetigen aber nur ein Objekt aus dem array
-			let responsePlayerBO = PlayerBO.fromJSON(responseJSON);
-			return new Promise(function (resolve) {
-				resolve(responsePlayerBO);
-			})
-		})
-	}
-	
-	//Spieler bearbeiten
-	updatePlayer(playerBO){
-		return this.#fetchAdvanced(this.#updatePlayerURL(), {
-			method: 'PUT',
-			headers: {
-				'Accept': 'application/json, text/plain',
-				'Content-type': 'application/json',
-			},
-			body: JSON.stringify(playerBO)
-		}).then((responseJSON) => {
-			// zuruck kommt ein array, wir benoetigen aber nur ein Objekt aus dem array
-			let responsePlayerBO = PlayerBO.fromJSON(responseJSON);
-			return new Promise(function (resolve) {
-				resolve(responsePlayerBO);
-			})
-		})
-	}
+  //Spieler hinzufuegen
+  addPlayer(playerBO) {
+    return this.#fetchAdvanced(this.#addPlayerURL(), {
+      method: "POST",
+      headers: {
+        Accept: "application/json, text/plain",
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(playerBO),
+    }).then((responseJSON) => {
+      // zuruck kommt ein array, wir benoetigen aber nur ein Objekt aus dem array
+      let responsePlayerBO = PlayerBO.fromJSON(responseJSON);
+      return new Promise(function (resolve) {
+        resolve(responsePlayerBO);
+      });
+    });
+  }
 
-	//Spieler löschen
-	deletePlayer(id){
-		return this.#fetchAdvanced(this.#deletePlayerURL(id),{method: 'DELETE'})
-	}
+  //Spieler bearbeiten
+  updatePlayer(playerBO) {
+    return this.#fetchAdvanced(this.#updatePlayerURL(), {
+      method: "PUT",
+      headers: {
+        Accept: "application/json, text/plain",
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(playerBO),
+    }).then((responseJSON) => {
+      // zuruck kommt ein array, wir benoetigen aber nur ein Objekt aus dem array
+      let responsePlayerBO = PlayerBO.fromJSON(responseJSON);
+      return new Promise(function (resolve) {
+        resolve(responsePlayerBO);
+      });
+    });
+  }
 
+  //Spieler löschen
+  deletePlayer(id) {
+    return this.#fetchAdvanced(this.#deletePlayerURL(id), { method: "DELETE" });
+  }
+
+  getPlayers() {
+    return this.#fetchAdvanced(this.#getPlayersURL(), { method: "GET" }).then(
+      (responseJSON) => {
+        let playerBOs = PlayerBO.fromJSON(responseJSON);
+        return new Promise(function (resolve) {
+          resolve(playerBOs);
+        });
+      }
+    );
+  }
 }

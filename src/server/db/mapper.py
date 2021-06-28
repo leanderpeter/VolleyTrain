@@ -27,14 +27,13 @@ class Mapper(AbstractContextManager, ABC):
             also auf einem Local Development Server. Hierbei stellen wir eine einfache Verbindung zu einer lokal
             installierten mySQL-Datenbank her."""
 
-            self._connection = connector.connect(user='root', password='root',
+            self._connection = connector.connect(user='TestNutzer', password='P@s$w0rd123!',
                                                  host='127.0.0.1',
                                                  database='volleytrain')
 
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-
         """In order to close the connection we use the following statement. For example we quit working with the mapper class for now"""
         self._connection.close()
 

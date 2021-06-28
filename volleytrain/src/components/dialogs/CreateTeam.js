@@ -12,7 +12,7 @@ import {
   Divider,
 } from "@material-ui/core";
 import React from "react";
-import ArrowBackOutlinedIcon from "@material-ui/icons/Add";
+import ArrowBackOutlinedIcon from "@material-ui/icons/ArrowBackOutlined";
 import AddIcon from "@material-ui/icons/Add";
 import CheckIcon from "@material-ui/icons/Check";
 

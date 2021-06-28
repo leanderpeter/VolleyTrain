@@ -48,6 +48,8 @@ class Team extends Component {
     VolleytrainAPI.getAPI().deleteTeam(this.state.team.getID());
   };
 
+  getPlayerByTeam = () => {};
+
   getTrainingdays = () => {
     VolleytrainAPI.getAPI()
       .getTrainingdaysByTeamID(this.state.team.getID())
