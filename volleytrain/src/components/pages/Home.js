@@ -147,7 +147,22 @@ class Home extends Component {
           </Grid>
         </Grid>
         <Divider className={classes.solid} />
-        <TrainingSchedule />
+        <Grid>
+            <Typography>
+              <b>Geplante Trainings</b>
+            </Typography>
+            {trainings
+              ? trainings.map((training) =>
+                  Date.parse(training.getCreationDate()) >=
+                  Date.parse(currentDatetime) ? (
+                    <TrainingScheduleEntry
+                      key={training.getID()}
+                      training={training}
+                    />
+                  ) : null
+                )
+              : null}
+          </Grid>
       </div>
     );
   }
