@@ -21,6 +21,19 @@ import Divider from "@material-ui/core/Divider";
 import TrainingSchedule from "../TrainingSchedule";
 
 class Home extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      trainings: [],
+      error: null,
+      currentDate: null,
+      currentTime: null,
+      currentDatetime: null,
+    };
+  }
+  
   // Get all Trainings from backend
   getAllTrainings = () => {
     VolleytrainAPI.getAPI()
