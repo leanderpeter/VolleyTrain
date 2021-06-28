@@ -14,7 +14,7 @@ import AvTimerIcon from "@material-ui/icons/AvTimer";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import GroupIcon from "@material-ui/icons/Group";
 import Divider from "@material-ui/core/Divider";
-import TrainingScheduleEntry from "../TrainingScheduleEntry";
+import TrainingSchedule from "../TrainingSchedule";
 
 class Home extends Component {
 
@@ -143,20 +143,22 @@ class Home extends Component {
         </Grid>
         <Divider className={classes.solid} />
         <Grid>
+        <Grid>
             <Typography>
-              <b>Geplante Trainings</b>
+              Geplante Trainings
             </Typography>
             {trainings
               ? trainings.map((training) =>
                   Date.parse(training.getCreationDate()) >=
                   Date.parse(currentDatetime) ? (
-                    <TrainingScheduleEntry
+                    <TrainingSchedule
                       key={training.getID()}
                       training={training}
                     />
                   ) : null
                 )
               : null}
+          </Grid>
           </Grid>
       </div>
     );
