@@ -17,7 +17,10 @@ import VolleytrainAPI from "../api/VolleytrainAPI";
 import arrow_n from "./media/arrow_n.png";
 import arrow_l from "./media/arrow_l.png";
 import arrow_r from "./media/arrow_r.png";
-import { PositionHandler } from "./MatchfieldHandler/PositionHandler";
+import {
+  PositionHandler,
+  PostPutHandler,
+} from "./MatchfieldHandler/PositionHandler";
 import LoadingProgress from "./dialogs/LoadingProgress";
 import update from "immutability-helper";
 import { useDrop } from "react-dnd";
@@ -118,13 +121,10 @@ const Exercises = ({ Players, MatchfieldID }) => {
   };
 
   const saveExercise = () => {
-    var playerToSave = [];
-    players.forEach((player) => {
-      if (player.visibleOnSelection === false) {
-        playerToSave.push(player);
-      }
-    });
-    console.log(playerToSave);
+    var infos = [];
+    //console.log(players);
+    infos.push(PostPutHandler(MatchfieldPlayers, players, dimensions));
+    console.log(infos);
   };
 
   useEffect(() => {
@@ -198,6 +198,7 @@ const Exercises = ({ Players, MatchfieldID }) => {
       setPlayerLoading(false);
       var PlayerWithPositions = [];
       var i;
+      // this can be deleted
       for (i = 0; i < players.length; i++) {
         if (!(players[i].top == null)) {
           PlayerWithPositions.push(players[i]);
