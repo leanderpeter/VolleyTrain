@@ -3,10 +3,12 @@ import NamedBusinessObject from './NamedBusinessObject';
 
 export default class PlayerBO extends NamedBusinessObject{
 
-	constructor(asurname, ateamId){
+	constructor(asurname, ateamId, arole, at_number){
         super();
         this.surname = asurname;
-        this.teamId = ateamId;
+		this.teamId = ateamId;
+		this.role = arole;
+		this.t_number = at_number;
     }
     /*
 	erhalte 
@@ -31,6 +33,30 @@ export default class PlayerBO extends NamedBusinessObject{
 	*/
     setTeamId(ateamId){
         this.teamId = ateamId;
+    }
+    /*
+	erhalte 
+	*/
+    getRole(){
+        return this.role;
+    }
+    /*
+	setze 
+	*/
+    setRole(arole){
+        this.role = arole;
+    }
+    /*
+	erhalte 
+	*/
+    getT_number(){
+        return this.t_number;
+    }
+    /*
+	setze 
+	*/
+    setT_number(at_number){
+        this.t_number = at_number;
     }
     /** 
    * Returns an Array of PlayerBOs from a given JSON structure

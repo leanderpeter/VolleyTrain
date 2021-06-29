@@ -257,11 +257,10 @@ DROP TABLE IF EXISTS `team`;
 CREATE TABLE `team` (
   `PK_Team` int NOT NULL,
   `name` varchar(45) DEFAULT NULL,
-  `trainingsday`INT NULL DEFAULT NULL,
-  `addDayOne` INT NULL DEFAULT NULL,
-  `addDayTwo` INT NULL DEFAULT NULL,
-  `addDayThree` INT NULL DEFAULT NULL,
-  PRIMARY KEY (`PK_Team`)
+  `trainer` int NOT NULL,
+  PRIMARY KEY (`PK_Team`),
+  KEY `fk_trainer_team` (`trainer`),
+  CONSTRAINT `fk_trainer_team` FOREIGN KEY (`trainer`) REFERENCES `user` (`PK_User`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -271,9 +270,27 @@ CREATE TABLE `team` (
 
 LOCK TABLES `team` WRITE;
 /*!40000 ALTER TABLE `team` DISABLE KEYS */;
-INSERT INTO `team` VALUES (1,'Team1',1,1,1,1),(2,'Team2',1,1,1,1),(3,'Team3',1,1,1,1);
+INSERT INTO `team` VALUES (1,'Team1',2),(2,'Team2',2),(3,'Team3',2);
 /*!40000 ALTER TABLE `team` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `trainingday`
+--
+
+DROP TABLE IF EXISTS `trainingday`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `trainingday` (
+  `PK_Trainingday` int NOT NULL,
+  `weekday` varchar(45) NOT NULL,
+  `starttime` time NOT NULL,
+  `endtime` time NOT NULL,
+  `team` int NOT NULL,
+  PRIMARY KEY (`PK_Trainingday`,`team`),
+  KEY `idx_trainingday_PK_Trainingday` (`PK_Trainingday`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `training`
