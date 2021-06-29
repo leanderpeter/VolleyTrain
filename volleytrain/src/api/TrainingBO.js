@@ -3,11 +3,20 @@ import NamedBusinessObject from './NamedBusinessObject';
 
 export default class TrainingBO extends NamedBusinessObject{
 
-	constructor(aGoal, aTeamId, aUserId){
+	constructor(aDatetime, aGoal, aTeamId, aUserId){
         super();
+        this.datetime = aDatetime
         this.goal = aGoal;
         this.teamId = aTeamId;
         this.userId = aUserId;
+    }
+
+    getDatetime(){
+        return this.datetime
+    }
+
+    setDatetime(aDatetime){
+        return this.datetime = aDatetime;
     }
     
 	getGoal(){

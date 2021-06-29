@@ -21,12 +21,13 @@ class TrainingScheduleEntry extends React.Component {
   }
 
   getTrainingDateTime = () => {
-    var trainingDateTime = new Date(this.props.training.getCreationDate());
+    var trainingDateTime = new Date(this.props.training.getDatetime());
+    console.log(this.props.training.getDatetime());
 
     var date =
       trainingDateTime.getDate() +
       "." +
-      (trainingDateTime.getMonth()+1) +
+      (trainingDateTime.getMonth() + 1) +
       "." +
       trainingDateTime.getFullYear();
 
@@ -39,7 +40,7 @@ class TrainingScheduleEntry extends React.Component {
 
     var datetime = date + " " + time;
     console.log(typeof datetime);
-    
+
     this.setState({
       trainingDate: date,
       trainingTime: time,
