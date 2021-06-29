@@ -81,7 +81,6 @@ class Home extends Component {
   
   render() {
     const { classes } = this.props;
-    const { trainings, currentDatetime } = this.state;
 
     return (
       <div>
@@ -142,24 +141,7 @@ class Home extends Component {
           </Grid>
         </Grid>
         <Divider className={classes.solid} />
-        <Grid>
-        <Grid>
-            <Typography>
-              Geplante Trainings
-            </Typography>
-            {trainings
-              ? trainings.map((training) =>
-                  Date.parse(training.getCreationDate()) >=
-                  Date.parse(currentDatetime) ? (
-                    <TrainingSchedule
-                      key={training.getID()}
-                      training={training}
-                    />
-                  ) : null
-                )
-              : null}
-          </Grid>
-          </Grid>
+        <TrainingSchedule/>
       </div>
     );
   }
