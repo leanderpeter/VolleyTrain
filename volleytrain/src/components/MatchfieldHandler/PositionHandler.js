@@ -9,7 +9,7 @@ export function PositionHandler(MatchfieldPlayers, Players, dimensions) {
     */
     var player_key_array = []
     var s;
-    for (s=0; s < MatchfieldPlayers.length; s++){
+    for (s = 0; s < MatchfieldPlayers.length; s++) {
         player_key_array.push(MatchfieldPlayers[s]._player_pk)
     }
 
@@ -22,37 +22,37 @@ export function PositionHandler(MatchfieldPlayers, Players, dimensions) {
      */
 
     var i;
-    for (i=0; i < Players.length; i++){
+    for (i = 0; i < Players.length; i++) {
         var j;
-        for (j=0; j < MatchfieldPlayers.length; j++){
-            if (Players[i].id == MatchfieldPlayers[j]._player_pk){
+        for (j = 0; j < MatchfieldPlayers.length; j++) {
+            if (Players[i].id == MatchfieldPlayers[j]._player_pk) {
                 //"Here we concat given players with given positions"
                 // create a player object with matchfield positions and push it into the player array
                 //console.log(MatchfieldPlayers[j].top)
                 const obj = {
-                    id:Players[i].id,
-                    surname:Players[i].surname,
-                    name:Players[i].name,
-                    team:Players[i].team,
-                    top:parseFloat(MatchfieldPlayers[j].top)*dimensions.height,
-                    left:parseFloat(MatchfieldPlayers[j].left)*dimensions.width,
-                    visibleOnSelection:false,
+                    id: Players[i].id,
+                    surname: Players[i].surname,
+                    name: Players[i].name,
+                    team: Players[i].team,
+                    top: parseFloat(MatchfieldPlayers[j].top) * dimensions.height,
+                    left: parseFloat(MatchfieldPlayers[j].left) * dimensions.width,
+                    visibleOnSelection: false,
                 }
                 //console.log(obj)
                 posPlayer.push(obj)
-            } else if (!(player_key_array.includes(Players[i].id))){
+            } else if (!(player_key_array.includes(Players[i].id))) {
                 //"Here we check if theres a Player id without a position"
                 // create a player object with random positions and push it into the player array
                 const obj = {
-                    id:Players[i].id,
-                    surname:Players[i].surname,
-                    name:Players[i].name,
-                    team:Players[i].team,
+                    id: Players[i].id,
+                    surname: Players[i].surname,
+                    name: Players[i].name,
+                    team: Players[i].team,
                     top: Math.floor(Math.random() * dimensions.height),
                     left: Math.floor(Math.random() * dimensions.width),
-                    visibleOnSelection:true,
+                    visibleOnSelection: true,
                 }
-                
+
                 // add the playerId to the player_key_array
                 player_key_array.push(Players[i].id)
                 posPlayer.push(obj)
