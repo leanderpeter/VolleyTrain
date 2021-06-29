@@ -18,67 +18,6 @@ import TrainingSchedule from "../TrainingSchedule";
 
 class Home extends Component {
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      trainings: [],
-      error: null,
-      currentDate: null,
-      currentTime: null,
-      currentDatetime: null,
-    };
-  }
-  
-  // Get all Trainings from backend
-  getAllTrainings = () => {
-    VolleytrainAPI.getAPI()
-      .getAllTrainings()
-      .then((trainingBOs) => {
-        this.setState({
-          trainings: trainingBOs,
-          error: null,
-        });
-      })
-      .catch((e) => {
-        this.setState({
-          trainings: [],
-          error: e,
-        });
-      });
-    this.setState({
-      error: null,
-    });
-  };
-
-  getCurrentDateTime = () => {
-    var today = new Date();
-    var date =
-      today.getFullYear() +
-      "-" +
-      (today.getMonth() + 1) +
-      "-" +
-      today.getDate();
-    var time =
-      today.getHours() +
-      ":" +
-      today.getMinutes() +
-      ":" +
-      today.getSeconds() +
-      "." +
-      today.getMilliseconds();
-    var datetime = date + " " + time;
-    console.log(typeof datetime);
-    this.setState({
-      currentDatetime: datetime,
-    });
-  };
-
-  componentDidMount() {
-    this.getAllTrainings();
-    this.getCurrentDateTime();
-  }
-  
   render() {
     const { classes } = this.props;
 
@@ -115,7 +54,7 @@ class Home extends Component {
               </Button>
             </Paper>
           </Grid>
-          <Grid item component={Link} to={"/exercises"}>
+          <Grid item component={Link} to={"/exerciseForm"}>
             <Paper
               className={classes.border}
               variant="outlined"
