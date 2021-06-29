@@ -85,7 +85,7 @@ class TrainingSchedule extends React.Component {
             </Typography>
             {trainings
               ? trainings.map((training) =>
-                  Date.parse(training.getCreationDate()) >=
+                  Date.parse(training.getDatetime()) >=
                   Date.parse(currentDatetime) ? (
                     <TrainingScheduleEntry
                       key={training.getID()}
@@ -102,7 +102,7 @@ class TrainingSchedule extends React.Component {
             </Typography>
             {trainings
               ? trainings.map((training) =>
-                  Date.parse(training.getCreationDate()) <
+                  Date.parse(training.getDatetime()) <
                   Date.parse(currentDatetime) ? (
                     <TrainingScheduleEntry
                       key={training.getID()}
