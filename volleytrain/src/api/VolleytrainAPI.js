@@ -42,6 +42,8 @@ export default class VolleytrainAPI {
   //Trainingday
   #getAllTrainingdaysURL = () =>
     `${this.#VolleyTrainServerBaseURL}/trainingday`;
+  #getTrainingdayByIdURL = (id) =>
+    `${this.#VolleyTrainServerBaseURL}/trainingday/${id}`;
   #getTrainingdaysByTeamIdURL = (id) =>
     `${this.#VolleyTrainServerBaseURL}/trainingday/${id}`;
   #addTrainingdayURL = () => `${this.#VolleyTrainServerBaseURL}/trainingday`;
@@ -525,7 +527,7 @@ export default class VolleytrainAPI {
 
   //Training
   getAllMatchfieldPlayerBO() {
-    return this.#fetchAdvanced(this.#getAllMatchfieldPlayerBO()).then(
+    return this.#fetchAdvanced(this.#getAllMatchfieldPlayerURL()).then(
       (responseJSON) => {
         let matchfieldPlayerBO = MatchfieldPlayerBO.fromJSON(responseJSON);
         return new Promise(function (resolve) {
