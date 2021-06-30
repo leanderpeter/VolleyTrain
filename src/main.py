@@ -89,10 +89,6 @@ exercise = api.inherit('exercise', nbo, {
     'description': fields.String(attribute='_description', description='description of exercise'),
 })
 
-position = api.inherit('position', bo, {
-    'top': fields.String(attribute='_x', description='X Postion'),
-    'left': fields.String(attribute='_y', description='Y Postion'),
-})
 
 matchfieldPlayers = api.inherit('matchfieldPlayers', {
     '_matchfield_pk': fields.Integer(attribute='_matchfield_pk', description='_matchfield_pk'),
