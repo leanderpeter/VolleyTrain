@@ -411,7 +411,7 @@ const Exercises = ({ Players, MatchfieldID }) => {
 const styles = makeStyles({
   root: {
     flexGrow: 1,
-    marginLeft: "240px",
+    //marginLeft: "240px",
   },
   test_player: {
     height: "45px",
