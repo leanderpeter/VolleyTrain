@@ -9,12 +9,14 @@ import Slide from "@material-ui/core/Slide";
 import Exercises from "../Exercises";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { DndProvider } from "react-dnd";
+import VolleytrainAPI from "../../api/VolleytrainAPI";
+import ExerciseBO from "../../api/ExerciseBO";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function CreateExercise({ Players }) {
+export default function CreateExercise({ Players, Training }) {
   const [open, setOpen] = React.useState(false);
 
   //show or hide Exercise Component state
@@ -32,6 +34,7 @@ export default function CreateExercise({ Players }) {
   };
 
   const handleExerciseCompCall = () => {
+    createExerciseObj();
     setShowComp(true);
     setShowButton(false);
     setOpen(false);
@@ -39,6 +42,33 @@ export default function CreateExercise({ Players }) {
 
   const handleExerciseLibraryCall = () => {
     setShowComp(false);
+  };
+
+  //this function gets passed to the exercise component
+  const closeOpenHandler = () => {
+    setShowComp(false);
+    setShowButton(true);
+  };
+
+  // const init Exercise State
+  const [exercise, setExercise] = React.useState(null);
+
+  console.log(exercise);
+
+  const createExerciseObj = () => {
+    let exercise = new ExerciseBO();
+    if (!(Training == null)) {
+      exercise.setTraining(Training.id);
+    }
+
+    VolleytrainAPI.getAPI()
+      .addExercise(exercise)
+      .then((exercise) => {
+        setExercise(exercise);
+      })
+      .catch((e) => {
+        setExercise(null);
+      });
   };
 
   const MatchfieldIDMock = 1;
@@ -76,16 +106,31 @@ export default function CreateExercise({ Players }) {
         <DialogActions></DialogActions>
       </Dialog>
       {showComp ? (
-        <ExerciseComp Players={Players} MatchfieldID={MatchfieldIDMock} />
+        <ExerciseComp
+          Players={Players}
+          MatchfieldID={MatchfieldIDMock}
+          setShowCompState={closeOpenHandler}
+          exerciseToChange={exercise}
+        />
       ) : null}
     </div>
   );
 }
 
-const ExerciseComp = ({ Players, MatchfieldID }) => (
+const ExerciseComp = ({
+  Players,
+  MatchfieldID,
+  setShowCompState,
+  exerciseToChange,
+}) => (
   <div id="ExerciseComp">
     <DndProvider backend={HTML5Backend}>
-      <Exercises Players={Players} MatchfieldID={MatchfieldID} />
+      <Exercises
+        Players={Players}
+        MatchfieldID={MatchfieldID}
+        setShowCompState={setShowCompState}
+        exercise={exerciseToChange}
+      />
     </DndProvider>
   </div>
 );

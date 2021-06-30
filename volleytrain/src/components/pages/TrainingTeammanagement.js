@@ -18,6 +18,7 @@ import VolleytrainAPI from "../../api/VolleytrainAPI";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "../layout/TabStyling.css";
 import { flexbox } from "@material-ui/system";
+import TrainingBO from "../../api/TrainingBO";
 /**
  *
  * @returns
@@ -46,6 +47,20 @@ const TrainingTeammanagement = () => {
 
   // init Trainingsablauf state
   const [teamChosen, setChosenTeam] = useState(true);
+
+  // init Training state
+  const [training, setTraining] = useState(null);
+
+  var MOCKUPTRAINING = new TrainingBO();
+  MOCKUPTRAINING.setID(1);
+  MOCKUPTRAINING.setDatetime("");
+  MOCKUPTRAINING.setName("Grossen Training");
+  MOCKUPTRAINING.setGoal("Viel erreichen");
+  if (!(team == null)) {
+    MOCKUPTRAINING.setTeamId(team.id);
+  }
+  MOCKUPTRAINING.setUserId(1);
+  MOCKUPTRAINING.setVisibility(1);
 
   const getTeams = () => {
     VolleytrainAPI.getAPI()
@@ -81,15 +96,12 @@ const TrainingTeammanagement = () => {
       getPlayersForTeam(team.id);
       setChosenTeam(false);
     }
-    console.log(player);
   }, [, team]);
 
   //call function when render
   useLayoutEffect(() => {
     getTeams();
   }, []);
-
-  console.log(team);
 
   return (
     <div className={classes.root}>
@@ -144,6 +156,7 @@ const TrainingTeammanagement = () => {
               <CreateExercise
                 className={classes.exerciseButton}
                 Players={player}
+                Training={MOCKUPTRAINING}
               />
             </Grid>
           </TabPanel>
