@@ -48,10 +48,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 export default function Header(props) {
   const classes = useStyles();
-
 
   return (
     <div className={classes.root}>
@@ -68,31 +66,31 @@ export default function Header(props) {
         <div className={classes.toolbar} />
         <Divider />
         <List>
-          <ListItem button component={Link} to={'/home'}>
+          <ListItem button component={Link} to={"/home"}>
             <ListItemIcon style={{ color: "white" }}>
               <AppsIcon />
             </ListItemIcon>
             Dashboard
           </ListItem>
-          <ListItem button component={Link} to={'/exerciseForm'}>
+          <ListItem button component={Link} to={"/createTraining"}>
             <ListItemIcon style={{ color: "white" }}>
               <FitnessCenterIcon />
             </ListItemIcon>
             Trainingsplanung
           </ListItem>
-          <ListItem button component={Link} to={'/training'}>
+          <ListItem button component={Link} to={"/training"}>
             <ListItemIcon style={{ color: "white" }}>
               <AvTimerIcon />
             </ListItemIcon>
             Trainingspläne
           </ListItem>
-          <ListItem button component={Link} to={'/exercises'}>
+          <ListItem button component={Link} to={"/exercises"}>
             <ListItemIcon style={{ color: "white" }}>
               <MenuBookIcon />
             </ListItemIcon>
             Übungsverwaltung
           </ListItem>
-          <ListItem button component={Link} to={'/teamoverview'}>
+          <ListItem button component={Link} to={"/teamoverview"}>
             <ListItemIcon style={{ color: "white" }}>
               <GroupIcon />
             </ListItemIcon>
