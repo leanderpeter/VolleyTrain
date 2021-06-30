@@ -72,6 +72,7 @@ CREATE TABLE `exercise` (
   `notes` varchar(256) DEFAULT NULL,
   `description` varchar(256) DEFAULT NULL,
   `Training_PK_Training` int NOT NULL,
+  `rating` int DEFAULT 0,
   PRIMARY KEY (`PK_Exercise`,`Training_PK_Training`),
   KEY `fk_Exercise_Training1_idx` (`Training_PK_Training`),
   CONSTRAINT `fk_Exercise_Training1` FOREIGN KEY (`Training_PK_Training`) REFERENCES `training` (`PK_Training`)
@@ -84,7 +85,7 @@ CREATE TABLE `exercise` (
 
 LOCK TABLES `exercise` WRITE;
 /*!40000 ALTER TABLE `exercise` DISABLE KEYS */;
-INSERT INTO `exercise` VALUES (1,NULL,20,'Aufwärmen','lief gut','öldskföaoeirgoabgroöaeg',1),(2,NULL,15,'Spielvorbereitung','bla','dföaoiegjoiaejrgoiahgr',2),(3,NULL,10,'Nachbereitung','blabla','aöofighoaihgoiaehrg',3);
+INSERT INTO `exercise` VALUES (1,'Training - 1',20,'Aufwärmen','lief gut','öldskföaoeirgoabgroöaeg',1,3),(2,'Training - 2',15,'Spielvorbereitung','bla','dföaoiegjoiaejrgoiahgr',2,3),(3,'Training - 3',10,'Nachbereitung','blabla','aöofighoaihgoiaehrg',3,3);
 /*!40000 ALTER TABLE `exercise` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -322,6 +323,7 @@ CREATE TABLE `training` (
   `goal` varchar(45) DEFAULT NULL,
   `Team_PK_Team` int NOT NULL,
   `User_PK_User` int NOT NULL,
+  `visibility` tinyint DEFAULT NULL,
   PRIMARY KEY (`PK_Training`,`Team_PK_Team`,`User_PK_User`),
   KEY `fk_Training_Team1_idx` (`Team_PK_Team`),
   KEY `fk_training_users1_idx` (`User_PK_User`),
@@ -335,7 +337,7 @@ CREATE TABLE `training` (
 
 LOCK TABLES `training` WRITE;
 /*!40000 ALTER TABLE `training` DISABLE KEYS */;
-INSERT INTO `training` VALUES (1,'Training1','2021-07-28 13:45:54','Ausdauer verbessern',1,1),(2,'Training2','2021-05-27 13:45:54','Strategie planen',2,1),(3,'Training3','2020-06-27 13:45:54','Beweglichkeit verbessern',3,1);
+INSERT INTO `training` VALUES (1,'Training1','2021-07-28 13:45:54','Ausdauer verbessern',1,1,1),(2,'Training2','2021-05-27 13:45:54','Strategie planen',2,1,0),(3,'Training3','2020-06-27 13:45:54','Beweglichkeit verbessern',3,1,1);
 /*!40000 ALTER TABLE `training` ENABLE KEYS */;
 UNLOCK TABLES;
 
