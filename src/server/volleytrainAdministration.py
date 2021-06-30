@@ -85,25 +85,35 @@ class volleytrainAdministration(object):
 
     """ Training """
 
-    def createTraining(self, training):
+    def create_training(self, training):
         with TrainingMapper() as mapper:
             return mapper.insert(training)
 
-    def getAllTrainings(self):
+    def get_all_trainings(self):
         with TrainingMapper() as mapper:
             return mapper.find_all()
+    
+    def get_visible_trainings(self):
+        with TrainingMapper() as mapper:
+            return mapper.find_visible_trainings()
+    
+    def get_archived_trainings(self):
+        with TrainingMapper() as mapper:
+            return mapper.find_archived_trainings()
 
-    def getTrainingById(self, id):
+    def get_training_by_id(self, id):
         with TrainingMapper() as mapper:
             return mapper.find_by_id(id)
 
-    def saveTraining(self, training):
+    def save_training(self, training):
         with TrainingMapper() as mapper:
             return mapper.update(training)
 
-    def deleteTraining(self, training):
+    def delete_training(self, training):
         with TrainingMapper() as mapper:
             return mapper.delete(training)
+
+    """ Team """
 
     def create_team(self, name, trainer):
 

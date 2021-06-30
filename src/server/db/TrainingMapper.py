@@ -23,7 +23,7 @@ class TrainingMapper(Mapper):
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        for (id, name, datetime, goal, team_id, user_id) in tuples:
+        for (id, name, datetime, goal, team_id, user_id, visibility) in tuples:
             training = Training()
             training.set_id(id)
             training.set_name(name)
@@ -31,6 +31,63 @@ class TrainingMapper(Mapper):
             training.set_goal(goal)
             training.set_team_id(team_id)
             training.set_user_id(user_id)
+            training.set_visibility(visibility)
+
+            result.append(training)
+
+        self._connection.commit()
+        cursor.close()
+
+        return result
+
+    def find_visible_trainings(self):
+
+        result = []
+
+        cursor = self._connection.cursor()
+
+        command = "SELECT * FROM training WHERE visibility=1"
+
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        for (id, name, datetime, goal, team_id, user_id, visibility) in tuples:
+            training = Training()
+            training.set_id(id)
+            training.set_name(name)
+            training.set_datetime(datetime)
+            training.set_goal(goal)
+            training.set_team_id(team_id)
+            training.set_user_id(user_id)
+            training.set_visibility(visibility)
+
+            result.append(training)
+
+        self._connection.commit()
+        cursor.close()
+
+        return result
+
+    def find_archived_trainings(self):
+
+        result = []
+
+        cursor = self._connection.cursor()
+
+        command = "SELECT * FROM training WHERE visibility=0"
+
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        for (id, name, datetime, goal, team_id, user_id, visibility) in tuples:
+            training = Training()
+            training.set_id(id)
+            training.set_name(name)
+            training.set_datetime(datetime)
+            training.set_goal(goal)
+            training.set_team_id(team_id)
+            training.set_user_id(user_id)
+            training.set_visibility(visibility)
 
             result.append(training)
 
@@ -55,7 +112,8 @@ class TrainingMapper(Mapper):
         cursor.execute(command)
         tuples = cursor.fetchall()
         try:
-            (id, name, datetime, goal, team_id, user_id) = tuples[0]
+            (id, name, datetime, goal, team_id,
+             user_id, visibility) = tuples[0]
             training = Training()
             training.set_id(id)
             training.set_name(name)
@@ -63,6 +121,7 @@ class TrainingMapper(Mapper):
             training.set_goal(goal)
             training.set_team_id(team_id)
             training.set_user_id(user_id)
+            training.set_visibility(visibility)
             result = training
 
         except IndexError:
@@ -98,7 +157,7 @@ class TrainingMapper(Mapper):
 
         command = "INSERT INTO training (PK_Training, name, datetime, goal, Team_PK_Team, User_PK_User) VALUES (%s,%s,%s,%s,%s,%s)"
         data = (training.get_id(), training.get_name(), training.get_datetime(
-        ), training.get_goal(), training.get_team_id(), training.get_user_id())
+        ), training.get_goal(), training.get_team_id(), training.get_user_id(), training.get_visibility())
         cursor.execute(command, data)
 
         self._connection.commit()
@@ -115,9 +174,9 @@ class TrainingMapper(Mapper):
         cursor = self._connection.cursor()
 
         command = "UPDATE training " + \
-            "SET name=%s, datetime=%s, goal=%s, Team_PK_Team=%s, User_PK_User=%s WHERE PK_Training=%s"
+            "SET name=%s, datetime=%s, goal=%s, Team_PK_Team=%s, User_PK_User=%s, visibility=%s WHERE PK_Training=%s"
         data = (training.get_name(), training.get_datetime(), training.get_goal(
-        ), training.get_team_id(), training.get_user_id(), training.get_id())
+        ), training.get_team_id(), training.get_user_id(), training.get_visibility(), training.get_id())
 
         cursor.execute(command, data)
 
