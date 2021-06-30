@@ -60,7 +60,7 @@ user = api.inherit('user', nbo, {
 
 player = api.inherit('nbo', nbo, {
     'surname': fields.String(attribute='_surname', description='Surname of Player'),
-    'teamId': fields.String(attribute='_teamId', description='Team ID of Player'),
+    'teamid': fields.Integer(attribute='_teamid', description='Team ID of Player'),
     'role': fields.String(attribute='_role', description='Role of Player'),
     't_number': fields.Integer(attribute='_t_number', description='t_number of PLayer')
 })
@@ -146,8 +146,8 @@ class PlayerOperations(Resource):
         adm = volleytrainAdministration()
         player = Player.from_dict(api.payload)
         if player is not None:
-            c = adm.createPlayer(player.getSurname(), player.getName(), player.getTeamId(),
-                                 player.getRole(), player.getT_number())
+            c = adm.createPlayer(player.get_surname(), player.get_name(), player.get_teamid(),
+                                 player.get_role(), player.get_t_number())
             return c, 200
         else:
             return '', 500
@@ -176,7 +176,7 @@ class PlayerOperations(Resource):
         playerId = request.args.get("id")
         name = request.args.get("name")
         name = request.args.get("surname")
-        TeamId = request.args.get("teamId")
+        ieamid = request.args.get("teamid")
         role = request.args.get("role")
         t_number = request.args.get("t_number")
         adm.createPlayer(api.payload)
