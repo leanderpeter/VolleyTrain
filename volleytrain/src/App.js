@@ -161,8 +161,8 @@ class App extends React.Component {
               <Route path="/exerciseForm" component={ExerciseForm}>
                 <ExerciseForm />
               </Route>
-              <Route path="/exercises" component={Exercises}>
-                <Exercises />
+              <Route path="/exercises" component={BlankPage}>
+                <BlankPage />
               </Route>
             </>
           ) : (

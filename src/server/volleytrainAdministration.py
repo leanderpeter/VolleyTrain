@@ -75,10 +75,6 @@ class volleytrainAdministration(object):
         with PlayerMapper() as mapper:
             mapper.update(player)
 
-    def getAllPositions(self):
-        with PositionMapper() as mapper:
-            return mapper.find_all()
-
     def getAllMatchfieldPlayers(self):
         with MatchfieldPlayerMapper() as mapper:
             return mapper.find_all()
@@ -215,3 +211,11 @@ class volleytrainAdministration(object):
     def getByPlayerPosByMatchfieldId(self, id):
         with MatchfieldPlayerMapper() as mapper:
             return mapper.find_by_Matchfield(id)
+
+    def putPlayerPosByMatchfieldId(self, MatchfieldBO):
+        with MatchfieldPlayerMapper() as mapper:
+            return mapper.update(MatchfieldBO)
+
+    def deletePlayerPosByMatchfieldId(self, MatchfieldPlayerBO):
+        with MatchfieldPlayerMapper() as mapper:
+            return mapper.delete(MatchfieldPlayerBO)
