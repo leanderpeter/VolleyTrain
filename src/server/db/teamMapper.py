@@ -23,14 +23,11 @@ class TeamMapper(Mapper):
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        for (id, name, trainingsday, addDayOne, addDayTwo, addDayThree) in tuples:
+        for (id, name, trainer) in tuples:
             team = Team()
-            team.setId(id)
-            team.setName(name)
-            team.setTrainingsday(trainingsday)
-            team.setAddDayOne(addDayOne)
-            team.setAddDayTwo(addDayTwo)
-            team.setAddDayThree(addDayThree)
+            team.set_id(id)
+            team.set_name(name)
+            team.set_trainer(trainer)
 
             result.append(team)
 
@@ -39,10 +36,7 @@ class TeamMapper(Mapper):
 
         return result
 
-    def find_by_name(self):
-        pass
-
-    def find_by_id(self, id):
+    def find_by_name(self, name):
         """Suchen einer team nach der übergebenen ID. 
 
         :param id Primärschlüsselattribut einer team aus der Datenbank
@@ -51,29 +45,56 @@ class TeamMapper(Mapper):
         """
         result = None
         cursor = self._connection.cursor()
-        command = "SELECT * FROM team WHERE PK_Team='{}'".format(id)
+        command = "SELECT * FROM team WHERE name='{}'".format(name)
         cursor.execute(command)
         tuples = cursor.fetchall()
         try:
-            (id, name, trainingsday, addDayOne, addDayTwo, addDayThree) = tuples[0]
+            (id, name, trainer) = tuples[0]
             team = Team()
-            team.setId(id)
-            team.setName(name)
-            team.setTrainingsday(trainingsday)
-            team.setAddDayOne(addDayOne)
-            team.setAddDayTwo(addDayTwo)
-            team.setAddDayThree(addDayThree)
+            team.set_id(id)
+            team.set_name(name)
+            team.set_trainer(trainer)
+
             result = team
 
         except IndexError:
             """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
-			keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
+                        keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
             result = None
 
         self._connection.commit()
         cursor.close()
         return result
 
+    def find_by_id(self, team_id):
+        """Suchen einer team nach der übergebenen ID. 
+
+        :param id Primärschlüsselattribut einer team aus der Datenbank
+        :return team-Objekt, welche mit der ID übereinstimmt,
+                None wenn kein Eintrag gefunden wurde
+        """
+        result = None
+        cursor = self._connection.cursor()
+        command = "SELECT * FROM team WHERE PK_Team='{}'".format(team_id)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+        try:
+            (id, name, trainer) = tuples[0]
+            team = Team()
+            team.set_id(id)
+            team.set_name(name)
+            team.set_trainer(trainer)
+
+            result = team
+
+        except IndexError:
+            """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
+                        keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
+            result = None
+
+        self._connection.commit()
+        cursor.close()
+        return result
 
     def insert(self, team):
         """Einfügen eines team Objekts in die DB
@@ -91,21 +112,20 @@ class TeamMapper(Mapper):
             if maxid[0] is not None:
                 """Wenn wir eine maximale ID festellen konnten, zählen wir diese
                 um 1 hoch und weisen diesen Wert als ID dem team-Objekt zu."""
-                team.setId(maxid[0] + 1)
+                team.set_id(maxid[0] + 1)
             else:
                 """Wenn wir KEINE maximale ID feststellen konnten, dann gehen wir
                 davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
-                team.setId(1)
+                team.set_id(1)
 
-        command = "INSERT INTO team (PK_Team, name, trainingsday, addDayOne, addDayTwo, addDayThree) VALUES (%s,%s,%s,%s,%s,%s)"
-        data = (team.getId(), team.getName(), team.getTrainingsday(), team.getAddDayOne(), team.getAddDayTwo(), team.getAddDayThree())
+        command = "INSERT INTO team (PK_Team, name, trainer) VALUES (%s,%s,%s)"
+        data = (team.get_id(), team.get_name(), team.get_trainer())
         cursor.execute(command, data)
 
         self._connection.commit()
         cursor.close()
 
         return team
-
 
     def update(self, team):
         """Überschreiben / Aktualisieren eines team-Objekts in der DB
@@ -115,14 +135,13 @@ class TeamMapper(Mapper):
         """
         cursor = self._connection.cursor()
 
-        command = "UPDATE team " + "SET name=%s, trainingsday=%s, addDayOne=%s, addDayTwo=%s, addDayThree=%s WHERE PK_Team=%s"
-        data = (team.getName(), team.getTrainingsday(), team.getAddDayOne(), team.getAddDayTwo(), team.getAddDayThree(), team.getId())
+        command = "UPDATE team " + "SET name=%s, trainer=%s WHERE PK_Team=%s"
+        data = (team.get_name(), team.get_trainer(), team.get_id())
 
         cursor.execute(command, data)
 
         self._connection.commit()
         cursor.close()
-
 
     def delete(self, team):
         """Löschen der Daten einer team aus der Datenbank
@@ -131,13 +150,11 @@ class TeamMapper(Mapper):
         """
         cursor = self._connection.cursor()
 
-        command = "DELETE FROM team WHERE PK_Team={}".format(team.getId())
+        command = "DELETE FROM team WHERE PK_Team={}".format(team.get_id())
         cursor.execute(command)
 
         self._connection.commit()
         cursor.close()
-        return team
-
 
 
 '''Only for testing purpose'''

@@ -2,11 +2,12 @@ import BusinessObject from "./BusinessObject";
 
 export default class TrainingdayBO extends BusinessObject{
 
-    constructor(aWeekday, aStarttime, aEndtime){
+    constructor(aWeekday, aStarttime, aEndtime, aTeam){
         super()
         this.weekday = aWeekday;
         this.starttime = aStarttime;
         this.endtime = aEndtime;
+        this.team = aTeam;
     }
 
     setWeekday(aDay) {
@@ -31,6 +32,14 @@ export default class TrainingdayBO extends BusinessObject{
 
     getEndtime() {
         return this.endtime;
+    }
+
+    setTeam(aTeam) {
+        this.team = aTeam
+    }
+
+    getTeam() {
+        return this.team
     }
 
      /** 

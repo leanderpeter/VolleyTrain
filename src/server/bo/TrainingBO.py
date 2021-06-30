@@ -1,40 +1,49 @@
 from server.bo.NamedBusinessObject import NamedBusinessObject
 
+
 class Training (NamedBusinessObject):
 
     def __init__(self):
         super().__init__()
+        self._datetime = None
         self._goal = None
         self._team_id = None
         self._user_id = None
+    
+    def get_datetime(self):
+        return self._datetime
+    
+    def set_datetime(self, datetime):
+        self._datetime = datetime
 
-    def getGoal(self):
+    def get_goal(self):
         return self._goal
     
-    def setGoal(self, goal):
+    def set_goal(self, goal):
         self._goal = goal
     
-    def getTeamId(self):
+    def get_team_id(self):
         return self._team_id
     
-    def setTeamId(self, team_id):
+    def set_team_id(self, team_id):
         self._team_id = team_id
 
-    def getUserId(self):
+    def get_user_id(self):
         return self._user_id
     
-    def setUserId(self, user_id):
+    def set_user_id(self, user_id):
         self._user_id = user_id
 
     def __str__(self):
-        return "Training: {}, {}, {}, {}, {}, {}".format(self.getId(), self.getCreationDate, self.getName(), self.getGoal(), self.getTeamId(), self.getUserId())
+        return "Training: {}, {}, {}, {}, {}, {}, {}".format(self.get_id(), self.get_creation_date(), self.get_name(), self.get_datetime(), self.get_goal(), self.get_team_id(), self.get_user_id())
 
     @staticmethod
     def from_dict(dictionary=dict()):
         obj = Training()
-        obj.setId(dictionary["id"]) 
-        obj.setName(dictionary["name"])
-        obj.setGoal(dictionary["goal"])
-        obj.setTeamId(dictionary["team_id"])
-        obj.setUserId(dictionary["user_id"])
+        obj.set_id(dictionary["id"]) 
+        obj.set_name(dictionary["name"])
+        obj.set_datetime(dictionary["datetime"])
+        obj.set_goal(dictionary["goal"])
+        obj.set_team_id(dictionary["team_id"])
+        obj.set_user_id(dictionary["user_id"])
         return obj

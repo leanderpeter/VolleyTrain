@@ -15,6 +15,7 @@ from server.bo.trainingdayBO import Trainingday
 from server.bo.userBO import User
 from server.bo.TrainingBO import Training
 from server.bo.ExerciseBO import Exercise
+from server.bo.playerBO import Player
 
 # SecurityDecorator
 from SecurityDecorator import secured
@@ -58,26 +59,27 @@ user = api.inherit('user', nbo, {
 })
 
 player = api.inherit('nbo', nbo, {
-    'surname': fields.String(attribute='_surname', description='Surname of user'),
-    'teamId': fields.String(attribute='_teamId', description='Team ID of Player')
+    'surname': fields.String(attribute='_surname', description='Surname of Player'),
+    'teamId': fields.String(attribute='_teamId', description='Team ID of Player'),
+    'role': fields.String(attribute='_role', description='Role of Player'),
+    't_number': fields.Integer(attribute='_t_number', description='t_number of PLayer')
 })
 training = api.inherit('training', nbo, {
+    'datetime': fields.DateTime(attribute='_datetime', description='Datum und Zeitpunkt des Trainings'),
     'goal': fields.String(attribute='_goal', description='Ziel des Trainings'),
     'team_id': fields.Integer(attribute='_team_id', description='ID des beteiligten Team'),
     'user_id': fields.Integer(attribute='_user_id', description='ID des User/Trainer')
 })
 
 team = api.inherit('team', nbo, {
-    'trainingsday': fields.Integer(attribute='_trainingsday', deschription='fk of trainingdays with timestamps for team'),
-    'addDayOne': fields.Integer(attribute='_addDayOne', deschription='fk of trainingdays with timestamps for team'),
-    'addDayTwo': fields.Integer(attribute='_addDayTwo', deschription='fk of trainingdays with timestamps for team'),
-    'addDayThree': fields.Integer(attribute='_addDayThree', deschription='fk of trainingdays with timestamps for team'),
+    'trainer': fields.Integer(attribute='_trainer', deschription='id of user as trainer'),
 })
 
 trainingday = api.inherit('trainingday', bo, {
     'weekday': fields.String(attribute='_weekday', description='weekday of training'),
     'starttime': fields.String(attribute='_starttime', description='starttime of training'),
     'endtime': fields.String(attribute='_endtime', description='endtime of training'),
+    'team': fields.Integer(attribute='_team', description='team of trainingday')
 })
 exercise = api.inherit('exercise', nbo, {
     'notes': fields.String(attribute='_notes', description='notes of exercise'),
@@ -134,16 +136,64 @@ class UserOperation(Resource):
         adm.createUser(api.payload)
         return user
 
+# Player API
+
+
+@volleyTrain.route("/playerss")
+class PlayerOperations(Resource):
+    @volleyTrain.marshal_list_with(player, code=200)
+    @volleyTrain.expect(player)
+    # @secured
+    def post(self):
+        """Create Player"""
+        adm = volleytrainAdministration()
+        player = Player.from_dict(api.payload)
+        if player is not None:
+            c = adm.createPlayer(player.getSurname(), player.getName(), player.getTeamId(),
+                                 player.getRole(), player.getT_number())
+            return c, 200
+        else:
+            return '', 500
+
 
 @volleyTrain.route('/players')
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class PlayerOperation(Resource):
-    # @secured
+    @secured
     @volleyTrain.marshal_list_with(player)
     def get(self):
+        """Get all Player"""
         adm = volleytrainAdministration()
         players = adm.getAllPlayer()
         return players
+
+    # @secured
+    def delete(self, id):
+        """Delete Player"""
+        adm = volleytrainAdministration()
+        player = adm.getPlayerById(id)
+        if player is None:
+            return 'Player konnte nicht gelöscht werden', 500
+        else:
+            adm.deletePlayer(player)
+            return 'Player wurde erfolgreich aus der DB gelöscht', 200
+
+    @volleyTrain.expect(player)
+    # @secured
+    def put(self, id):
+        """Change Player Data"""
+        adm = volleytrainAdministration()
+        player = Player.from_dict(api.payload)
+
+        if player is None:
+            return "Player konnte nicht geändert werden", 500
+
+        else:
+            player.set_id(id)
+            adm.savePlayer(player)
+            return "Player wurde erfolgreich geändert", 200
+
+# User API by GoogleID
 
 
 @volleyTrain.route('/userbygoogle/<string:id>')
@@ -235,7 +285,7 @@ class TeamOperations(Resource):
     @volleyTrain.marshal_list_with(team)
     def get(self):
         adm = volleytrainAdministration()
-        teams = adm.getAllTeams()
+        teams = adm.get_all_teams()
         return teams
 
     @secured
@@ -246,26 +296,43 @@ class TeamOperations(Resource):
         proposal = Team.from_dict(api.payload)
 
         if proposal is not None:
-            p = adm.createTeam(proposal.getName(), proposal.getTrainingsday(
-            ), proposal.getAddDayOne(), proposal.getAddDayTwo(), proposal.getAddDayThree())
+            p = adm.create_team(proposal.get_name(), proposal.get_trainer())
             return p, 200
         else:
             return '', 500
 
-    @secured
-    def delete(self):
-        adm = volleytrainAdministration()
-        adm.deleteTeam(team)
 
-
-@volleyTrain.route('/team/<int:id>')
+@volleyTrain.route('/team/<int:team_id>')
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class TeamByIDOperation(Resource):
     @secured
     @volleyTrain.marshal_list_with(team)
-    def get(self, id):
+    def get(self, team_id):
         adm = volleytrainAdministration()
-        team = adm.getTeamById(id)
+        team = adm.get_team_by_id(team_id)
+        return team
+
+    @secured
+    @volleyTrain.marshal_with(team)
+    def delete(self, team_id):
+        adm = volleytrainAdministration()
+        team = adm.get_team_by_id(team_id)
+
+        if team is not None:
+            adm.delete_team(team)
+            return 'Successfully deleted', 200
+        else:
+            return 'Deleting failed', 500
+
+
+@volleyTrain.route('/team/<string:name>')
+@volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class TeamByIDOperation(Resource):
+    @secured
+    @volleyTrain.marshal_list_with(team)
+    def get(self, name):
+        adm = volleytrainAdministration()
+        team = adm.get_team_by_name(name)
         return team
 
 
@@ -276,7 +343,7 @@ class TrainingdayOperations(Resource):
     @volleyTrain.marshal_list_with(trainingday)
     def get(self):
         adm = volleytrainAdministration()
-        trainingday = adm.getAllTraingdays()
+        trainingday = adm.get_all_trainingdays()
         return trainingday
 
     @secured
@@ -287,21 +354,22 @@ class TrainingdayOperations(Resource):
         proposal = Trainingday.from_dict(api.payload)
 
         if proposal is not None:
-            p = adm.createTrainingday(proposal.getWeekday(
-            ), proposal.getStarttime(), proposal.getEndtime())
+            p = adm.create_trainingday(proposal.get_weekday(
+            ), proposal.get_starttime(), proposal.get_endtime(), proposal.get_team())
             return p, 200
         else:
             return '', 500
 
-    @volleyTrain.route('/trainingday/<int:id>')
-    @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-    class TrainingdayByIDOperation(Resource):
-        @secured
-        @volleyTrain.marshal_list_with(trainingday)
-        def get(self, id):
-            adm = volleytrainAdministration()
-            trainingday = adm.getTrainingdayById(id)
-            return trainingday
+
+@volleyTrain.route('/trainingday/<int:id>')
+@volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class TrainingdayByTeamIDOperation(Resource):
+    @secured
+    @volleyTrain.marshal_list_with(trainingday)
+    def get(self, id):
+        adm = volleytrainAdministration()
+        trainingday = adm.get_trainingdays_by_team_id(id)
+        return trainingday
 
 
 @volleyTrain.route('/exercise/<int:id>')
@@ -370,7 +438,7 @@ class ExerciseOperation(Resource):
 @volleyTrain.route('/matchfieldPlayers')
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class MatchfieldPlayerOperation(Resource):
-    # @secured
+    @secured
     @volleyTrain.marshal_list_with(matchfieldPlayers)
     def get(self):
         adm = volleytrainAdministration()
@@ -381,7 +449,7 @@ class MatchfieldPlayerOperation(Resource):
 @volleyTrain.route('/matchfieldPlayersById/<int:id>')
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class MatchfieldPlayerOperation(Resource):
-    # @secured
+    @secured
     @volleyTrain.marshal_list_with(matchfieldPlayers)
     def get(self, id):
         adm = volleytrainAdministration()
