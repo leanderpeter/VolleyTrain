@@ -25,6 +25,7 @@ import ExerciseForm from "./components/pages/exerciseForm";
 import Exercises from "./components/Exercises";
 import CreateExercise from "./components/dialogs/CreateExercise";
 import BlankPage from "./components/pages/BlankPage";
+import ExerciseOverview from "./components/pages/ExerciseOverview";
 /*
 Main page of the volleytrain. First firebase to verify users. Then routing to the pages via react-router-dom
 */
@@ -164,6 +165,7 @@ class App extends React.Component {
               <Route path="/exercises" component={Exercises}>
                 <Exercises />
               </Route>
+              <Route path="/exerciseoverview" component={ExerciseOverview}></Route>
             </>
           ) : (
             <>

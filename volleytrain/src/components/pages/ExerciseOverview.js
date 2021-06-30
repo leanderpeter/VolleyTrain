@@ -24,10 +24,10 @@ class ExerciseOverview extends React.Component {
   }
 
   getExercises = () => {
-    VolleytrainAPI.getExercises()
-      .then((exerciseBO) =>
+    VolleytrainAPI.getAPI().getExercises()
+      .then((exerciseBOs) =>
         this.setState({
-          exercises: exerciseBO,
+          exercises: exerciseBOs,
           error: null,
           loadingInProgress: false,
         })
@@ -46,13 +46,13 @@ class ExerciseOverview extends React.Component {
   }
 
   render() {
-    const { classes, currentUser } = this.props;
+    const { classes } = this.props;
     const { exercises } = this.state;
 
     return (
       <div>
-        <Typography>Übungsverwaltung</Typography>
-        <Grid>
+        <Typography className={classes.heading}>Übungsverwaltung</Typography>
+        <Grid className={classes.border}> 
           {exercises.map((exerciseBO) => (
             <Grid key={exerciseBO.getID()} item>
               <Paper className={classes.papes}>
