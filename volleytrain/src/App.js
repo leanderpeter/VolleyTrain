@@ -1,10 +1,15 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
-import { withStyles, ThemeProvider, CssBaseline, Container } from '@material-ui/core';
-import firebase from 'firebase/app'; //Firebase module
-import 'firebase/auth'; //Firebase module
-import Grid from '@material-ui/core/Grid';
-import Link from 'react-router-dom';
+import React from "react";
+import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
+import {
+  withStyles,
+  ThemeProvider,
+  CssBaseline,
+  Container,
+} from "@material-ui/core";
+import firebase from "firebase/app"; //Firebase module
+import "firebase/auth"; //Firebase module
+import Grid from "@material-ui/core/Grid";
+import Link from "react-router-dom";
 
 // import Componentents from '/components/';
 import theme from './Theme';
@@ -28,7 +33,7 @@ Main page of the volleytrain. First firebase to verify users. Then routing to th
 
 class App extends React.Component {
   // initialize firebase
-  constructor(props){
+  constructor(props) {
     super(props);
 
     // initialize empty values
@@ -38,7 +43,7 @@ class App extends React.Component {
       authError: null,
       authLoading: false,
       currentStudent: null,
-      currentPerson: null
+      currentPerson: null,
     };
   }
   // creating error boundry. receiving all errors below the component tree
@@ -47,111 +52,96 @@ class App extends React.Component {
     // update state for fallback UI
     return { appError: error };
   }
-  
+
   // handles all user login states with firebase
-  handleAuthStateChange = user => {
+  handleAuthStateChange = (user) => {
     if (user) {
       this.setState({
-        authLoading: true, 
+        authLoading: true,
       });
       // user signed in
-      user.getIdToken().then(token => {
-        // Token gets storend into cookie
-        // Server (backend) can then read out that cookie
-        // only token information, safety risk!
-        document.cookie = `token=${token};path=/`;
-        // set user when token arrives
-        this.setState({
-          currentUser: user,
-          authError: null,
-          authLoading: false
-        })}).then(() => {
-        this.getUserByGoogleID()
-      }).catch(e => {
-        this.setState({
-          authError: e,
-          authLoading: false
+      user
+        .getIdToken()
+        .then((token) => {
+          // Token gets storend into cookie
+          // Server (backend) can then read out that cookie
+          // only token information, safety risk!
+          document.cookie = `token=${token};path=/`;
+          // set user when token arrives
+          this.setState({
+            currentUser: user,
+            authError: null,
+            authLoading: false,
+          });
+        })
+        .then(() => {
+          this.getUserByGoogleID();
+        })
+        .catch((e) => {
+          this.setState({
+            authError: e,
+            authLoading: false,
+          });
         });
-      });
     } else {
       // user loggend out -> clear id token
-      document.cookie = 'token=;path=/';
+      document.cookie = "token=;path=/";
 
       // Set the logged out user to null
       this.setState({
         currentUser: null,
-        authLoading: false
+        authLoading: false,
       });
     }
-  }
+  };
 
   // handles the sign in component with firebase.auth()
   handleSignIn = () => {
     this.setState({
-      authLoading: true
+      authLoading: true,
     });
     const provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithRedirect(provider);
-  }
+  };
 
   //aktuell eingeloggten Student vom Backend abfragen
   getUserByGoogleID = () => {
-
-      VolleytrainAPI.getAPI().getUserByGoogleID(this.state.currentUser.uid)
-        .then(userBO =>
-            this.setState({
-                currentUser: userBO,
-                error: null,
-                loadingInProgress: false,
-            })
-            ).catch(e =>
-                this.setState({
-                    currentUser: null,
-                    error: e,
-                    loadingInProgress: false,
-                }));
+    VolleytrainAPI.getAPI()
+      .getUserByGoogleID(this.state.currentUser.uid)
+      .then((userBO) =>
         this.setState({
-            error: null,
-            loadingInProgress: true
-        });
-    
-    setTimeout(()=>{
-    },1000);
-    }
-    
-    //openbook getcookie von Galileo
-    getCookie = (name) => {
-      var i=0;  //Suchposition im Cookie
-      var suche = name + "=";
-      while (i<document.cookie.length) {
-         if (document.cookie.substring(i, i + suche.length) === suche) {
-            var ende = document.cookie.indexOf(";", i + suche.length);
-            ende = (ende > -1) ? ende : document.cookie.length;
-            var cook = document.cookie.substring(i + suche.length, ende);
-            return unescape(cook);
-         }
-         i++;
-      }
-      return "";
-   }
-
-   
-
+          currentUser: userBO,
+          error: null,
+          loadingInProgress: false,
+        })
+      )
+      .catch((e) =>
+        this.setState({
+          currentUser: null,
+          error: e,
+          loadingInProgress: false,
+        })
+      );
+    this.setState({
+      error: null,
+      loadingInProgress: true,
+    });
+  };
 
   // lifecycle method
   componentDidMount() {
     firebase.initializeApp(firebaseConfig);
-    firebase.auth().languageCode = 'en';
+    firebase.auth().languageCode = "en";
     firebase.auth().onAuthStateChanged(this.handleAuthStateChange);
   }
 
   render() {
-    const {classes} = this.props;
+    const { classes } = this.props;
     const { currentUser } = this.state;
 
     return (
       <ThemeProvider theme={theme}>
-        <CssBaseline/>
+        <CssBaseline />
         <Router>
             {
               currentUser ?
@@ -184,32 +174,27 @@ class App extends React.Component {
               <>
             <Grid container spacing={0} direction="column" alignItems="center" justify="center" style={{ minHeight: '100vh' }}>
                 <Grid item xs={8}>
-                <Redirect to='/index.html' />
-                <SignIn onSignIn={this.handleSignIn} />
+                  <Redirect to="/index.html" />
+                  <SignIn onSignIn={this.handleSignIn} />
                 </Grid>
-            </Grid>
-              </>
-            }
-
-
+              </Grid>
+            </>
+          )}
         </Router>
       </ThemeProvider>
     );
-
   }
 }
 
 /** Component specific styles */
-const styles = theme => ({
-  root: {
-      
-  },
+const styles = (theme) => ({
+  root: {},
   formControl: {
-      minWidth: 180
+    minWidth: 180,
   },
   form: {
-      marginTop: theme.spacing(1)
-  }
+    marginTop: theme.spacing(1),
+  },
 });
 
-export default (withStyles(styles)(App));
+export default withStyles(styles)(App);

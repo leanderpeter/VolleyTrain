@@ -2,6 +2,7 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
 
+
 class BusinessObject(ABC):
     '''Base class for all business objects
     every business object features an identification and a time stamp
@@ -11,14 +12,14 @@ class BusinessObject(ABC):
         self._id = 0
         self._creation_date = datetime.now()
 
-    def getId(self):
+    def get_id(self):
         return self._id
-    
-    def setId(self, new_id):
-        self._id = new_id
-    
-    def setCreationDate(self, date):
+
+    def set_id(self, id):
+        self._id = id
+
+    def set_creation_date(self, date):
         self._creation_date = date
-    
-    def getCreationDate(self):
+
+    def get_creation_date(self):
         return self._creation_date

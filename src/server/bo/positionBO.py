@@ -14,7 +14,7 @@ class Position(ABC):
         super().__init__()
         self._x = None
         self._y = None
-    
+
     def setXPosition(self, x):
         self._x = x
 
@@ -22,7 +22,7 @@ class Position(ABC):
         self._y = y
 
     def getXPosition(self):
-        return _x
+        return self._x
 
     def getYPosition(self):
-        return _y
+        return self._y

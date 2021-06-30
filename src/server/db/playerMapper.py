@@ -24,9 +24,9 @@ class PlayerMapper(Mapper):
 
         for (id, surname, name, teamId, role, t_number) in tuples:
             player = Player()
-            player.setId(id)
-            player.setName(name)
-            player.setSurname(surname)
+            player.set_id(id)
+            player.set_name(name)
+            player.set_surname(surname)
             player.setTeamId(teamId)
             player.setRole(role)
             player.setT_number(t_number)
@@ -132,8 +132,10 @@ class PlayerMapper(Mapper):
         """
         cursor = self._connection.cursor()
 
-        command = "UPDATE player " + "SET surname=%s, SET name=%s, SET Team_PK_Team=%S, SET role=%S, SET t_number=%S WHERE PK_Player=%s"
-        data = (player.getSurname(), player.getName(), player.getTeamId(), player.getRole(), player.getT_number(), player.getId())
+        command = "UPDATE player SET surname=%s, SET name=%s, SET Team_PK_Team=%s, " \
+            "role=%s, t_number=%s WHERE PK_Player=%s" \
+            .format(player.getId(), player.getSurname(), player.getName(), player.getTeamId(), player.getRole(),
+                    player.getT_number())
 
         cursor.execute(command, data)
 
@@ -149,7 +151,8 @@ class PlayerMapper(Mapper):
         """
         cursor = self._connection.cursor()
 
-        command = "DELETE FROM player WHERE PK_Player={}".format(player.getId())
+        command = "DELETE FROM player WHERE PK_Player={}".format(
+            player.getId())
         cursor.execute(command)
 
         self._connection.commit()
