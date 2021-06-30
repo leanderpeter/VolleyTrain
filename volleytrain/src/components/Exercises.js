@@ -9,6 +9,7 @@ import React, {
   useReducer,
 } from "react";
 import { Button, Typography, makeStyles } from "@material-ui/core";
+import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 import Rating from "@material-ui/lab/Rating";
 import PlayerButton from "./PlayerButton";
@@ -53,11 +54,20 @@ const Exercises = ({ Players, MatchfieldID }) => {
   // init state for resources MatchfieldPlayerBO
   const [MatchfieldPlayers, setMatchfieldPlayers] = useState([]);
 
-  // Init states player Positions
-  //const [playerPositions, setPlayerPositions] = useState(posPlayer);
-
   // getting the dimensions of matchfield compoent
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+
+  // init Exercise name state
+  const [exerciseName, setExerciseName] = useState(null);
+
+  // init Exercise Goal state
+  const [exerciseGoal, setExerciseGoal] = useState(null);
+
+  // inti exerciseNameValdiation state
+  const [exerciseNameValdiation, setExerciseNameValidation] = useState(false);
+
+  // inti exerciseNameValdiation state
+  const [exerciseGoalValdiation, setExerciseGoalValidation] = useState(false);
 
   /**
    * In this Layout effect we set the width and height of the
@@ -261,6 +271,32 @@ const Exercises = ({ Players, MatchfieldID }) => {
    * Above here is only Matchfield function/logic
    */
 
+  // here we validate if there are values in the textFields
+  const exerciseNameValidation = (exerciseName) => {
+    if (exerciseName == "") {
+      setExerciseNameValidation(true);
+    } else {
+      setExerciseNameValidation(false);
+    }
+  };
+
+  // here we validate if there are values in the textFields
+  const exerciseGoalValidation = (exerciseGoal) => {
+    if (exerciseGoal == "") {
+      setExerciseGoalValidation(true);
+    } else {
+      setExerciseGoalValidation(false);
+    }
+  };
+
+  // here we run the validation every state change
+  useEffect(() => {
+    // Runs after EVERY exerciseName and exerciseGoal state change
+    exerciseNameValidation(exerciseName);
+    exerciseGoalValidation(exerciseGoal);
+  }, [, exerciseName, exerciseGoal]);
+
+  console.log(exerciseName);
   return (
     <div>
       <div className={classes.root}>
@@ -273,6 +309,7 @@ const Exercises = ({ Players, MatchfieldID }) => {
             justify="center"
             alignItems="center"
           />
+
           <Grid
             item
             xs={9}
@@ -282,6 +319,63 @@ const Exercises = ({ Players, MatchfieldID }) => {
             alignItems="center"
             style={{ borderRight: "0.2em solid black", padding: "0.5em" }}
           >
+            <Grid
+              item
+              container
+              direction="row"
+              justify="flex-start"
+              alignItems="center"
+            >
+              <Typography variant="h5" component="h2">
+                Übungsname:
+              </Typography>
+              <Grid
+                item
+                container
+                direction="row"
+                justify="flex-start"
+                alignItems="center"
+              >
+                <TextField
+                  error={exerciseNameValdiation}
+                  required
+                  id="outlined-required"
+                  placeholder="Neue Übung..."
+                  variant="outlined"
+                  className={classes.nameField}
+                  onChange={(name) => setExerciseName(name.target.value)}
+                />
+              </Grid>
+            </Grid>
+            <Grid
+              item
+              container
+              direction="row"
+              justify="flex-start"
+              alignItems="center"
+            >
+              <Typography variant="h5" component="h2">
+                Übungsziel:
+              </Typography>
+              <Grid
+                item
+                container
+                direction="row"
+                justify="flex-start"
+                alignItems="center"
+              >
+                <TextField
+                  error={exerciseGoalValdiation}
+                  required
+                  id="outlined-required"
+                  placeholder="Ziel..."
+                  variant="outlined"
+                  className={classes.nameField}
+                  onChange={(goal) => setExerciseGoal(goal.target.value)}
+                />
+              </Grid>
+            </Grid>
+
             {loading ? <LoadingComp show={loading} /> : null}
             <div className={classes.wrapper}>
               <div className={classes.above}>
@@ -330,10 +424,17 @@ const Exercises = ({ Players, MatchfieldID }) => {
             <Grid
               container
               direction="row"
-              justify="center"
+              justify="flex-start"
               alignItems="flex-end"
             >
-              <Button onClick={saveExercise}>Uebung Speichern</Button>
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={saveExercise}
+                style={{ marginTop: 10 }}
+              >
+                Zum Training hinzufügen
+              </Button>
             </Grid>
           </Grid>
           <Grid
@@ -344,7 +445,7 @@ const Exercises = ({ Players, MatchfieldID }) => {
             justify="flex-start"
             alignItems="flex-start"
           >
-            <Typography variant="h6">Uebung bewerten:</Typography>
+            <Typography variant="h6">Übung bewerten:</Typography>
             <Rating
               name="simple-controlled"
               value={rating}
@@ -467,6 +568,10 @@ const styles = makeStyles({
   purple: {
     color: deepPurple[500],
     backgroundColor: deepPurple[100],
+  },
+  nameField: {
+    paddingTop: 15,
+    paddingBottom: 15,
   },
 });
 
