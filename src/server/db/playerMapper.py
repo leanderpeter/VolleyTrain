@@ -69,15 +69,16 @@ class PlayerMapper(Mapper):
 
         result = []
         cursor = self._connection.cursor()
-        command = "SELECT * FROM player WHERE teamId like '{}'".format(teamId)
+        command = "SELECT * FROM player WHERE Team_PK_Team like '{}'".format(
+            teamId)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         for (id, surname, name, teamId, role, t_number) in tuples:
             player = Player()
-            player.setId(id)
-            player.setName(name)
-            player.setSurname(surname)
+            player.set_id(id)
+            player.set_name(name)
+            player.set_surname(surname)
             player.setTeamId(teamId)
             player.setRole(role)
             player.setT_number(t_number)

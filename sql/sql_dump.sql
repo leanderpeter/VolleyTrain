@@ -72,6 +72,7 @@ CREATE TABLE `exercise` (
   `notes` varchar(256) DEFAULT NULL,
   `description` varchar(256) DEFAULT NULL,
   `Training_PK_Training` int NOT NULL,
+  `rating` int DEFAULT 0,
   PRIMARY KEY (`PK_Exercise`,`Training_PK_Training`),
   KEY `fk_Exercise_Training1_idx` (`Training_PK_Training`),
   CONSTRAINT `fk_Exercise_Training1` FOREIGN KEY (`Training_PK_Training`) REFERENCES `training` (`PK_Training`)
@@ -84,7 +85,7 @@ CREATE TABLE `exercise` (
 
 LOCK TABLES `exercise` WRITE;
 /*!40000 ALTER TABLE `exercise` DISABLE KEYS */;
-INSERT INTO `exercise` VALUES (1,NULL,20,'Aufwärmen','lief gut','öldskföaoeirgoabgroöaeg',1),(2,NULL,15,'Spielvorbereitung','bla','dföaoiegjoiaejrgoiahgr',2),(3,NULL,10,'Nachbereitung','blabla','aöofighoaihgoiaehrg',3);
+INSERT INTO `exercise` VALUES (1,'Training - 1',20,'Aufwärmen','lief gut','öldskföaoeirgoabgroöaeg',1,3),(2,'Training - 2',15,'Spielvorbereitung','bla','dföaoiegjoiaejrgoiahgr',2,3),(3,'Training - 3',10,'Nachbereitung','blabla','aöofighoaihgoiaehrg',3,3);
 /*!40000 ALTER TABLE `exercise` ENABLE KEYS */;
 UNLOCK TABLES;
 

@@ -15,6 +15,7 @@ class Exercise(NamedBusinessObject):
         self._description = None
         self._notes = None
         self._goal = None
+        self._rating = None
 
     def setDuration(self, duration):
         self._duration = duration
@@ -46,6 +47,12 @@ class Exercise(NamedBusinessObject):
     def getGoal(self):
         return self._goal
 
+    def get_rating(self):
+        return self._rating
+
+    def set_rating(self, arating):
+        self._rating = arating
+
     def __str__(self):
         return "Exercise: {} {} {} {} {} {}".format(self.get_id(), self.get_name(), self.getDescription(), self.getNotes(), self.getDuration(), self.getTraining(), self.getGoal())
 
@@ -63,5 +70,6 @@ class Exercise(NamedBusinessObject):
         obj.setTraining(dictionary["training"])
         obj.setNotes(dictionary["notes"])
         obj.setGoal(dictionary["goal"])
+        obj.set_rating(dictionary["rating"])
 
         return obj
