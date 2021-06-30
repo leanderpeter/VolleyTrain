@@ -6,11 +6,26 @@ import {
   InputLabel,
   FormControl,
   MenuItem,
+  TextField,
 } from "@material-ui/core";
-import { Link } from "react-router-dom";
+import Paper from "@material-ui/core/Paper";
+import Grid from "@material-ui/core/Grid";
+import Divider from "@material-ui/core/Divider";
 import TeamBO from "../../api/TeamBO";
 import goBackIcon from "../../assets/goBackIcon.svg";
+import CreateExercise from "../dialogs/CreateExercise";
 import VolleytrainAPI from "../../api/VolleytrainAPI";
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import "../layout/TabStyling.css";
+import { flexbox } from "@material-ui/system";
+import TrainingBO from "../../api/TrainingBO";
+/**
+ *
+ * @returns
+ * it is to mentioned that the package react-tabs uses its own css for styling
+ * The styling file can be found at ../layout/TabStyling.css
+ *
+ */
 
 const TrainingTeammanagement = () => {
   // init styling
@@ -27,6 +42,26 @@ const TrainingTeammanagement = () => {
   //init error state
   const [error, setError] = useState(false);
 
+  // init players for team
+  const [player, setPlayer] = useState([]);
+
+  // init Trainingsablauf state
+  const [teamChosen, setChosenTeam] = useState(true);
+
+  // init Training state
+  const [training, setTraining] = useState(null);
+
+  var MOCKUPTRAINING = new TrainingBO();
+  MOCKUPTRAINING.setID(1);
+  MOCKUPTRAINING.setDatetime("");
+  MOCKUPTRAINING.setName("Grossen Training");
+  MOCKUPTRAINING.setGoal("Viel erreichen");
+  if (!(team == null)) {
+    MOCKUPTRAINING.setTeamId(team.id);
+  }
+  MOCKUPTRAINING.setUserId(1);
+  MOCKUPTRAINING.setVisibility(1);
+
   const getTeams = () => {
     VolleytrainAPI.getAPI()
       .getAllTeams()
@@ -41,39 +76,91 @@ const TrainingTeammanagement = () => {
       });
   };
 
+  const getPlayersForTeam = (id) => {
+    VolleytrainAPI.getAPI()
+      .getPlayerByTeam(id)
+      .then((playerBOs) => {
+        setPlayer(playerBOs);
+        setLoadingInProgress(false);
+      })
+      .catch((e) => {
+        setPlayer([]);
+        setError(e);
+        setLoadingInProgress(false);
+      });
+  };
+
+  //call function when team is changed
+  useLayoutEffect(() => {
+    if (!(team == null)) {
+      getPlayersForTeam(team.id);
+      setChosenTeam(false);
+    }
+  }, [, team]);
+
   //call function when render
   useLayoutEffect(() => {
     getTeams();
   }, []);
 
-  console.log(team);
-
   return (
     <div className={classes.root}>
-      <div className={classes.headerContainer}>
-        <Link to="/createTraining">
-          <img src={goBackIcon} alt="" />
-        </Link>
-        <Typography className={classes.headingSelected}>
-          Teammanagement
-        </Typography>
-        <Link to="/trainingsablauf" className={classes.headingLink}>
-          <Typography className={classes.heading}>Trainingsablauf</Typography>
-        </Link>
-      </div>
-      <div className={classes.selectContainer}>
-        <FormControl variant="outlined" className={classes.teamauswahl}>
-          <InputLabel id="teamauswahl">Teamauswahl</InputLabel>
-          <Select
-            label="Teamauswahl"
-            value={team}
-            onChange={(event) => setTeam(event.target.value)}
-          >
-            {teams.map((team) => {
-              return <MenuItem value={team}>{team.name}</MenuItem>;
-            })}
-          </Select>
-        </FormControl>
+      <div>
+        <Tabs>
+          <TabList>
+            <Tab>Teammanagement</Tab>
+            <Tab disabled={teamChosen}>Trainingsablauf</Tab>
+          </TabList>
+
+          <TabPanel>
+            <div className={classes.selectContainer}>
+              <FormControl variant="outlined" className={classes.teamauswahl}>
+                <InputLabel id="teamauswahl">Teamauswahl</InputLabel>
+                <Select
+                  label="Teamauswahl"
+                  value={team}
+                  onChange={(event) => setTeam(event.target.value)}
+                >
+                  {teams.map((team) => {
+                    return <MenuItem value={team}>{team.name}</MenuItem>;
+                  })}
+                </Select>
+              </FormControl>
+            </div>
+          </TabPanel>
+          <TabPanel>
+            <Grid container spacing={3}>
+              <Grid item xs={6}>
+                <Typography
+                  variant="h5"
+                  component="h2"
+                  className={classes.trainingGoal}
+                >
+                  Trainingsziel:
+                </Typography>
+                <TextField
+                  error={false}
+                  required
+                  id="outlined-required"
+                  placeholder="Neues Ziel..."
+                  variant="outlined"
+                  fullWidth
+                  onChange={(name) => {}}
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <div className={classes.divider} />
+              </Grid>
+              <Grid item xs={12}></Grid>
+              <CreateExercise
+                className={classes.exerciseButton}
+                Players={player}
+                Training={MOCKUPTRAINING}
+              />
+            </Grid>
+          </TabPanel>
+        </Tabs>
       </div>
     </div>
   );
@@ -85,23 +172,8 @@ const styles = makeStyles({
     marginLeft: "280px",
     marginRight: "50px",
   },
-  headerContainer: {
-    display: "flex",
-    alignItems: "flex-start",
-  },
   heading: {
     fontSize: "21px",
-    color: "black",
-  },
-  headingLink: {
-    marginLeft: "30px",
-    textDecorationLine: "none",
-  },
-  headingSelected: {
-    fontSize: "21px",
-    textDecorationLine: "underline",
-    textDecorationColor: "#3ECCA5",
-    marginLeft: "30px",
     color: "black",
   },
   selectContainer: {
@@ -111,6 +183,14 @@ const styles = makeStyles({
   teamauswahl: {
     minWidth: 250,
   },
+  trainingGoal: {
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  divider: {
+    borderBottom: "3px solid rgb(212, 212, 212)",
+  },
+  exerciseButton: {},
 });
 
 export default TrainingTeammanagement;

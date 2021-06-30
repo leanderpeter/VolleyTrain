@@ -69,7 +69,9 @@ export default class VolleytrainAPI {
     `${this.#VolleyTrainServerBaseURL}/players/${id}`;
   #addPlayerURL = () => `${this.#VolleyTrainServerBaseURL}/playerss`;
   #deletePlayerURL = (id) => `${this.#VolleyTrainServerBaseURL}/player/${id}`;
-  #updatePlayerURL = () => `${this.#VolleyTrainServerBaseURL}/players`;
+  #updatePlayerURL = () => `${this.#VolleyTrainServerBaseURL}/player`;
+  #getPlayersByTeamURL = (id) =>
+    `${this.#VolleyTrainServerBaseURL}/team/${id}/players`;
 
   //MatchfieldPlayerBO
   #getAllMatchfieldPlayerURL = () =>
@@ -663,6 +665,18 @@ export default class VolleytrainAPI {
       let responsePositionBO = positionBO.fromJSON(responseJSON);
       return new Promise(function (resolve) {
         resolve(responsePositionBO);
+      });
+    });
+  }
+
+  // get all players for a Team
+  getPlayerByTeam(tID) {
+    return this.#fetchAdvanced(this.#getPlayersByTeamURL(tID), {
+      method: "GET",
+    }).then((responseJSON) => {
+      let playerBOs = PlayerBO.fromJSON(responseJSON);
+      return new Promise(function (resolve) {
+        resolve(playerBOs);
       });
     });
   }

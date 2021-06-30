@@ -9,6 +9,7 @@ import React, {
   useReducer,
 } from "react";
 import { Button, Typography, makeStyles } from "@material-ui/core";
+import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 import Rating from "@material-ui/lab/Rating";
 import PlayerButton from "./PlayerButton";
@@ -30,7 +31,7 @@ import field from "./media/field.png";
 import LoadingComp from "./dialogs/LoadingComp";
 import { deepOrange, deepPurple } from "@material-ui/core/colors";
 
-const Exercises = ({ Players, MatchfieldID }) => {
+const Exercises = ({ Players, MatchfieldID, setShowCompState, exercise }) => {
   // force update handler
   const [ignored, forceUpdate] = useReducer((x) => x + 1, 0);
 
@@ -43,7 +44,7 @@ const Exercises = ({ Players, MatchfieldID }) => {
   const divRef = useRef();
 
   // init rating state
-  const [rating, setRating] = useState(null);
+  const [rating, setRatingVal] = useState(null);
 
   // Init states for resources from Backend Players
   const [players, setPlayers] = useState([]);
@@ -53,11 +54,20 @@ const Exercises = ({ Players, MatchfieldID }) => {
   // init state for resources MatchfieldPlayerBO
   const [MatchfieldPlayers, setMatchfieldPlayers] = useState([]);
 
-  // Init states player Positions
-  //const [playerPositions, setPlayerPositions] = useState(posPlayer);
-
   // getting the dimensions of matchfield compoent
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+
+  // init Exercise name state
+  const [exerciseName, setExerciseName] = useState(null);
+
+  // init Exercise Goal state
+  const [exerciseGoal, setExerciseGoal] = useState(null);
+
+  // inti exerciseNameValdiation state
+  const [exerciseNameValdiation, setExerciseNameValidation] = useState(false);
+
+  // inti exerciseNameValdiation state
+  const [exerciseGoalValdiation, setExerciseGoalValidation] = useState(false);
 
   /**
    * In this Layout effect we set the width and height of the
@@ -142,25 +152,51 @@ const Exercises = ({ Players, MatchfieldID }) => {
       });
   };
 
-  const saveExercise = () => {
-    var toBackend;
-    //console.log(players);
-    toBackend = PostPutHandler(
-      MatchfieldPlayers,
-      players,
-      dimensions,
-      MatchfieldID
-    );
-    // update all players that are on matchfield
-    toBackend[1].forEach((obj) => {
-      updateMatchfieldPlayer(obj);
-    });
-    // delete all players that are on matchfield
-    toBackend[0].forEach((obj) => {
-      deletePlayerPosition(obj);
-    });
+  // API Anbindung um MatchfieldPlayerPos über das Backend in die Datenbank upzudaten
+  const updateExercise = (exerciseObj) => {
+    VolleytrainAPI.getAPI()
+      .updateExercise(exerciseObj)
+      .then((exerciseObj) => {
+        console.log(exerciseObj);
+      })
+      .catch((e) => console.log(e));
+  };
 
-    //updateMatchfieldPlayer(infos[1][0]);
+  const saveExercise = () => {
+    if (
+      !(exercise == null) &&
+      exerciseNameValdiation == false &&
+      exerciseGoalValdiation == false
+    ) {
+      var toBackend;
+      //console.log(players);
+      toBackend = PostPutHandler(
+        MatchfieldPlayers,
+        players,
+        dimensions,
+        MatchfieldID
+      );
+      // update all players that are on matchfield
+      toBackend[1].forEach((obj) => {
+        updateMatchfieldPlayer(obj);
+      });
+      // delete all players that are on matchfield
+      toBackend[0].forEach((obj) => {
+        deletePlayerPosition(obj);
+      });
+
+      exercise.setName(exerciseName);
+      exercise.setGoal(exerciseGoal);
+      if (!(rating == null)) {
+        exercise.setRating(rating);
+      }
+
+      // finally we send our updated exercise to the backend
+      updateExercise(exercise);
+
+      //close the component
+      setShowCompState();
+    }
   };
 
   useEffect(() => {
@@ -261,6 +297,31 @@ const Exercises = ({ Players, MatchfieldID }) => {
    * Above here is only Matchfield function/logic
    */
 
+  // here we validate if there are values in the textFields
+  const exerciseNameValidation = (exerciseName) => {
+    if (exerciseName == "") {
+      setExerciseNameValidation(true);
+    } else {
+      setExerciseNameValidation(false);
+    }
+  };
+
+  // here we validate if there are values in the textFields
+  const exerciseGoalValidation = (exerciseGoal) => {
+    if (exerciseGoal == "") {
+      setExerciseGoalValidation(true);
+    } else {
+      setExerciseGoalValidation(false);
+    }
+  };
+
+  // here we run the validation every state change
+  useEffect(() => {
+    // Runs after EVERY exerciseName and exerciseGoal state change
+    exerciseNameValidation(exerciseName);
+    exerciseGoalValidation(exerciseGoal);
+  }, [, exerciseName, exerciseGoal]);
+
   return (
     <div>
       <div className={classes.root}>
@@ -273,6 +334,7 @@ const Exercises = ({ Players, MatchfieldID }) => {
             justify="center"
             alignItems="center"
           />
+
           <Grid
             item
             xs={9}
@@ -282,6 +344,63 @@ const Exercises = ({ Players, MatchfieldID }) => {
             alignItems="center"
             style={{ borderRight: "0.2em solid black", padding: "0.5em" }}
           >
+            <Grid
+              item
+              container
+              direction="row"
+              justify="flex-start"
+              alignItems="center"
+            >
+              <Typography variant="h5" component="h2">
+                Übungsname:
+              </Typography>
+              <Grid
+                item
+                container
+                direction="row"
+                justify="flex-start"
+                alignItems="center"
+              >
+                <TextField
+                  error={exerciseNameValdiation}
+                  required
+                  id="outlined-required"
+                  placeholder="Neue Übung..."
+                  variant="outlined"
+                  className={classes.nameField}
+                  onChange={(name) => setExerciseName(name.target.value)}
+                />
+              </Grid>
+            </Grid>
+            <Grid
+              item
+              container
+              direction="row"
+              justify="flex-start"
+              alignItems="center"
+            >
+              <Typography variant="h5" component="h2">
+                Übungsziel:
+              </Typography>
+              <Grid
+                item
+                container
+                direction="row"
+                justify="flex-start"
+                alignItems="center"
+              >
+                <TextField
+                  error={exerciseGoalValdiation}
+                  required
+                  id="outlined-required"
+                  placeholder="Ziel..."
+                  variant="outlined"
+                  className={classes.nameField}
+                  onChange={(goal) => setExerciseGoal(goal.target.value)}
+                />
+              </Grid>
+            </Grid>
+
             {loading ? <LoadingComp show={loading} /> : null}
             <div className={classes.wrapper}>
               <div className={classes.above}>
@@ -330,10 +449,17 @@ const Exercises = ({ Players, MatchfieldID }) => {
             <Grid
               container
               direction="row"
-              justify="center"
+              justify="flex-start"
               alignItems="flex-end"
             >
-              <Button onClick={saveExercise}>Uebung Speichern</Button>
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={saveExercise}
+                style={{ marginTop: 10 }}
+              >
+                Zum Training hinzufügen
+              </Button>
             </Grid>
           </Grid>
           <Grid
@@ -344,12 +470,12 @@ const Exercises = ({ Players, MatchfieldID }) => {
             justify="flex-start"
             alignItems="flex-start"
           >
-            <Typography variant="h6">Uebung bewerten:</Typography>
+            <Typography variant="h6">Übung bewerten:</Typography>
             <Rating
               name="simple-controlled"
               value={rating}
               onChange={(event, newValue) => {
-                setRating(newValue);
+                setRatingVal(newValue);
               }}
               size="large"
             />
@@ -411,7 +537,7 @@ const Exercises = ({ Players, MatchfieldID }) => {
 const styles = makeStyles({
   root: {
     flexGrow: 1,
-    marginLeft: "240px",
+    //marginLeft: "240px",
   },
   test_player: {
     height: "45px",
@@ -467,6 +593,10 @@ const styles = makeStyles({
   purple: {
     color: deepPurple[500],
     backgroundColor: deepPurple[100],
+  },
+  nameField: {
+    paddingTop: 15,
+    paddingBottom: 15,
   },
 });
 
