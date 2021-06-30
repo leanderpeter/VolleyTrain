@@ -152,43 +152,49 @@ class PlayerOperations(Resource):
         else:
             return '', 500
 
-#@volleyTrain.route("/player/<int:id>")
-#@volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-#@volleyTrain.param('id', 'Die ID des Player-Objekts')
-#class PlayerOperations(player):
-#    @volleyTrain.marshal_list_with(player)
-#    #@secured
-#    def get(self, id):
-#        """Player by ID"""
-#        adm = volleytrainAdministration()
-#        player = adm.getPlayerById(id)
-#        return player
+@volleyTrain.route("/player/<int:id>")
+@volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@volleyTrain.param('id', 'Die ID des Player-Objekts')
+class PlayerOperations(Resource):
+    @volleyTrain.marshal_list_with(player)
+    #@secured
+    def get(self, id):
+        """Player by ID"""
+        adm = volleytrainAdministration()
+        player = adm.getPlayerById(id)
+        return player
 
-#    #@secured
-#    def delete(self, id):
-#        """Delete Player"""
-#        adm = volleytrainAdministration()
+    @volleyTrain.marshal_with(player)
+    @volleyTrain.expect(player)
+    def put(self):
+        """Please provide a user object to transfer it into
+        the database
+        """
+
+        adm = volleytrainAdministration()
+        # print(api.payload)
+        playerId = request.args.get("id")
+        name = request.args.get("name")
+        name = request.args.get("surname")
+        TeamId = request.args.get("teamId")
+        role = request.args.get("role")
+        t_number = request.args.get("t_number")
+        adm.createPlayer(api.payload)
+        return player
+
+    @volleyTrain.marshal_with(player)
+    #@secured
+    def delete(self):
+        """Delte Player"""
+        adm = volleytrainAdministration()
+        adm.deletePlayer(player)
 #        player = adm.getPlayerById(id)
-#        if player is None:
-#            return 'Player konnte nicht gelöscht werden', 500
-#        else:
+
+#        if player is not None:
 #            adm.deletePlayer(player)
-#            return 'Player wurde erfolgreich aus der DB gelöscht', 200
-
-#    @volleyTrain.expect(player)
-#    #@secured
-#    def put(self, id):
-#        """Change Player Data"""
-#        adm = volleytrainAdministration()
-#        player = Player.from_dict(api.payload)
-
-#        if player is None:
-#            return "Player konnte nicht geändert werden", 500
-
+#            return 'Successfully deleted', 200
 #        else:
-#            player.setId(id)
-#            adm.savePlayer(player)
-#            return "Player wurde erfolgreich geändert", 200
+#            return 'Deleting failed', 500
 
 """All PLayer API"""
 
@@ -439,3 +445,20 @@ class MatchfieldPlayerOperation(Resource):
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+"""
+    @volleyTrain.marshal_with(player)
+    @volleyTrain.expect(player, validate=True)
+    #@secured
+    def put(self, id):
+#        Player Update
+        adm = volleytrainAdministration()
+        player = adm.getPlayerById(api.payload)
+        print(player)
+
+        if player is not None:
+            adm.savePlayer(player)
+            return player, 200
+        else:
+            return '', 500
+"""

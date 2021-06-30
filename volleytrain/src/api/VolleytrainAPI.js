@@ -114,6 +114,18 @@ export default class VolleytrainAPI {
 			})
 		})
 	}
+
+	//Player
+	getAllPlayers(){
+		return this.#fetchAdvanced(this.#getPlayersURL()).then((responseJSON) => {
+			let playerBO = PlayerBO.fromJSON(responseJSON);
+			console.info(playerBO)
+			return new Promise(function (resolve){
+				resolve(playerBO)
+			})
+		})
+	}
+
 	//Training
 	getAllTrainings() {
 		return this.#fetchAdvanced(this.#getAllTrainings())

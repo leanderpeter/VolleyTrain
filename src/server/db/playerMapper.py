@@ -126,30 +126,27 @@ class PlayerMapper(Mapper):
         return player
 
     def update(self, player):
-        """Überschreiben / Aktualisieren eines player-Objekts in der DB
-        :param player -> player-Objekt
-        :return aktualisiertes player-Objekt
+        """Überschreiben / Aktualisieren eines Player-Objekts in der DB
+
+        :return aktualisiertes team-Objekt
         """
         cursor = self._connection.cursor()
 
-        command = "UPDATE player SET surname=%s, SET name=%s, SET Team_PK_Team=%s, " \
-                                      "role=%s, t_number=%s WHERE PK_Player=%s" \
-        .format(player.getId(), player.getSurname(), player.getName(), player.getTeamId(), player.getRole(),
-                player.getT_number())
+        command = "UPDATE player " + "SET surname=%s, SET name=%s, SET Team_PK_Team=%S, SET role=%S, SET t_number=%S WHERE PK_Player=%s"
+        data = (player.getSurname(), player.getName(), player.getTeamId(), player.getRole(), player.getT_number(), player.getId())
 
-        cursor.execute(command)
+        cursor.execute(command, data)
 
         self._connection.commit()
         cursor.close()
-
-        return player
 
     def update_by_id(self, player):
         pass
 
     def delete(self, player):
-        """Löschen eines Spieler-Objekts aus der Datenbank."""
+        """Löschen der Daten eines Player aus der Datenbank
 
+        """
         cursor = self._connection.cursor()
 
         command = "DELETE FROM player WHERE PK_Player={}".format(player.getId())
@@ -157,6 +154,7 @@ class PlayerMapper(Mapper):
 
         self._connection.commit()
         cursor.close()
+        return player
 
 
 '''Only for testing purpose'''
@@ -167,4 +165,18 @@ if (__name__ == "__main__"):
         result = mapper.find_all()
         for user in result:
             print(user)
+"""
+"""
+if (__name__ == "__main__"):
+    with PlayerMapper() as mapper:
+        user = mapper.find_by_id(1)
+        for i in user:
+            print(i.getName())
+"""
+"""
+if (__name__ == "__main__"):
+    with PlayerMapper() as mapper:
+        user = mapper.find_by_id(8)
+        for i in user:
+            mapper.delete(i)
 """
