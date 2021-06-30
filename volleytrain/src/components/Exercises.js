@@ -120,11 +120,47 @@ const Exercises = ({ Players, MatchfieldID }) => {
     setError(null);
   };
 
+  // API Anbindung um MatchfieldPlayerPos über das Backend in die Datenbank upzudaten
+  const updateMatchfieldPlayer = (matchfieldPlayer) => {
+    VolleytrainAPI.getAPI()
+      .updatePlayerPositions(matchfieldPlayer)
+      .then((matchfieldPlayer) => {
+        console.log(matchfieldPlayer);
+      })
+      .catch((e) => console.log(e));
+  };
+
+  // API Anbindung um das MatchfieldPlayerPos über das Backend in der Datenbank zu löschen
+  const deletePlayerPosition = (pos) => {
+    VolleytrainAPI.getAPI()
+      .deletePlayerPositions(pos)
+      .then(() => {
+        console.log("delete");
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
   const saveExercise = () => {
-    var infos = [];
+    var toBackend;
     //console.log(players);
-    infos.push(PostPutHandler(MatchfieldPlayers, players, dimensions));
-    console.log(infos);
+    toBackend = PostPutHandler(
+      MatchfieldPlayers,
+      players,
+      dimensions,
+      MatchfieldID
+    );
+    // update all players that are on matchfield
+    toBackend[1].forEach((obj) => {
+      updateMatchfieldPlayer(obj);
+    });
+    // delete all players that are on matchfield
+    toBackend[0].forEach((obj) => {
+      deletePlayerPosition(obj);
+    });
+
+    //updateMatchfieldPlayer(infos[1][0]);
   };
 
   useEffect(() => {
@@ -180,8 +216,11 @@ const Exercises = ({ Players, MatchfieldID }) => {
   );
 
   const addPlayer = (playerID) => {
-    playerID = playerID - 1;
-    players[playerID].visibleOnSelection = false;
+    players.forEach((player) => {
+      if (player.id === playerID) {
+        player.visibleOnSelection = false;
+      }
+    });
     setPlayers(players);
     forceUpdate();
   };

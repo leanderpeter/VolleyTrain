@@ -11,7 +11,7 @@ class MatchfieldPlayerBO(Position):
         super().__init__()
         self._matchfield_pk = None
         self._player_pk = None
-    
+
     def getMatchfieldPK(self):
         return self._matchfield_pk
 
@@ -24,9 +24,8 @@ class MatchfieldPlayerBO(Position):
     def setPlayerPK(self, pk):
         self._player_pk = pk
 
-
     def __str__(self):
-        pass
+        return f'{self._matchfield_pk}, {self._player_pk}'
 
     @staticmethod
     def from_dict(dictionary=dict()):
@@ -34,8 +33,8 @@ class MatchfieldPlayerBO(Position):
         '''
 
         obj = MatchfieldPlayerBO()
-        obj.setMatchfieldPK(dictionary["matchfieldPK"])
-        obj.setPlayerPK(dictionary["playerPK"])
-        obj.setXPosition(dictionary["x"])
-        obj.setYPosition(dictionary["y"])
+        obj.setMatchfieldPK(dictionary["_matchfield_pk"])
+        obj.setPlayerPK(dictionary["_player_pk"])
+        obj.setXPosition(dictionary["left"])
+        obj.setYPosition(dictionary["top"])
         return obj

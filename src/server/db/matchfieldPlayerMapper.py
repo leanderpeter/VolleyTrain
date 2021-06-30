@@ -67,13 +67,20 @@ class MatchfieldPlayerMapper(Mapper):
         """
         pass
 
-    def update(self, user):
+    def update(self, MatchfieldPlayerPos):
         """Überschreiben / Aktualisieren eines user-Objekts in der DB
 
         :param user -> user-Objekt
         :return aktualisiertes user-Objekt
         """
-        pass
+        cursor = self._connection.cursor()
+
+        command = f"INSERT INTO matchfield_has_player (Matchfield_PK_Matchfield, Player_PK_Player, x, y) VALUES ({MatchfieldPlayerPos.getMatchfieldPK()},{MatchfieldPlayerPos.getPlayerPK()},{MatchfieldPlayerPos.getXPosition()},{MatchfieldPlayerPos.getYPosition()}) ON DUPLICATE KEY UPDATE x={MatchfieldPlayerPos.getXPosition()}, y={MatchfieldPlayerPos.getYPosition()}"
+
+        cursor.execute(command)
+
+        self._connection.commit()
+        cursor.close()
 
     def update_by_id(self, user):
         """Überschreiben / Aktualisieren eines user-Objekts in der DB
@@ -83,12 +90,17 @@ class MatchfieldPlayerMapper(Mapper):
         """
         pass
 
-    def delete(self, user):
-        """Löschen der Daten einer user aus der Datenbank
+    def delete(self, MatchfieldPlayerPos):
+        """Löschen der Daten einer MatchfieldPlayerPos aus der Datenbank
 
-        :param user -> user-Objekt
+        :param MatchfieldPlayerPos -> MatchfieldPlayerPos-Objekt
         """
-        pass
+        cursor = self._connection.cursor()
+        command = f"DELETE FROM matchfield_has_player WHERE Matchfield_PK_Matchfield={MatchfieldPlayerPos.getMatchfieldPK()} AND Player_PK_Player={MatchfieldPlayerPos.getPlayerPK()}"
+        cursor.execute(command)
+
+        self._connection.commit()
+        cursor.close()
 
     def find_by_Matchfield(self, id):
         """Suchen einer user nach der übergebenen ID. 
@@ -98,7 +110,8 @@ class MatchfieldPlayerMapper(Mapper):
         """
         result = None
         cursor = self._connection.cursor()
-        command = "SELECT Matchfield_PK_Matchfield, Player_PK_Player, x, y FROM matchfield_has_player WHERE Matchfield_PK_Matchfield='{}'".format(id)
+        command = "SELECT Matchfield_PK_Matchfield, Player_PK_Player, x, y FROM matchfield_has_player WHERE Matchfield_PK_Matchfield='{}'".format(
+            id)
         cursor.execute(command)
         tuples = cursor.fetchall()
         result = []
@@ -114,13 +127,12 @@ class MatchfieldPlayerMapper(Mapper):
 
         except IndexError:
             """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
-			keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
+                        keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
             result = None
 
         self._connection.commit()
         cursor.close()
         return result
-
 
 
 '''Only for testing purpose'''
