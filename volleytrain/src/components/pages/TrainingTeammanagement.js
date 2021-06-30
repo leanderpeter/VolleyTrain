@@ -6,14 +6,18 @@ import {
   InputLabel,
   FormControl,
   MenuItem,
+  TextField,
 } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
+import Divider from "@material-ui/core/Divider";
 import TeamBO from "../../api/TeamBO";
 import goBackIcon from "../../assets/goBackIcon.svg";
+import CreateExercise from "../dialogs/CreateExercise";
 import VolleytrainAPI from "../../api/VolleytrainAPI";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "../layout/TabStyling.css";
+import { flexbox } from "@material-ui/system";
 /**
  *
  * @returns
@@ -39,6 +43,9 @@ const TrainingTeammanagement = () => {
 
   // init players for team
   const [player, setPlayer] = useState([]);
+
+  // init Trainingsablauf state
+  const [teamChosen, setChosenTeam] = useState(true);
 
   const getTeams = () => {
     VolleytrainAPI.getAPI()
@@ -72,6 +79,7 @@ const TrainingTeammanagement = () => {
   useLayoutEffect(() => {
     if (!(team == null)) {
       getPlayersForTeam(team.id);
+      setChosenTeam(false);
     }
     console.log(player);
   }, [, team]);
@@ -89,7 +97,7 @@ const TrainingTeammanagement = () => {
         <Tabs>
           <TabList>
             <Tab>Teammanagement</Tab>
-            <Tab disabled={false}>Trainingsablauf</Tab>
+            <Tab disabled={teamChosen}>Trainingsablauf</Tab>
           </TabList>
 
           <TabPanel>
@@ -110,36 +118,33 @@ const TrainingTeammanagement = () => {
           </TabPanel>
           <TabPanel>
             <Grid container spacing={3}>
-              <Grid item xs={9}>
-                <Typography variant="h6">Uebung bewerten:</Typography>
-                <Rating
-                  name="simple-controlled"
-                  value={rating}
-                  onChange={(event, newValue) => {
-                    setRating(newValue);
-                  }}
-                  size="large"
+              <Grid item xs={6}>
+                <Typography
+                  variant="h5"
+                  component="h2"
+                  className={classes.trainingGoal}
+                >
+                  Trainingsziel:
+                </Typography>
+                <TextField
+                  error={false}
+                  required
+                  id="outlined-required"
+                  placeholder="Neues Ziel..."
+                  variant="outlined"
+                  fullWidth
+                  onChange={(name) => {}}
                 />
-                <Paper className={classes.paper}>xs=12</Paper>
               </Grid>
-              <Grid item xs={6}>
-                <Paper className={classes.paper}>xs=6</Paper>
+
+              <Grid item xs={12}>
+                <div className={classes.divider} />
               </Grid>
-              <Grid item xs={6}>
-                <Paper className={classes.paper}>xs=6</Paper>
-              </Grid>
-              <Grid item xs={3}>
-                <Paper className={classes.paper}>xs=3</Paper>
-              </Grid>
-              <Grid item xs={3}>
-                <Paper className={classes.paper}>xs=3</Paper>
-              </Grid>
-              <Grid item xs={3}>
-                <Paper className={classes.paper}>xs=3</Paper>
-              </Grid>
-              <Grid item xs={3}>
-                <Paper className={classes.paper}>xs=3</Paper>
-              </Grid>
+              <Grid item xs={12}></Grid>
+              <CreateExercise
+                className={classes.exerciseButton}
+                Players={player}
+              />
             </Grid>
           </TabPanel>
         </Tabs>
@@ -154,23 +159,8 @@ const styles = makeStyles({
     marginLeft: "280px",
     marginRight: "50px",
   },
-  headerContainer: {
-    display: "flex",
-    alignItems: "flex-start",
-  },
   heading: {
     fontSize: "21px",
-    color: "black",
-  },
-  headingLink: {
-    marginLeft: "30px",
-    textDecorationLine: "none",
-  },
-  headingSelected: {
-    fontSize: "21px",
-    textDecorationLine: "underline",
-    textDecorationColor: "#3ECCA5",
-    marginLeft: "30px",
     color: "black",
   },
   selectContainer: {
@@ -180,6 +170,14 @@ const styles = makeStyles({
   teamauswahl: {
     minWidth: 250,
   },
+  trainingGoal: {
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  divider: {
+    borderBottom: "3px solid rgb(212, 212, 212)",
+  },
+  exerciseButton: {},
 });
 
 export default TrainingTeammanagement;
