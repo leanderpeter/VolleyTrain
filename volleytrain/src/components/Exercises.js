@@ -31,7 +31,7 @@ import field from "./media/field.png";
 import LoadingComp from "./dialogs/LoadingComp";
 import { deepOrange, deepPurple } from "@material-ui/core/colors";
 
-const Exercises = ({ Players, MatchfieldID }) => {
+const Exercises = ({ Players, MatchfieldID, setShowCompState, exercise }) => {
   // force update handler
   const [ignored, forceUpdate] = useReducer((x) => x + 1, 0);
 
@@ -44,7 +44,7 @@ const Exercises = ({ Players, MatchfieldID }) => {
   const divRef = useRef();
 
   // init rating state
-  const [rating, setRating] = useState(null);
+  const [rating, setRatingVal] = useState(null);
 
   // Init states for resources from Backend Players
   const [players, setPlayers] = useState([]);
@@ -152,25 +152,51 @@ const Exercises = ({ Players, MatchfieldID }) => {
       });
   };
 
-  const saveExercise = () => {
-    var toBackend;
-    //console.log(players);
-    toBackend = PostPutHandler(
-      MatchfieldPlayers,
-      players,
-      dimensions,
-      MatchfieldID
-    );
-    // update all players that are on matchfield
-    toBackend[1].forEach((obj) => {
-      updateMatchfieldPlayer(obj);
-    });
-    // delete all players that are on matchfield
-    toBackend[0].forEach((obj) => {
-      deletePlayerPosition(obj);
-    });
+  // API Anbindung um MatchfieldPlayerPos über das Backend in die Datenbank upzudaten
+  const updateExercise = (exerciseObj) => {
+    VolleytrainAPI.getAPI()
+      .updateExercise(exerciseObj)
+      .then((exerciseObj) => {
+        console.log(exerciseObj);
+      })
+      .catch((e) => console.log(e));
+  };
 
-    //updateMatchfieldPlayer(infos[1][0]);
+  const saveExercise = () => {
+    if (
+      !(exercise == null) &&
+      exerciseNameValdiation == false &&
+      exerciseGoalValdiation == false
+    ) {
+      var toBackend;
+      //console.log(players);
+      toBackend = PostPutHandler(
+        MatchfieldPlayers,
+        players,
+        dimensions,
+        MatchfieldID
+      );
+      // update all players that are on matchfield
+      toBackend[1].forEach((obj) => {
+        updateMatchfieldPlayer(obj);
+      });
+      // delete all players that are on matchfield
+      toBackend[0].forEach((obj) => {
+        deletePlayerPosition(obj);
+      });
+
+      exercise.setName(exerciseName);
+      exercise.setGoal(exerciseGoal);
+      if (!(rating == null)) {
+        exercise.setRating(rating);
+      }
+
+      // finally we send our updated exercise to the backend
+      updateExercise(exercise);
+
+      //close the component
+      setShowCompState();
+    }
   };
 
   useEffect(() => {
@@ -296,7 +322,6 @@ const Exercises = ({ Players, MatchfieldID }) => {
     exerciseGoalValidation(exerciseGoal);
   }, [, exerciseName, exerciseGoal]);
 
-  console.log(exerciseName);
   return (
     <div>
       <div className={classes.root}>
@@ -450,7 +475,7 @@ const Exercises = ({ Players, MatchfieldID }) => {
               name="simple-controlled"
               value={rating}
               onChange={(event, newValue) => {
-                setRating(newValue);
+                setRatingVal(newValue);
               }}
               size="large"
             />

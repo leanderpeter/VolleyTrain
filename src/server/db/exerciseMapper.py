@@ -121,7 +121,8 @@ class ExerciseMapper(Mapper):
         cursor = self._connection.cursor()
 
         command = "UPDATE exercise set " + \
-            "name=%s, duration=%s, notes=%s, description=%s, goal=%s , rating=%s, WHERE PK_Exercise=%s"
+            "name=%s, duration=%s, notes=%s, description=%s, goal=%s , rating=%s WHERE PK_Exercise=%s"
+
         data = (exercise.get_name(), exercise.getDuration(), exercise.getNotes(
         ), exercise.getDescription(), exercise.getGoal(), exercise.get_rating(), exercise.get_id())
 
