@@ -55,8 +55,12 @@ export default class VolleytrainAPI {
   #addExerciseURL = () => `${this.#VolleyTrainServerBaseURL}/exercise`;
   #getExercisesURL = () => `${this.#VolleyTrainServerBaseURL}/exercise`;
   #updateExerciseURL = () => `${this.#VolleyTrainServerBaseURL}/exercise`;
+
   //Training
   #getAllTrainings = () => `${this.#VolleyTrainServerBaseURL}/trainings`;
+  #getVisibleTrainings = () => `${this.#VolleyTrainServerBaseURL}/visible_trainings`;
+  #getArchivedTrainings = () => `${this.#VolleyTrainServerBaseURL}/archived_trainings`;
+
   //getPlayers: all
   #getPlayersURL = () => `${this.#VolleyTrainServerBaseURL}/players`;
   #addPlayerURL = () => `${this.#VolleyTrainServerBaseURL}/playerss`;
@@ -386,9 +390,29 @@ export default class VolleytrainAPI {
       }
     );
   }
+
   //Training
+
   getAllTrainings() {
     return this.#fetchAdvanced(this.#getAllTrainings()).then((responseJSON) => {
+      let trainingBO = TrainingBO.fromJSON(responseJSON);
+      return new Promise(function (resolve) {
+        resolve(trainingBO);
+      });
+    });
+  }
+
+  getVisibleTrainings() {
+    return this.#fetchAdvanced(this.#getVisibleTrainings()).then((responseJSON) => {
+      let trainingBO = TrainingBO.fromJSON(responseJSON);
+      return new Promise(function (resolve) {
+        resolve(trainingBO);
+      });
+    });
+  }
+
+  getArchivedTrainings() {
+    return this.#fetchAdvanced(this.#getArchivedTrainings()).then((responseJSON) => {
       let trainingBO = TrainingBO.fromJSON(responseJSON);
       return new Promise(function (resolve) {
         resolve(trainingBO);

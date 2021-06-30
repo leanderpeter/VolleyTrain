@@ -273,11 +273,10 @@ DROP TABLE IF EXISTS `team`;
 CREATE TABLE `team` (
   `PK_Team` int NOT NULL,
   `name` varchar(45) DEFAULT NULL,
-  `trainingsday` int DEFAULT NULL,
-  `addDayOne` int DEFAULT NULL,
-  `addDayTwo` int DEFAULT NULL,
-  `addDayThree` int DEFAULT NULL,
-  PRIMARY KEY (`PK_Team`)
+  `trainer` int NOT NULL,
+  PRIMARY KEY (`PK_Team`),
+  KEY `fk_trainer_team` (`trainer`),
+  CONSTRAINT `fk_trainer_team` FOREIGN KEY (`trainer`) REFERENCES `user` (`PK_User`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -287,7 +286,7 @@ CREATE TABLE `team` (
 
 LOCK TABLES `team` WRITE;
 /*!40000 ALTER TABLE `team` DISABLE KEYS */;
-INSERT INTO `team` VALUES (1,'Team1',1,1,1,1),(2,'Team2',1,1,1,1),(3,'Team3',1,1,1,1);
+INSERT INTO `team` VALUES (1,'Team1',2),(2,'Team2',2),(3,'Team3',2);
 /*!40000 ALTER TABLE `team` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -323,6 +322,7 @@ CREATE TABLE `training` (
   `goal` varchar(45) DEFAULT NULL,
   `Team_PK_Team` int NOT NULL,
   `User_PK_User` int NOT NULL,
+  `visibility` tinyint DEFAULT NULL,
   PRIMARY KEY (`PK_Training`,`Team_PK_Team`,`User_PK_User`),
   KEY `fk_Training_Team1_idx` (`Team_PK_Team`),
   KEY `fk_training_users1_idx` (`User_PK_User`),
@@ -336,7 +336,7 @@ CREATE TABLE `training` (
 
 LOCK TABLES `training` WRITE;
 /*!40000 ALTER TABLE `training` DISABLE KEYS */;
-INSERT INTO `training` VALUES (1,'Training1','2021-07-28 13:45:54','Ausdauer verbessern',1,1),(2,'Training2','2021-05-27 13:45:54','Strategie planen',2,1),(3,'Training3','2020-06-27 13:45:54','Beweglichkeit verbessern',3,1);
+INSERT INTO `training` VALUES (1,'Training1','2021-07-28 13:45:54','Ausdauer verbessern',1,1,1),(2,'Training2','2021-05-27 13:45:54','Strategie planen',2,1,0),(3,'Training3','2020-06-27 13:45:54','Beweglichkeit verbessern',3,1,1);
 /*!40000 ALTER TABLE `training` ENABLE KEYS */;
 UNLOCK TABLES;
 

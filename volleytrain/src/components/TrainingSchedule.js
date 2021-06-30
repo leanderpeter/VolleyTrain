@@ -16,9 +16,9 @@ class TrainingSchedule extends React.Component {
     };
   }
 
-  getAllTrainings = () => {
+  getVisibleTrainings = () => {
     VolleytrainAPI.getAPI()
-      .getAllTrainings()
+      .getVisibleTrainings()
       .then((trainingBOs) => {
         this.setState({
           trainings: trainingBOs,
@@ -62,7 +62,7 @@ class TrainingSchedule extends React.Component {
   };
 
   componentDidMount() {
-    this.getAllTrainings();
+    this.getVisibleTrainings();
     this.getCurrentDateTime();
   }
 
