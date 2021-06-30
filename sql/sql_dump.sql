@@ -194,23 +194,26 @@ INSERT INTO `matchfield_has_player` VALUES (1,1,1),(2,2,2),(3,3,3);
 /*!40000 ALTER TABLE `matchfield_has_player` ENABLE KEYS */;
 UNLOCK TABLES;
 
---
--- Table structure for table `player`
---
+-- -----------------------------------------------------
+-- Table `volleytrain`.`player`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `volleytrain`.`player` ;
 
-DROP TABLE IF EXISTS `player`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `player` (
-  `PK_Player` int NOT NULL,
-  `surname` varchar(45) DEFAULT NULL,
-  `name` varchar(45) DEFAULT NULL,
-  `Team_PK_Team` int NOT NULL,
-  PRIMARY KEY (`PK_Player`,`Team_PK_Team`),
-  KEY `fk_Player_Team1_idx` (`Team_PK_Team`),
-  CONSTRAINT `fk_Player_Team1` FOREIGN KEY (`Team_PK_Team`) REFERENCES `team` (`PK_Team`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+CREATE TABLE IF NOT EXISTS `volleytrain`.`player` (
+  `PK_Player` INT NOT NULL,
+  `surname` VARCHAR(45) NULL DEFAULT NULL,
+  `name` VARCHAR(45) NULL DEFAULT NULL,
+  `Team_PK_Team` INT NOT NULL,
+  `role` VARCHAR(45) NULL DEFAULT NULL,
+  `t_number` INT DEFAULT NULL,
+  PRIMARY KEY (`PK_Player`, `Team_PK_Team`),
+  INDEX `fk_Player_Team1_idx` (`Team_PK_Team` ASC) VISIBLE,
+  CONSTRAINT `fk_Player_Team1`
+    FOREIGN KEY (`Team_PK_Team`)
+    REFERENCES `volleytrain`.`team` (`PK_Team`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `player`
@@ -218,8 +221,9 @@ CREATE TABLE `player` (
 
 LOCK TABLES `player` WRITE;
 /*!40000 ALTER TABLE `player` DISABLE KEYS */;
-INSERT INTO `player` VALUES (1,'Max','Musterspieler',1),(2,'Clara','Klarheit',2),(3,'Jürgen','Diesdas',3);
+INSERT INTO `player` VALUES (1,'Max','Musterspieler',1, "Bank", 2),(2,'Clara','Klarheit',1, "Bank", 2),(3,'Jürgen','Diesdas',1, "Bank", 2),(4,'Johannes','Steil',1, "Bank", 2),(5,'Sebastian','Puff',1, "Bank", 2),(6,'Sophia','Müller',1, "Bank", 2);
 /*!40000 ALTER TABLE `player` ENABLE KEYS */;
+UNLOCK TABLES;
 UNLOCK TABLES;
 
 --

@@ -20,6 +20,7 @@ import TeamOverview from "./TeamOverview";
 import DeleteTeam from "../dialogs/DeleteTeam";
 import VolleytrainAPI from "../../api/VolleytrainAPI";
 import TrainingSchedule from "../TrainingSchedule";
+import PlayerBO from "../../api/PlayerBO";
 
 class Team extends Component {
   constructor(props) {
@@ -27,28 +28,52 @@ class Team extends Component {
 
     this.state = {
       team: this.props.location.state.team,
-      dialogOpen: false,
+      deleteDialogOpen: false,
+      updateDialogOpen: false,
       trainingdays: [],
     };
   }
 
-  handleClick = () => {
+  handleDeleteClick = () => {
     this.setState({
-      dialogOpen: true,
+      deleteDialogOpen: true,
     });
   };
 
   handleClose = () => {
     this.setState({
-      dialogOpen: false,
+      deleteDialogOpen: false,
+      updateDialogOpen: false,
+    });
+  };
+
+  handleUpdateClick = () => {
+    this.setState({
+      updateDialogOpen: true,
     });
   };
 
   deleteTeam = () => {
+    VolleytrainAPI.getAPI()
+      .getPlayersByTeam(this.state.team.getID())
+      .then((playerBOs) => {
+        playerBOs.forEach((playerBO) => {
+          let player = new PlayerBO();
+          player.setID(playerBO.getID());
+          player.setName(playerBO.getName());
+          player.setSurname(playerBO.getSurname());
+          player.setTeamId(2);
+          player.setRole(playerBO.getRole());
+          player.setT_number(playerBO.getT_number());
+          VolleytrainAPI.getAPI().updatePlayer(player);
+        });
+      });
     VolleytrainAPI.getAPI().deleteTeam(this.state.team.getID());
   };
 
-  getPlayerByTeam = () => {};
+  updateTeam = (team) => {};
+
+  updateTrainingday = (trainingday) => {};
 
   getTrainingdays = () => {
     VolleytrainAPI.getAPI()
@@ -72,7 +97,8 @@ class Team extends Component {
 
   render() {
     const { classes } = this.props;
-    const { team, dialogOpen, trainingdays } = this.state;
+    const { team, deleteDialogOpen, updateDialogOpen, trainingdays } =
+      this.state;
 
     return (
       <div className={classes.root}>
@@ -83,7 +109,6 @@ class Team extends Component {
           justify="center"
           className={classes.border}
         >
-          {console.log(trainingdays)}
           <Grid item xs={7}>
             <Typography variant="h5">{team.getName()}</Typography>
           </Grid>
@@ -109,19 +134,27 @@ class Team extends Component {
           <Grid item xs={1} />
           <Grid item xs={3}>
             <Typography variant="h6">Verwalten</Typography>
-            <Typography onClick={this.handleClick}>
+            <Typography onClick={this.handleUpdateClick}>
               ... aktuelles Team bearbeiten
             </Typography>
-            <Typography onClick={this.handleClick}>
+            <Typography onClick={this.handleDeleteClick}>
               ... aktuelles Team löschen
             </Typography>
           </Grid>
         </Grid>
+
         <TrainingSchedule />
         <DeleteTeam
-          dialogOpen={dialogOpen}
+          dialogOpen={deleteDialogOpen}
           team={team}
           deleteTeam={this.deleteTeam}
+          onClose={this.handleClose}
+        />
+        <UpdateTeam
+          dialogOpen={updateDialogOpen}
+          team={team}
+          trainingdays={trainingdays}
+          updateTeam={this.updateTeam}
           onClose={this.handleClose}
         />
       </div>

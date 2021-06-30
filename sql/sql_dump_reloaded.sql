@@ -255,7 +255,9 @@ CREATE TABLE IF NOT EXISTS `volleytrain`.`player` (
   `PK_Player` INT NOT NULL,
   `surname` VARCHAR(45) NULL DEFAULT NULL,
   `name` VARCHAR(45) NULL DEFAULT NULL,
-  `Team_PK_Team` INT NOT NULL,
+  `Team_PK_Team` INT DEFAULT NULL,
+  `role` VARCHAR(45) NULL DEFAULT NULL,
+  `t_number` INT DEFAULT NULL,
   PRIMARY KEY (`PK_Player`, `Team_PK_Team`),
   INDEX `fk_Player_Team1_idx` (`Team_PK_Team` ASC) VISIBLE,
   CONSTRAINT `fk_Player_Team1`
@@ -271,7 +273,7 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 LOCK TABLES `player` WRITE;
 /*!40000 ALTER TABLE `player` DISABLE KEYS */;
-INSERT INTO `player` VALUES (1,'Max','Musterspieler',1),(2,'Clara','Klarheit',1),(3,'Jürgen','Diesdas',1),(4,'Johannes','Steil',1),(5,'Sebastian','Puff',1),(6,'Sophia','Müller',1);
+INSERT INTO `player` VALUES (1,'Max','Musterspieler',1, "Bank", 2),(2,'Clara','Klarheit',1, "Bank", 2),(3,'Jürgen','Diesdas',1, "Bank", 2),(4,'Johannes','Steil',1, "Bank", 2),(5,'Sebastian','Puff',1, "Bank", 2),(6,'Sophia','Müller',1, "Bank", 2);
 /*!40000 ALTER TABLE `player` ENABLE KEYS */;
 UNLOCK TABLES;
 

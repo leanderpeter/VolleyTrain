@@ -25,7 +25,7 @@ class Player(NamedBusinessObject):
     def set_surname(self, sname):
         self._surname = sname
 
-    def getSurname(self):
+    def get_surname(self):
         return self._surname
 
     def setRole(self, new_role):

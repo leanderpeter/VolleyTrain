@@ -178,7 +178,7 @@ class PlayerOperation(Resource):
 
     @volleyTrain.expect(player)
     # @secured
-    def put(self, id):
+    def put(self):
         """Change Player Data"""
         adm = volleytrainAdministration()
         player = Player.from_dict(api.payload)
@@ -187,11 +187,20 @@ class PlayerOperation(Resource):
             return "Player konnte nicht geändert werden", 500
 
         else:
-            player.set_id(id)
             adm.savePlayer(player)
             return "Player wurde erfolgreich geändert", 200
 
-# User API by GoogleID
+
+@volleyTrain.route('/players/<int:team_id>')
+@volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class PlayerOperation(Resource):
+    # @secured
+    @volleyTrain.marshal_list_with(player)
+    def get(self, team_id):
+        """Get all Player"""
+        adm = volleytrainAdministration()
+        players = adm.getPlayerByTeamId(team_id)
+        return players
 
 
 @volleyTrain.route('/userbygoogle/<string:id>')
