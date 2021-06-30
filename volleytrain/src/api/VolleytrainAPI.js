@@ -55,8 +55,14 @@ export default class VolleytrainAPI {
   #addExerciseURL = () => `${this.#VolleyTrainServerBaseURL}/exercise`;
   #getExercisesURL = () => `${this.#VolleyTrainServerBaseURL}/exercise`;
   #updateExerciseURL = () => `${this.#VolleyTrainServerBaseURL}/exercise`;
+
   //Training
   #getAllTrainings = () => `${this.#VolleyTrainServerBaseURL}/trainings`;
+  #getVisibleTrainings = () =>
+    `${this.#VolleyTrainServerBaseURL}/visible_trainings`;
+  #getArchivedTrainings = () =>
+    `${this.#VolleyTrainServerBaseURL}/archived_trainings`;
+
   //getPlayers: all
   #getPlayersURL = () => `${this.#VolleytrainServerBaseURL}/players`;
   #getPlayersByTeamURL = (id) =>
@@ -116,7 +122,19 @@ export default class VolleytrainAPI {
     );
   }
 
+  getPlayers() {
+    return this.#fetchAdvanced(this.#getPlayersURL(), { method: "GET" }).then(
+      (responseJSON) => {
+        let playerBOs = PlayerBO.fromJSON(responseJSON);
+        return new Promise(function (resolve) {
+          resolve(playerBOs);
+        });
+      }
+    );
+  }
+
   //Training
+
   getAllTrainings() {
     return this.#fetchAdvanced(this.#getAllTrainings()).then((responseJSON) => {
       let trainingBO = TrainingBO.fromJSON(responseJSON);
@@ -124,6 +142,28 @@ export default class VolleytrainAPI {
         resolve(trainingBO);
       });
     });
+  }
+
+  getVisibleTrainings() {
+    return this.#fetchAdvanced(this.#getVisibleTrainings()).then(
+      (responseJSON) => {
+        let trainingBO = TrainingBO.fromJSON(responseJSON);
+        return new Promise(function (resolve) {
+          resolve(trainingBO);
+        });
+      }
+    );
+  }
+
+  getArchivedTrainings() {
+    return this.#fetchAdvanced(this.#getArchivedTrainings()).then(
+      (responseJSON) => {
+        let trainingBO = TrainingBO.fromJSON(responseJSON);
+        return new Promise(function (resolve) {
+          resolve(trainingBO);
+        });
+      }
+    );
   }
 
   //gibt die Person mit der bestimmten GoogleUserID als BO zurück
