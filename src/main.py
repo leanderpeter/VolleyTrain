@@ -67,7 +67,8 @@ training = api.inherit('training', nbo, {
     'datetime': fields.DateTime(attribute='_datetime', description='Datum und Zeitpunkt des Trainings'),
     'goal': fields.String(attribute='_goal', description='Ziel des Trainings'),
     'team_id': fields.Integer(attribute='_team_id', description='ID des beteiligten Team'),
-    'user_id': fields.Integer(attribute='_user_id', description='ID des User/Trainer')
+    'user_id': fields.Integer(attribute='_user_id', description='ID des User/Trainer'),
+    'visibility': fields.Boolean(attribute='_visibility', description='Sichtbarkeit für archivierte und aktuelle Trainings')
 })
 
 team = api.inherit('team', nbo, {
@@ -216,7 +217,7 @@ class TrainingListOperations(Resource):
     @secured
     def get(self):
         adm = volleytrainAdministration()
-        trainings = adm.getAllTrainings()
+        trainings = adm.get_all_trainings()
         return trainings
 
     @volleyTrain.marshal_with(training, code=200)
@@ -229,10 +230,32 @@ class TrainingListOperations(Resource):
 
         print(proposal)
         if proposal is not None:
-            training = adm.createTraining(proposal)
+            training = adm.create_training(proposal)
             return training, 200
         else:
             return '', 500
+
+
+@volleyTrain.route('/visible_trainings')
+@volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class VisibleTrainingListOperations(Resource):
+    @volleyTrain.marshal_list_with(training)
+    @secured
+    def get(self):
+        adm = volleytrainAdministration()
+        trainings = adm.get_visible_trainings()
+        return trainings
+
+
+@volleyTrain.route('/archived_trainings')
+@volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ArchivedTrainingListOperations(Resource):
+    @volleyTrain.marshal_list_with(training)
+    @secured
+    def get(self):
+        adm = volleytrainAdministration()
+        trainings = adm.get_archived_trainings()
+        return trainings
 
 
 @volleyTrain.route('/training')
@@ -247,7 +270,7 @@ class TrainingOperations(Resource):
         print(training)
 
         if training is not None:
-            adm.saveTraining(training)
+            adm.save_training(training)
             return training, 200
         else:
             return '', 500
@@ -261,17 +284,17 @@ class TrainingOperations(Resource):
     @secured
     def get(self, training_id):
         adm = volleytrainAdministration()
-        training = adm.getTrainingById(training_id)
+        training = adm.get_training_by_id(training_id)
         return training
 
     @volleyTrain.marshal_with(training)
     @secured
     def delete(self, training_id):
         adm = volleytrainAdministration()
-        training = adm.getTrainingById(training_id)
+        training = adm.get_training_by_id(training_id)
 
         if training is not None:
-            adm.deleteTraining(training)
+            adm.delete_training(training)
             return 'Successfully deleted', 200
         else:
             return 'Deleting failed', 500
