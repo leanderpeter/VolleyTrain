@@ -18,6 +18,7 @@ import {
 } from "@material-ui/core";
 import TeamOverview from "./TeamOverview";
 import DeleteTeam from "../dialogs/DeleteTeam";
+import UpdateTeam from "../dialogs/UpdateTeam";
 import VolleytrainAPI from "../../api/VolleytrainAPI";
 import TrainingSchedule from "../TrainingSchedule";
 import PlayerBO from "../../api/PlayerBO";
@@ -40,9 +41,14 @@ class Team extends Component {
     });
   };
 
-  handleClose = () => {
+  handleDeleteClose = () => {
     this.setState({
       deleteDialogOpen: false,
+    });
+  };
+
+  handleUpdateClose = () => {
+    this.setState({
       updateDialogOpen: false,
     });
   };
@@ -142,20 +148,19 @@ class Team extends Component {
             </Typography>
           </Grid>
         </Grid>
-
         <TrainingSchedule />
         <DeleteTeam
-          dialogOpen={deleteDialogOpen}
+          deleteDialogOpen={deleteDialogOpen}
           team={team}
           deleteTeam={this.deleteTeam}
-          onClose={this.handleClose}
+          onClose={this.handleDeleteClose}
         />
         <UpdateTeam
-          dialogOpen={updateDialogOpen}
+          updateDialogOpen={updateDialogOpen}
           team={team}
           trainingdays={trainingdays}
           updateTeam={this.updateTeam}
-          onClose={this.handleClose}
+          onClose={this.handleUpdateClose}
         />
       </div>
     );

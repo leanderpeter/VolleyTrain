@@ -64,12 +64,12 @@ export default class VolleytrainAPI {
     `${this.#VolleyTrainServerBaseURL}/archived_trainings`;
 
   //getPlayers: all
-  #getPlayersURL = () => `${this.#VolleytrainServerBaseURL}/players`;
+  #getPlayersURL = () => `${this.#VolleyTrainServerBaseURL}/players`;
   #getPlayersByTeamURL = (id) =>
-    `${this.#VolleytrainServerBaseURL}/players/${id}`;
-  #addPlayerURL = () => `${this.#VolleytrainServerBaseURL}/playerss`;
-  #deletePlayerURL = (id) => `${this.#VolleytrainServerBaseURL}/player/${id}`;
-  #updatePlayerURL = () => `${this.#VolleytrainServerBaseURL}/players`;
+    `${this.#VolleyTrainServerBaseURL}/players/${id}`;
+  #addPlayerURL = () => `${this.#VolleyTrainServerBaseURL}/playerss`;
+  #deletePlayerURL = (id) => `${this.#VolleyTrainServerBaseURL}/player/${id}`;
+  #updatePlayerURL = () => `${this.#VolleyTrainServerBaseURL}/players`;
 
   //MatchfieldPlayerBO
   #getAllMatchfieldPlayerURL = () =>
