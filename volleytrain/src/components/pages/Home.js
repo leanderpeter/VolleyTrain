@@ -11,6 +11,7 @@ import MenuBookIcon from "@material-ui/icons/MenuBook";
 import GroupIcon from "@material-ui/icons/Group";
 import Divider from "@material-ui/core/Divider";
 import TrainingSchedule from '../TrainingSchedule';
+import ExerciseOverview from './ExerciseOverview';
 
 
 class Home extends Component {
@@ -50,7 +51,7 @@ class Home extends Component {
             </Button>
           </Paper>
         </Grid>
-        <Grid item component={Link} to={"/exercises"}>
+        <Grid item component={Link} to={"/exerciseoverview"}>
           <Paper
             className={classes.border}
             variant="outlined"
