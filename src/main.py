@@ -5,6 +5,7 @@ from flask_cors import CORS
 # Des Weiteren wird das auf Flask aufbauende Flask-RestX verwendet
 from flask_restx import Api, Resource, fields
 from flask import request
+from server.bo.matchfieldPlayerBO import MatchfieldPlayerBO
 
 # application logic import and business objects
 from server.volleytrainAdministration import volleytrainAdministration
@@ -88,16 +89,12 @@ exercise = api.inherit('exercise', nbo, {
     'description': fields.String(attribute='_description', description='description of exercise'),
 })
 
-position = api.inherit('position', bo, {
-    'top': fields.String(attribute='_x', description='X Postion'),
-    'left': fields.String(attribute='_y', description='Y Postion'),
-})
 
 matchfieldPlayers = api.inherit('matchfieldPlayers', {
     '_matchfield_pk': fields.Integer(attribute='_matchfield_pk', description='_matchfield_pk'),
     '_player_pk': fields.Integer(attribute='_player_pk', description='_player_pk'),
-    'top': fields.String(attribute='_x', description='X Postion'),
-    'left': fields.String(attribute='_y', description='Y Postion'),
+    'top': fields.String(attribute='_y', description='X Postion'),
+    'left': fields.String(attribute='_x', description='Y Postion'),
 })
 
 
@@ -462,6 +459,28 @@ class MatchfieldPlayerOperation(Resource):
     def get(self, id):
         adm = volleytrainAdministration()
         matchfieldPlayers = adm.getByPlayerPosByMatchfieldId(id)
+        return matchfieldPlayers
+
+
+@volleyTrain.route('/matchfieldPlayersById')
+@volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class MatchfieldPlayerTransformOperation(Resource):
+
+    @volleyTrain.marshal_list_with(matchfieldPlayers)
+    @volleyTrain.expect(matchfieldPlayers)
+    def put(self):
+
+        tmp = MatchfieldPlayerBO.from_dict(api.payload)
+        adm = volleytrainAdministration()
+        matchfieldPlayers = adm.putPlayerPosByMatchfieldId(tmp)
+        return matchfieldPlayers
+
+    @volleyTrain.marshal_list_with(matchfieldPlayers)
+    def delete(self):
+
+        tmp = MatchfieldPlayerBO.from_dict(api.payload)
+        adm = volleytrainAdministration()
+        matchfieldPlayers = adm.deletePlayerPosByMatchfieldId(tmp)
         return matchfieldPlayers
 
 

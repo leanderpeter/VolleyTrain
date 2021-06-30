@@ -16,15 +16,13 @@ export default class VolleytrainAPI {
   static #api = null;
 
   // Lokales Python backend
-  #VolleytrainServerBaseURL = "/volleyTrain";
+  #VolleyTrainServerBaseURL = "/volleyTrain";
 
   // Lokales Python backend
   //#ElectivServerBaseURL = 'https://wahlfachapp.oa.r.appspot.com/electivApp';
 
   //getPerson: google_user_id
   //#getUserByGoogleIDURL = (google_user_id) => `${this.#VolleytrainServerBaseURL}/userbygoogle/${google_user_id}`;
-
-  #VolleyTrainServerBaseURL = "/volleyTrain";
 
   //getPerson: google_user_id
   #getUserByGoogleIDURL = (google_user_id) =>
@@ -72,9 +70,11 @@ export default class VolleytrainAPI {
     `${this.#VolleyTrainServerBaseURL}/matchfieldPlayers`;
   #getMatchfieldPlayerByIdURL = (id) =>
     `${this.#VolleyTrainServerBaseURL}/matchfieldPlayersById/${id}`;
-
-  //positions
-  #getAllPositionsURL = () => `${this.#VolleyTrainServerBaseURL}/position`;
+  #updateMatchfieldPlayerByIdURL = () =>
+    `${this.#VolleyTrainServerBaseURL}/matchfieldPlayersById`;
+  //Delete PlayerPosition
+  #deletePlayerPositionsURL = () =>
+    `${this.#VolleyTrainServerBaseURL}/matchfieldPlayersById`;
 
   /*
 	Singleton/Einzelstuck instanz erhalten
@@ -529,17 +529,6 @@ export default class VolleytrainAPI {
     );
   }
 
-  //Training
-  getAllPositions() {
-    return this.#fetchAdvanced(this.#getAllPositionsURL()).then(
-      (responseJSON) => {
-        let positionBO = PositionBO.fromJSON(responseJSON);
-        return new Promise(function (resolve) {
-          resolve(positionBO);
-        });
-      }
-    );
-  }
   //Spieler hinzufuegen
   addPlayer(playerBO) {
     return this.#fetchAdvanced(this.#addPlayerURL(), {
@@ -599,6 +588,41 @@ export default class VolleytrainAPI {
       let playerBOs = PlayerBO.fromJSON(responseJSON);
       return new Promise(function (resolve) {
         resolve(playerBOs);
+      });
+    });
+  }
+
+  //update PlayerPosition
+  updatePlayerPositions(positionBO) {
+    return this.#fetchAdvanced(this.#updateMatchfieldPlayerByIdURL(), {
+      method: "PUT",
+      headers: {
+        Accept: "application/json, text/plain",
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(positionBO),
+    }).then((responseJSON) => {
+      // zuruck kommt ein array, wir benoetigen aber nur ein Objekt aus dem array
+      let responsePositionBO = positionBO.fromJSON(responseJSON);
+      return new Promise(function (resolve) {
+        resolve(responsePositionBO);
+      });
+    });
+  }
+  //Delete PlayerPosition
+  deletePlayerPositions(positionBO) {
+    return this.#fetchAdvanced(this.#deletePlayerPositionsURL(), {
+      method: "DELETE",
+      headers: {
+        Accept: "application/json, text/plain",
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(positionBO),
+    }).then((responseJSON) => {
+      // zuruck kommt ein array, wir benoetigen aber nur ein Objekt aus dem array
+      let responsePositionBO = positionBO.fromJSON(responseJSON);
+      return new Promise(function (resolve) {
+        resolve(responsePositionBO);
       });
     });
   }

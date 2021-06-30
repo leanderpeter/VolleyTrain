@@ -22,7 +22,7 @@ class Position(ABC):
         self._y = y
 
     def getXPosition(self):
-        return _x
+        return self._x
 
     def getYPosition(self):
-        return _y
+        return self._y
