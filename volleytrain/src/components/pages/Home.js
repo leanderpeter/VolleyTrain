@@ -33,7 +33,7 @@ class Home extends Component {
           justify="center"
           className={classes.root}
         >
-          <Grid item component={Link} to={"/exerciseForm"}>
+          <Grid item component={Link} to={"/createTraining"}>
             <Paper
               className={classes.border}
               variant="outlined"
