@@ -305,8 +305,8 @@ DROP TABLE IF EXISTS `training`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `training` (
   `PK_Training` int NOT NULL,
-  `datetime` datetime(6) DEFAULT NULL,
   `name` varchar(45) DEFAULT NULL,
+  `datetime` datetime DEFAULT NULL,
   `goal` varchar(45) DEFAULT NULL,
   `Team_PK_Team` int NOT NULL,
   `User_PK_User` int NOT NULL,
@@ -323,7 +323,7 @@ CREATE TABLE `training` (
 
 LOCK TABLES `training` WRITE;
 /*!40000 ALTER TABLE `training` DISABLE KEYS */;
-INSERT INTO `training` VALUES (1,'2020-12-20 20:13:34.000000','Training1','Ausdauer verbessern',1,1),(2,'2020-12-20 20:13:34.000000','Training2','Strategie planen',2,1),(3,'2020-12-20 20:13:34.000000','Training3','Beweglichkeit verbessern',3,1);
+INSERT INTO `training` VALUES (1,'Training1','2021-07-28 13:45:54','Ausdauer verbessern',1,1),(2,'Training2','2021-05-27 13:45:54','Strategie planen',2,1),(3,'Training3','2020-06-27 13:45:54','Beweglichkeit verbessern',3,1);
 /*!40000 ALTER TABLE `training` ENABLE KEYS */;
 UNLOCK TABLES;
 

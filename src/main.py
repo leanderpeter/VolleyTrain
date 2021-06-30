@@ -64,6 +64,7 @@ player = api.inherit('nbo', nbo, {
     't_number': fields.Integer(attribute='_t_number', description='t_number of PLayer')
 })
 training = api.inherit('training', nbo, {
+    'datetime': fields.DateTime(attribute='_datetime', description='Datum und Zeitpunkt des Trainings'),
     'goal': fields.String(attribute='_goal', description='Ziel des Trainings'),
     'team_id': fields.Integer(attribute='_team_id', description='ID des beteiligten Team'),
     'user_id': fields.Integer(attribute='_user_id', description='ID des User/Trainer')
@@ -157,7 +158,7 @@ class PlayerOperations(Resource):
 @volleyTrain.route('/players')
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class PlayerOperation(Resource):
-    # @secured
+    @secured
     @volleyTrain.marshal_list_with(player)
     def get(self):
         """Get all Player"""
@@ -445,7 +446,7 @@ class ExerciseOperation(Resource):
 @volleyTrain.route('/matchfieldPlayers')
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class MatchfieldPlayerOperation(Resource):
-    # @secured
+    @secured
     @volleyTrain.marshal_list_with(matchfieldPlayers)
     def get(self):
         adm = volleytrainAdministration()
@@ -456,7 +457,7 @@ class MatchfieldPlayerOperation(Resource):
 @volleyTrain.route('/matchfieldPlayersById/<int:id>')
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class MatchfieldPlayerOperation(Resource):
-    # @secured
+    @secured
     @volleyTrain.marshal_list_with(matchfieldPlayers)
     def get(self, id):
         adm = volleytrainAdministration()

@@ -23,14 +23,14 @@ class TrainingMapper(Mapper):
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        for (id, creation_date, name, goal, team_id, user_id) in tuples:
+        for (id, name, datetime, goal, team_id, user_id) in tuples:
             training = Training()
             training.set_id(id)
-            training.set_creation_date(creation_date)
             training.set_name(name)
-            training.setGoal(goal)
-            training.setTeamId(team_id)
-            training.setUserId(user_id)
+            training.set_datetime(datetime)
+            training.set_goal(goal)
+            training.set_team_id(team_id)
+            training.set_user_id(user_id)
 
             result.append(training)
 
@@ -55,14 +55,14 @@ class TrainingMapper(Mapper):
         cursor.execute(command)
         tuples = cursor.fetchall()
         try:
-            (id, creation_date, name, goal, team_id, user_id) = tuples[0]
+            (id, name, datetime, goal, team_id, user_id) = tuples[0]
             training = Training()
             training.set_id(id)
-            training.set_creation_date(creation_date)
             training.set_name(name)
-            training.setGoal(goal)
-            training.setTeamId(team_id)
-            training.setUserId(user_id)
+            training.set_datetime(datetime)
+            training.set_goal(goal)
+            training.set_team_id(team_id)
+            training.set_user_id(user_id)
             result = training
 
         except IndexError:
@@ -97,8 +97,8 @@ class TrainingMapper(Mapper):
                 training.set_id(1)
 
         command = "INSERT INTO training (PK_Training, name, datetime, goal, Team_PK_Team, User_PK_User) VALUES (%s,%s,%s,%s,%s,%s)"
-        data = (training.get_id(), training.get_name(), training.get_creation_date(
-        ), training.getGoal(), training.getTeamId(), training.getUserId())
+        data = (training.get_id(), training.get_name(), training.get_datetime(
+        ), training.get_goal(), training.get_team_id(), training.get_user_id())
         cursor.execute(command, data)
 
         self._connection.commit()
@@ -116,8 +116,8 @@ class TrainingMapper(Mapper):
 
         command = "UPDATE training " + \
             "SET name=%s, datetime=%s, goal=%s, Team_PK_Team=%s, User_PK_User=%s WHERE PK_Training=%s"
-        data = (training.get_name(), training.get_creation_date(), training.getGoal(
-        ), training.getTeamId(), training.getUserId(), training.get_id())
+        data = (training.get_name(), training.get_datetime(), training.get_goal(
+        ), training.get_team_id(), training.get_user_id(), training.get_id())
 
         cursor.execute(command, data)
 
