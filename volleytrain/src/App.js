@@ -179,6 +179,7 @@ class App extends React.Component {
                 <BlankPage />
               </Route>
               <Route path="/exerciseoverview" component={ExerciseOverview}></Route>
+              <Route path="/playeroverview" component={PlayerOverview}></Route>
             </>
           ) : (
             <>

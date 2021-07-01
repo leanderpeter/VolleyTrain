@@ -44,14 +44,14 @@ class CreatePlayer extends React.Component{
     }
 
     render() {
-        const { classes, show, dialogOpen, onClose } = this.props;
+        const { classes, dialogOpen, onClose } = this.props;
         const { surname, name, teamId, role, t_number} = this.state;
     
         let title = 'Neuen Spieler erstellen';
 
         return(
             <div>
-                <Dialog className={classes.root} open={dialogOpen} onClose={onClose}>
+                <Dialog className={classes.root} open={dialogOpen} onClose={onClose} fullWidth={true} >
                     
                     <DialogTitle>
                     <Grid container>
