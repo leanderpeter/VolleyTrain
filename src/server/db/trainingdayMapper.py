@@ -38,9 +38,6 @@ class TrainingdayMapper(Mapper):
 
         return result
 
-    def find_by_name(self):
-        pass
-
     def find_by_team_id(self, id):
         """find all trainingday obj
 
@@ -84,12 +81,13 @@ class TrainingdayMapper(Mapper):
         cursor.execute(command)
         tuples = cursor.fetchall()
         try:
-            (id, weekday, starttime, endtime) = tuples[0]
+            (id, weekday, starttime, endtime, team) = tuples[0]
             trainingday = Trainingday()
             trainingday.set_id(id)
             trainingday.set_weekday(weekday)
             trainingday.set_starttime(starttime)
             trainingday.set_endtime(endtime)
+            trainingday.set_team(team)
             result = trainingday
 
         except IndexError:
@@ -133,11 +131,37 @@ class TrainingdayMapper(Mapper):
 
         return trainingday
 
-    def update(self):
-        pass
+    def update(self, trainingday):
+        """Überschreiben / Aktualisieren eines trainingday-Objekts in der DB
 
-    def delete(self):
-        pass
+        :param trainingday -> trainingday-Objekt
+        :return aktualisiertes trainingday-Objekt
+        """
+        cursor = self._connection.cursor()
+
+        command = "UPDATE trainingday " + \
+            "SET weekday=%s, starttime=%s, endtime=%s, team=%s WHERE PK_Trainingday=%s"
+        data = (trainingday.get_weekday(), trainingday.get_starttime(
+        ), trainingday.get_endtime(), trainingday.get_team(), trainingday.get_id())
+
+        cursor.execute(command, data)
+
+        self._connection.commit()
+        cursor.close()
+
+    def delete(self, trainingday):
+        """Löschen der Daten einer trainingday aus der Datenbank
+
+        :param trainingday -> trainingday-Objekt
+        """
+        cursor = self._connection.cursor()
+
+        command = "DELETE FROM trainingday WHERE PK_Trainingday={}".format(
+            trainingday.get_id())
+        cursor.execute(command)
+
+        self._connection.commit()
+        cursor.close()
 
 
 '''Only for testing purpose'''

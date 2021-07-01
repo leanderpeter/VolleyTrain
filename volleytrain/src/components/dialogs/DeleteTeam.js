@@ -19,36 +19,29 @@ class DeleteTeam extends React.Component {
   }
 
   render() {
-    const { classes, dialogOpen, onClose, team, deleteTeam } = this.props;
+    const { classes, deleteDialogOpen, onClose, team, deleteTeam } = this.props;
 
     return (
       <div>
-        <Dialog className={classes.root} open={dialogOpen} onClose={onClose}>
+        <Dialog
+          className={classes.root}
+          open={deleteDialogOpen}
+          onClose={onClose}
+        >
           <DialogTitle>
-            <Grid container>
-              <Grid item xs={4}>
-                <Button className={classes.backButton} onClick={onClose}>
-                  <ArrowBackOutlinedIcon
-                    className={classes.backButton}
-                    color="primary"
-                  />
-                </Button>
-              </Grid>
-              <Grid item xs={8}>
-                <Typography variant="h6" color="primary">
-                  Möchtest du die <b>{team.getName()}</b> wirklich löschen?
-                </Typography>
-              </Grid>
-            </Grid>
+            <Typography variant="h6" color="primary">
+              Möchtest du die <b>{team.getName()}</b> wirklich löschen?
+            </Typography>
           </DialogTitle>
           <DialogContent>
             <Grid container spacing={2}>
               <Grid item xs={6}>
-                <Link to={{ pathname: "/home" }}>
+                <Link className={classes.link} to={{ pathname: "/home" }}>
                   <Button
                     color="primary"
                     variant="contained"
                     onClick={deleteTeam}
+                    fullWidth
                   >
                     {" "}
                     <b>LÖSCHEN</b>
@@ -56,7 +49,12 @@ class DeleteTeam extends React.Component {
                 </Link>
               </Grid>
               <Grid item xs={6}>
-                <Button color="secondary" variant="outlined" onClick={onClose}>
+                <Button
+                  color="secondary"
+                  variant="outlined"
+                  onClick={onClose}
+                  fullWidth
+                >
                   {" "}
                   <b>ABBRECHEN</b>
                 </Button>
@@ -74,6 +72,9 @@ const styles = (theme) => ({
   root: {
     margin: theme.spacing(2),
     width: "100%",
+  },
+  link: {
+    textDecoration: "None",
   },
   backButton: {
     borderRadius: "500px",

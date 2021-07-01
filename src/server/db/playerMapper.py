@@ -51,9 +51,9 @@ class PlayerMapper(Mapper):
 
         for (id, surname, name, teamId, role, t_number) in tuples:
             player = Player()
-            player.setId(id)
-            player.setName(name)
-            player.setSurname(surname)
+            player.set_id(id)
+            player.set_name(name)
+            player.set_surname(surname)
             player.setTeamId(teamId)
             player.setRole(role)
             player.setT_number(t_number)
@@ -104,15 +104,15 @@ class PlayerMapper(Mapper):
             if maxid[0] is not None:
                 """Wenn wir eine maximale ID festellen konnten, zählen wir diese
                 um 1 hoch und weisen diesen Wert als ID dem User-Objekt zu."""
-                player.setId(maxid[0] + 1)
+                player.set_id(maxid[0] + 1)
             else:
                 """Wenn wir KEINE maximale ID feststellen konnten, dann gehen wir
                 davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
-                player.setId(1)
+                player.set_id(1)
 
         command = "INSERT INTO player (PK_Player, surname, name, Team_PK_Team, role, t_number) " \
                   "VALUES (%s,%s,%s,%s,%s,%s)"
-        data = (player.getId(), player.getSurname(), player.getName(), player.getTeamId(),
+        data = (player.get_id(), player.get_surname(), player.get_name(), player.getTeamId(),
                 player.getRole(), player.getT_number())
         cursor.execute(command, data)
 
@@ -128,12 +128,12 @@ class PlayerMapper(Mapper):
         """
         cursor = self._connection.cursor()
 
-        command = "UPDATE player SET surname=%s, SET name=%s, SET Team_PK_Team=%s, " \
-            "role=%s, t_number=%s WHERE PK_Player=%s" \
-            .format(player.getId(), player.getSurname(), player.getName(), player.getTeamId(), player.getRole(),
-                    player.getT_number())
+        command = "UPDATE player" + \
+            "SET surname=%s, name=%s, Team_PK_Team=%s, role=%s, t_number=%s WHERE PK_Player=%s"
+        data = (player.get_surname(), player.get_name(), player.getTeamId(),
+                player.getRole(), player.getT_number(), player.get_id())
 
-        cursor.execute(command)
+        cursor.execute(command, data)
 
         self._connection.commit()
         cursor.close()
@@ -150,7 +150,7 @@ class PlayerMapper(Mapper):
         cursor = self._connection.cursor()
 
         command = "DELETE FROM player WHERE PK_Player={}".format(
-            player.getId())
+            player.get_id())
         cursor.execute(command)
 
         self._connection.commit()
