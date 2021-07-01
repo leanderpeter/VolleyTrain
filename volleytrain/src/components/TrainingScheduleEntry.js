@@ -6,6 +6,7 @@ import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import CreateIcon from "@material-ui/icons/Create";
+import TrainingDeletion from "./dialogs/TrainingDeletion";
 
 class TrainingScheduleEntry extends React.Component {
   constructor(props) {
@@ -16,6 +17,7 @@ class TrainingScheduleEntry extends React.Component {
       trainingDate: null,
       trainingTime: null,
       trainingDatetime: null,
+      openDialogDeletion: false,
     };
     console.log(this.props.training);
   }
@@ -48,13 +50,26 @@ class TrainingScheduleEntry extends React.Component {
     });
   };
 
+  openDialogDeletion = () => {
+    this.setState({
+      openDialogDeletion: true,
+    });
+  };
+
+  closeDialogDeletion = () => {
+    this.setState({
+      openDialogDeletion: false,
+    });
+  };
+
   componentDidMount = () => {
     this.getTrainingDateTime();
   };
 
   render() {
     const { classes } = this.props;
-    const { training, trainingDate, trainingTime } = this.state;
+    const { training, trainingDate, trainingTime, openDialogDeletion } =
+      this.state;
 
     return (
       <div className={classes.root}>
@@ -89,9 +104,15 @@ class TrainingScheduleEntry extends React.Component {
               </CardContent>
             </Card>
           </Grid>
+          <TrainingDeletion
+            openDeletion={openDialogDeletion}
+            onClose={this.closeDialogDeletion}
+            training={training}
+            onDelete={this.props.onDelete}
+          />
           <Grid item xs={1} align="center">
             <IconButton>
-              <DeleteIcon />
+              <DeleteIcon onClick={this.openDialogDeletion} />
             </IconButton>
           </Grid>
           <Grid item xs={1} align="center">

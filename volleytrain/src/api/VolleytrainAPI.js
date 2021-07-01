@@ -62,6 +62,7 @@ export default class VolleytrainAPI {
     `${this.#VolleyTrainServerBaseURL}/visible_trainings`;
   #getArchivedTrainings = () =>
     `${this.#VolleyTrainServerBaseURL}/archived_trainings`;
+  #deleteTrainingURL = (training_id) => `${this.#VolleyTrainServerBaseURL}/training/${training_id}`;
 
   //getPlayers: all
   #getPlayersURL = () => `${this.#VolleyTrainServerBaseURL}/players`;
@@ -164,6 +165,10 @@ export default class VolleytrainAPI {
         });
       }
     );
+  }
+
+  deleteTraining(id) {
+    return this.#fetchAdvanced(this.#deleteTrainingURL(id), { method: "DELETE" });
   }
 
   //gibt die Person mit der bestimmten GoogleUserID als BO zurück

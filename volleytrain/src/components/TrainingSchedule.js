@@ -61,6 +61,16 @@ class TrainingSchedule extends React.Component {
     });
   };
 
+  removeTraining = (trainingId) => {
+    let newTrainings = this.state.trainings.filter(
+      (training) => training.getID() !== trainingId
+    );
+    console.log(newTrainings.length)
+    this.setState({
+      trainings: newTrainings,
+    });
+  };
+
   componentDidMount() {
     this.getVisibleTrainings();
     this.getCurrentDateTime();
@@ -90,6 +100,7 @@ class TrainingSchedule extends React.Component {
                     <TrainingScheduleEntry
                       key={training.getID()}
                       training={training}
+                      onDelete={() => this.removeTraining(training.getID())}
                     />
                   ) : null
                 )
