@@ -53,13 +53,11 @@ export default function CreateExercise({ Players, Training }) {
   // const init Exercise State
   const [exercise, setExercise] = React.useState(null);
 
-  console.log(exercise);
+  console.log(Training);
 
   const createExerciseObj = () => {
     let exercise = new ExerciseBO();
-    if (!(Training == null)) {
-      exercise.setTraining(Training.id);
-    }
+    exercise.setTraining(Training.id);
 
     VolleytrainAPI.getAPI()
       .addExercise(exercise)

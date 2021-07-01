@@ -59,7 +59,7 @@ class Training (NamedBusinessObject):
         obj.set_name(dictionary["name"])
         obj.set_datetime(dictionary["datetime"])
         obj.set_goal(dictionary["goal"])
-        obj.set_team_id(dictionary["team_id"])
-        obj.set_user_id(dictionary["user_id"])
+        obj.set_team_id(dictionary["teamId"])
+        obj.set_user_id(dictionary["userId"])
         obj.set_visibility(dictionary["visibility"])
         return obj

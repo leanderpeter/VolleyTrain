@@ -155,7 +155,7 @@ class TrainingMapper(Mapper):
                 davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
                 training.set_id(1)
 
-        command = "INSERT INTO training (PK_Training, name, datetime, goal, Team_PK_Team, User_PK_User) VALUES (%s,%s,%s,%s,%s,%s)"
+        command = "INSERT INTO training (PK_Training, name, datetime, goal, Team_PK_Team, User_PK_User, visibility) VALUES (%s,%s,%s,%s,%s,%s,%s)"
         data = (training.get_id(), training.get_name(), training.get_datetime(
         ), training.get_goal(), training.get_team_id(), training.get_user_id(), training.get_visibility())
         cursor.execute(command, data)

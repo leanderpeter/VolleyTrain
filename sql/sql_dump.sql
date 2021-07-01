@@ -85,7 +85,7 @@ CREATE TABLE `exercise` (
 
 LOCK TABLES `exercise` WRITE;
 /*!40000 ALTER TABLE `exercise` DISABLE KEYS */;
-INSERT INTO `exercise` VALUES (1,'Training - 1',20,'Aufwärmen','lief gut','öldskföaoeirgoabgroöaeg',1,3),(2,'Training - 2',15,'Spielvorbereitung','bla','dföaoiegjoiaejrgoiahgr',2,3),(3,'Training - 3',10,'Nachbereitung','blabla','aöofighoaihgoiaehrg',3,3);
+INSERT INTO `exercise` VALUES (1,'Training - 1',20,'Aufwärmen','lief gut','öldskföaoeirgoabgroöaeg',1,3),(2,'Training - 2',15,'Spielvorbereitung','bla','dföaoiegjoiaejrgoiahgr',2,3),(3,'Training - 3',10,'Nachbereitung','blabla','aöofighoaihgoiaehrg',3,3),(4,'Training - 4',20,'Aufwärmen','lief gut','öldskföaoeirgoabgroöaeg',1,3);
 /*!40000 ALTER TABLE `exercise` ENABLE KEYS */;
 UNLOCK TABLES;
 

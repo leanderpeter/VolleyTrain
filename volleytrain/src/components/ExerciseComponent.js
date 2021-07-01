@@ -10,44 +10,35 @@ import {
 } from "@material-ui/core";
 import Divider from "@material-ui/core/Divider";
 
-const ExerciseComponent = (exercise) => {
+const ExerciseComponent = ({ exerciseBO }) => {
   // init styling
   const classes = styles();
 
-  const [exerciseBO, setExercise] = useState(exercise);
-
+  console.log(exerciseBO);
   return (
     <div>
       <Grid item xs={10}>
         <Card className={classes.border}>
           <CardContent>
             <Grid>
-              <Grid key={exerciseBO.getID()} item>
+              <Grid key={exerciseBO.id} item>
                 <Typography>Übungsname:</Typography>
-                <Typography>
-                  <b>{exerciseBO.getName()}</b>
-                </Typography>
+                <Typography>{exerciseBO.name}</Typography>
               </Grid>
               <Divider className={classes.solid} />
-              <Grid key={exerciseBO.getID()} item>
+              <Grid key={exerciseBO.id} item>
                 <Typography>Übungsziel:</Typography>
-                <Typography>
-                  <b>{exerciseBO.getGoal()}</b>
-                </Typography>
+                <Typography>{exerciseBO.goal}</Typography>
               </Grid>
               <Divider className={classes.solid} />
-              <Grid key={exerciseBO.getID()} item>
+              <Grid key={exerciseBO.id} item>
                 <Typography>Beschreibung:</Typography>
-                <Typography>
-                  <b>{exerciseBO.getDescription()}</b>
-                </Typography>
+                <Typography>{exerciseBO.description}</Typography>
               </Grid>
               <Divider className={classes.solid} />
-              <Grid key={exerciseBO.getID()} item>
+              <Grid key={exerciseBO.id} item>
                 <Typography>Bewertung:</Typography>
-                <Typography>
-                  <b>{exerciseBO.getRating()}</b>
-                </Typography>
+                <Typography>{exerciseBO.rating}</Typography>
               </Grid>
             </Grid>
           </CardContent>
