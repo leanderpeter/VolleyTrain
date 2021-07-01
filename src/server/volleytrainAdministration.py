@@ -103,11 +103,11 @@ class volleytrainAdministration(object):
     def get_all_trainings(self):
         with TrainingMapper() as mapper:
             return mapper.find_all()
-    
+
     def get_visible_trainings(self):
         with TrainingMapper() as mapper:
             return mapper.find_visible_trainings()
-    
+
     def get_archived_trainings(self):
         with TrainingMapper() as mapper:
             return mapper.find_archived_trainings()
@@ -173,6 +173,18 @@ class volleytrainAdministration(object):
     def get_trainingdays_by_team_id(self, id):
         with TrainingdayMapper() as mapper:
             return mapper.find_by_team_id(id)
+
+    def get_trainingday_by_id(self, id):
+        with TrainingdayMapper() as mapper:
+            return mapper.find_by_id(id)
+
+    def save_trainingday(self, trainingday):
+        with TrainingdayMapper() as mapper:
+            mapper.update(trainingday)
+
+    def delete_trainingday(self, trainingday):
+        with TrainingdayMapper() as mapper:
+            mapper.delete(trainingday)
 
     def createExercise(self, exercise):
         """ Create a Exercise object and inject it into the database """

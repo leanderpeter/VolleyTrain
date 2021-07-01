@@ -164,7 +164,7 @@ class App extends React.Component {
               />
               <Route path="/team" render={(props) => <Team {...props} />} />
               <Route path="/teammanagement" component={TrainingTeammanagement}>
-                <TrainingTeammanagement />
+                <TrainingTeammanagement currentUser={currentUser} />
               </Route>
               <Route path="/createTraining" component={TrainingPlaningPage}>
                 <TrainingPlaningPage />

@@ -16,14 +16,17 @@ import {
   Container,
   Divider,
 } from "@material-ui/core";
+import DeleteIcon from "@material-ui/icons/Delete";
 import TeamOverview from "./TeamOverview";
 import DeleteTeam from "../dialogs/DeleteTeam";
+import UpdateTeam from "../dialogs/UpdateTeam";
 import VolleytrainAPI from "../../api/VolleytrainAPI";
 import TrainingSchedule from "../TrainingSchedule";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import PlayerOverview from './PlayerOverview';
 import CreatePLayer from "../dialogs/CreatePLayer";
 import AddIcon from '@material-ui/icons/Add'
+import PlayerBO from "../../api/PlayerBO";
 
 class Team extends Component {
   constructor(props) {
@@ -31,27 +34,64 @@ class Team extends Component {
 
     this.state = {
       team: this.props.location.state.team,
-      dialogOpen: false,
+      teamid: this.props.location.state.team.id,
+      deleteDialogOpen: false,
+      updateDialogOpen: false,
       trainingdays: [],
       player: [],
       openNewPlayer: false
     };
   }
 
-  handleClick = () => {
+  handleDeleteClick = () => {
     this.setState({
-      dialogOpen: true,
+      deleteDialogOpen: true,
     });
   };
 
-  handleClose = () => {
+  handleDeleteClose = () => {
     this.setState({
-      dialogOpen: false,
+      deleteDialogOpen: false,
+    });
+  };
+
+  handleUpdateClose = () => {
+    this.setState({
+      updateDialogOpen: false,
+    });
+    this.getTeam();
+    this.getTrainingdays();
+  };
+
+  handleUpdateClick = () => {
+    this.setState({
+      updateDialogOpen: true,
     });
   };
 
   deleteTeam = () => {
-    VolleytrainAPI.getAPI().deleteTeam(this.state.team.getID());
+    /* VolleytrainAPI.getAPI()
+      .getPlayersByTeam(this.state.team.getID())
+      .then((playerBOs) => {
+        playerBOs.forEach((playerBO) => {
+          let player = new PlayerBO();
+          player.setID(playerBO.getID());
+          player.setName(playerBO.getName());
+          player.setSurname(playerBO.getSurname());
+          player.setTeamId(2);
+          player.setRole(playerBO.getRole());
+          player.setT_number(playerBO.getT_number());
+          VolleytrainAPI.getAPI().updatePlayer(player);
+        });
+      });
+    setTimeout(() => {
+      VolleytrainAPI.getAPI().deleteTeam(this.state.teamid);
+    }, 5000); */
+    console.log(
+      "würde gerne das team mit der id ",
+      this.state.teamid,
+      " löschen, aber player hat fk und kann nicht updaten geschweige denn auf null setzen. einzige lösung zur jetztigen datenstruktur wäre, den player auch zu löschen.. das wäre aber unvorteilhaft."
+    );
   };
 
   getPlayersForTeam = () => {
@@ -69,6 +109,34 @@ class Team extends Component {
           player: [],
           error: e,
           loadingInProgress: false,
+          
+  updateTeam = (team) => {
+    VolleytrainAPI.getAPI().updateTeam(team);
+  };
+
+  handleDeleteTrainingday = (id) => {
+    this.deleteTrainingday(id);
+  };
+
+  deleteTrainingday = (trainingdayId) => {
+    VolleytrainAPI.getAPI().deleteTrainingday(trainingdayId);
+    setTimeout(() => {
+      this.getTrainingdays();
+    }, 1000);
+  };
+
+  updateTrainingday = (trainingday) => {
+    trainingday.getID() === 1
+      ? VolleytrainAPI.getAPI().addTrainingday(trainingday)
+      : VolleytrainAPI.getAPI().updateTrainingday(trainingday);
+  };
+
+  getTeam = () => {
+    VolleytrainAPI.getAPI()
+      .getTeamByID(this.state.teamid)
+      .then((teamBO) =>
+        this.setState({
+          team: teamBO,
         })
       );
   };
@@ -92,16 +160,17 @@ class Team extends Component {
   componentDidMount() {
     this.getTrainingdays();
     this.getPlayersForTeam()
-  }
+  };
+
   openNewPlayer=()=>{
     this.setState({
       openNewPlayer: !this.state.openNewPlayer
     })
-  }
+  };
 
   render() {
     const { classes } = this.props;
-    const { team, dialogOpen, trainingdays, player, openNewPlayer } = this.state;
+    const { team, dialogOpen, trainingdays, player,deleteDialogOpen, updateDialogOpen, openNewPlayer } = this.state;
 
     return (
       <div className={classes.root}>
@@ -118,7 +187,6 @@ class Team extends Component {
           justify="center"
           className={classes.border}
         >
-          {console.log(trainingdays)}
           <Grid item xs={7}>
             <Typography variant="h5">{team.getName()}</Typography>
           </Grid>
@@ -144,20 +212,29 @@ class Team extends Component {
           <Grid item xs={1} />
           <Grid item xs={3}>
             <Typography variant="h6">Verwalten</Typography>
-            <Typography onClick={this.handleClick}>
+            <Typography onClick={this.handleUpdateClick}>
               ... aktuelles Team bearbeiten
             </Typography>
-            <Typography onClick={this.handleClick}>
+            <Typography onClick={this.handleDeleteClick}>
               ... aktuelles Team löschen
             </Typography>
           </Grid>
         </Grid>
         <TrainingSchedule />
         <DeleteTeam
-          dialogOpen={dialogOpen}
+          deleteDialogOpen={deleteDialogOpen}
           team={team}
           deleteTeam={this.deleteTeam}
-          onClose={this.handleClose}
+          onClose={this.handleDeleteClose}
+        />
+        <UpdateTeam
+          updateDialogOpen={updateDialogOpen}
+          team={team}
+          trainingdays={trainingdays}
+          deleteTrainingday={this.deleteTrainingday}
+          updateTeam={this.updateTeam}
+          updateTrainingday={this.updateTrainingday}
+          onClose={this.handleUpdateClose}
         />
         </TabPanel>
         <TabPanel>

@@ -138,7 +138,7 @@ class PlayerMapper(Mapper):
             .format(player.get_id(), player.get_surname(), player.get_name(), player.get_teamid(), player.get_role(),
                     player.get_t_number())
 
-        cursor.execute(command)
+        cursor.execute(command, data)
 
         self._connection.commit()
         cursor.close()
@@ -153,7 +153,7 @@ class PlayerMapper(Mapper):
         cursor = self._connection.cursor()
 
         command = "DELETE FROM player WHERE PK_Player={}".format(
-            player.getId())
+            player.get_id())
         cursor.execute(command)
 
         self._connection.commit()

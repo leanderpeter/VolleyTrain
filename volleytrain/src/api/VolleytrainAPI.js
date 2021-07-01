@@ -45,6 +45,9 @@ export default class VolleytrainAPI {
   #getTrainingdaysByTeamIdURL = (id) =>
     `${this.#VolleyTrainServerBaseURL}/trainingday/${id}`;
   #addTrainingdayURL = () => `${this.#VolleyTrainServerBaseURL}/trainingday`;
+  #updateTrainingdayURL = () => `${this.#VolleyTrainServerBaseURL}/trainingday`;
+  #deleteTrainingdayURL = (id) =>
+    `${this.#VolleyTrainServerBaseURL}/trainingday/${id}`;
 
   //getExercise: id
   #getExerciseByIDURL = (id) =>
@@ -65,11 +68,13 @@ export default class VolleytrainAPI {
 
   //getPlayers: all
   #getPlayersURL = () => `${this.#VolleyTrainServerBaseURL}/players`;
+  #getPlayersByTeamURL = (id) =>
+    `${this.#VolleyTrainServerBaseURL}/players/${id}`;
   #addPlayerURL = () => `${this.#VolleyTrainServerBaseURL}/playerss`;
   #deletePlayerURL = (id) => `${this.#VolleyTrainServerBaseURL}/player/${id}`;
-  #updatePlayerURL = () => `${this.#VolleyTrainServerBaseURL}/player`;
-  #getPlayersByTeamURL = (id) =>
-    `${this.#VolleyTrainServerBaseURL}/team/${id}/players`;
+  #updatePlayerURL = () => `${this.#VolleyTrainServerBaseURL}/players`;
+  /*  #getPlayersByTeamURL = (id) =>
+    `${this.#VolleyTrainServerBaseURL}/team/${id}/players`; */
 
   //MatchfieldPlayerBO
   #getAllMatchfieldPlayerURL = () =>
@@ -538,6 +543,12 @@ export default class VolleytrainAPI {
     return this.#fetchAdvanced(this.#deleteTeamURL(id), { method: "DELETE" });
   }
 
+  deleteTrainingday(id) {
+    return this.#fetchAdvanced(this.#deleteTrainingdayURL(id), {
+      method: "DELETE",
+    });
+  }
+
   //gibt die Person mit der bestimmten GoogleUserID als BO zurück
   getAllTrainingdays() {
     return this.#fetchAdvanced(this.#getAllTrainingdaysURL()).then(
@@ -570,9 +581,9 @@ export default class VolleytrainAPI {
     );
   }
 
-  addTrainingday(trainingdayBO) {
-    return this.#fetchAdvanced(this.#addTrainingdayURL(), {
-      method: "POST",
+  updateTrainingday(trainingdayBO) {
+    return this.#fetchAdvanced(this.#updateTrainingdayURL(), {
+      method: "PUT",
       headers: {
         Accept: "application/json, text/plain",
         "Content-type": "application/json",
@@ -586,6 +597,7 @@ export default class VolleytrainAPI {
       });
     });
   }
+
   //Übung löschen
   deleteExercise(id) {
     return this.#fetchAdvanced(this.#deleteExerciseURL(id), {
@@ -881,6 +893,17 @@ export default class VolleytrainAPI {
         });
       }
     );
+  }
+
+  getPlayersByTeam(teamId) {
+    return this.#fetchAdvanced(this.#getPlayersByTeamURL(teamId), {
+      method: "GET",
+    }).then((responseJSON) => {
+      let playerBOs = PlayerBO.fromJSON(responseJSON);
+      return new Promise(function (resolve) {
+        resolve(playerBOs);
+      });
+    });
   }
 
   //update PlayerPosition
