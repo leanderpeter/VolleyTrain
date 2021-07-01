@@ -1,24 +1,20 @@
 import React, { useState, useLayoutEffect } from "react";
 import {
   Select,
-  Typography,
   makeStyles,
   InputLabel,
   FormControl,
   MenuItem,
   TextField,
 } from "@material-ui/core";
-import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
-import Divider from "@material-ui/core/Divider";
-import TeamBO from "../../api/TeamBO";
-import goBackIcon from "../../assets/goBackIcon.svg";
 import CreateExercise from "../dialogs/CreateExercise";
 import VolleytrainAPI from "../../api/VolleytrainAPI";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "../layout/TabStyling.css";
-import { flexbox } from "@material-ui/system";
 import TrainingBO from "../../api/TrainingBO";
+import ContextErrorMessage from '../dialogs/ContextErrorMessage';
+import LoadingProgress from '../dialogs/LoadingProgress';
 /**
  *
  * @returns
@@ -27,7 +23,7 @@ import TrainingBO from "../../api/TrainingBO";
  *
  */
 
-const TrainingTeammanagement = ( currentUser) => {
+const TrainingTeammanagement = ({currentUser}) => {
   // init styling
   const classes = styles();
 
@@ -37,26 +33,20 @@ const TrainingTeammanagement = ( currentUser) => {
   const [teams, setTeams] = useState([]);
 
   // init loading process state
-  const [loadingInProgres, setLoadingInProgress] = useState(false);
+  const [loadingInProgress, setLoadingInProgress] = useState(false);
 
   //init error state
-  const [error, setError] = useState(false);
+  const [error, setError] = useState(null);
 
   // init players for team
   const [player, setPlayer] = useState([]);
 
-  // init Trainingsablauf state
-  const [teamChosen, setChosenTeam] = useState(false);
+  // init teams state
+  const [name, setName] = useState('');
 
   // init teams state
-  const [name, setName] = useState(null);
+  const [goal, setGoal] = useState('');
 
-  // init teams state
-  const [goal, setGoal] = useState(null);
-
-  // init nameChosen state
-  const [nameChosen, setChosenName] = useState(false);
-  
   // init Training state
   const [training, setTraining] = useState(null);
 
@@ -72,6 +62,7 @@ const TrainingTeammanagement = ( currentUser) => {
         setError(e);
         setLoadingInProgress(false);
       });
+      setLoadingInProgress(true);
   };
 
   const getPlayersForTeam = (id) => {
@@ -86,29 +77,24 @@ const TrainingTeammanagement = ( currentUser) => {
         setError(e);
         setLoadingInProgress(false);
       });
+      setLoadingInProgress(true);
   };
 
   const createTraining = ()=>{
-    var training = new TrainingBO();
-    training.setName(name);
-    training.setTeamId(team.id);
-    training.setUserId(currentUser["currentUser"].getID());
-    training.setVisibility(1);
+    if(!team==null&!name==''&!goal==''){
+      let training = new TrainingBO();
+      training.setName(name);
+      training.setTeamId(team.id);
+      training.setUserId(currentUser.getID());
+      training.setVisibility(1);
+      setTraining(training)
+    }
   }
 
-  //call function when team is changed
-  useLayoutEffect(() => {
-    if (!(team == null)) {
-      getPlayersForTeam(team.id);
-      setChosenTeam(true);
-    }
-    if (!(name == null)) {
-      setChosenName(true);
-    }
-    if (!(name == null && team == null)) {
-      createTraining()
-    }
-  }, [, team, name]);
+  const handleTeamChange = (event) =>{
+    setTeam(event.target.value)
+    getPlayersForTeam(event.target.value.id);
+  }
 
   //call function when render
   useLayoutEffect(() => {
@@ -121,24 +107,23 @@ const TrainingTeammanagement = ( currentUser) => {
         <Tabs>
           <TabList>
             <Tab>Teammanagement</Tab>
-            <Tab disabled={!teamChosen||!nameChosen}>Trainingsablauf</Tab>
+            <Tab disabled={team==null||name==''||goal==''} onClick={createTraining}>Trainingsablauf</Tab>
           </TabList>
-
           <TabPanel>
             <div className={classes.container}>
-              
               <FormControl required variant="outlined" className={classes.teamauswahl}>
                 <InputLabel id="teamauswahl">Teamauswahl</InputLabel>
                 <Select
                   label="Teamauswahl"
                   value={team}
-                  onChange={(event) => setTeam(event.target.value)}
+                  onChange={handleTeamChange}
                 >
                   {teams.map((team) => {
                     return <MenuItem value={team}>{team.name}</MenuItem>;
                   })}
                 </Select>
               </FormControl>
+
               <TextField 
                 className={classes.name}
                 value={name} 
@@ -149,17 +134,15 @@ const TrainingTeammanagement = ( currentUser) => {
                 >
               </TextField>
             </div>
-      
-                <TextField
-                  error={false}
-                  className={classes.goal}
-                  required
-                  label="Trainingsziel"
-                  variant="outlined"
-                  value={goal}
-                  onChange={(event)=>setGoal(event.target.value)}
-                />
-        
+              <TextField
+                error={false}
+                className={classes.goal}
+                required
+                label="Trainingsziel"
+                variant="outlined"
+                value={goal}
+                onChange={(event)=>setGoal(event.target.value)}
+              />
           </TabPanel>
           <TabPanel>
             <Grid container spacing={3}>
@@ -176,6 +159,11 @@ const TrainingTeammanagement = ( currentUser) => {
           </TabPanel>
         </Tabs>
       </div>
+      <LoadingProgress show={loadingInProgress} />
+      <ContextErrorMessage 
+          error={error} 
+          contextErrorMsg = {'Ein Fehler ist aufgetreten'} 
+          /> 
     </div>
   );
 };
@@ -186,15 +174,11 @@ const styles = makeStyles({
     marginLeft: "280px",
     marginRight: "50px",
   },
-  heading: {
-    fontSize: "21px",
-    color: "black",
-  },
   container: {
     display: "flex",
     marginTop: "40px",
     justifyContent:"flex-start",
-    marginBottom:"40px"
+    marginBottom:"50px"
   },
   teamauswahl: {
     minWidth: 200,
@@ -204,16 +188,11 @@ const styles = makeStyles({
     minWidth: 300,
   },
   goal:{
-    width: "90%",
-  },
-  trainingGoal: {
-    marginTop: 10,
-    marginBottom: 10,
+    width: "80%",
   },
   divider: {
     borderBottom: "3px solid rgb(212, 212, 212)",
   },
-  exerciseButton: {},
 });
 
 export default TrainingTeammanagement;
