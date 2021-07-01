@@ -64,7 +64,7 @@ class Team extends Component {
   };
 
   deleteTeam = () => {
-    VolleytrainAPI.getAPI()
+    /* VolleytrainAPI.getAPI()
       .getPlayersByTeam(this.state.team.getID())
       .then((playerBOs) => {
         playerBOs.forEach((playerBO) => {
@@ -80,7 +80,12 @@ class Team extends Component {
       });
     setTimeout(() => {
       VolleytrainAPI.getAPI().deleteTeam(this.state.teamid);
-    }, 5000);
+    }, 5000); */
+    console.log(
+      "würde gerne das team mit der id ",
+      this.state.teamid,
+      " löschen, aber player hat fk und kann nicht updaten geschweige denn auf null setzen. einzige lösung zur jetztigen datenstruktur wäre, den player auch zu löschen.. das wäre aber unvorteilhaft."
+    );
   };
 
   updateTeam = (team) => {
