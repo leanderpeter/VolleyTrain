@@ -231,3 +231,7 @@ class volleytrainAdministration(object):
     def deletePlayerPosByMatchfieldId(self, MatchfieldPlayerBO):
         with MatchfieldPlayerMapper() as mapper:
             return mapper.delete(MatchfieldPlayerBO)
+
+    def getExercisesByTrainingId(self, id):
+        with ExerciseMapper() as mapper:
+            return mapper.get_by_training_id(id)

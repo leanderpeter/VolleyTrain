@@ -19,6 +19,8 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "../layout/TabStyling.css";
 import { flexbox } from "@material-ui/system";
 import TrainingBO from "../../api/TrainingBO";
+import ExerciseComponent from "../ExerciseComponent";
+import ExerciseBO from "../../api/ExerciseBO";
 /**
  *
  * @returns
@@ -27,7 +29,7 @@ import TrainingBO from "../../api/TrainingBO";
  *
  */
 
-const TrainingTeammanagement = ( currentUser) => {
+const TrainingTeammanagement = (currentUser) => {
   // init styling
   const classes = styles();
 
@@ -56,9 +58,12 @@ const TrainingTeammanagement = ( currentUser) => {
 
   // init nameChosen state
   const [nameChosen, setChosenName] = useState(false);
-  
+
   // init Training state
   const [training, setTraining] = useState(null);
+
+  // init exercises state
+  const [exercises, setExercise] = useState(null);
 
   const getTeams = () => {
     VolleytrainAPI.getAPI()
@@ -88,13 +93,13 @@ const TrainingTeammanagement = ( currentUser) => {
       });
   };
 
-  const createTraining = ()=>{
+  const createTraining = () => {
     var training = new TrainingBO();
     training.setName(name);
     training.setTeamId(team.id);
     training.setUserId(currentUser["currentUser"].getID());
     training.setVisibility(1);
-  }
+  };
 
   //call function when team is changed
   useLayoutEffect(() => {
@@ -106,14 +111,26 @@ const TrainingTeammanagement = ( currentUser) => {
       setChosenName(true);
     }
     if (!(name == null && team == null)) {
-      createTraining()
+      createTraining();
     }
   }, [, team, name]);
 
   //call function when render
   useLayoutEffect(() => {
     getTeams();
+    getExercises();
   }, []);
+
+  const getExercises = () => {
+    VolleytrainAPI.getAPI()
+      .getExercises()
+      .then((exercise) => {
+        //setExercises(exercise);
+      })
+      .catch((e) => {
+        setExercise(null);
+      });
+  };
 
   return (
     <div className={classes.root}>
@@ -121,13 +138,16 @@ const TrainingTeammanagement = ( currentUser) => {
         <Tabs>
           <TabList>
             <Tab>Teammanagement</Tab>
-            <Tab disabled={!teamChosen||!nameChosen}>Trainingsablauf</Tab>
+            <Tab disabled={false}>Trainingsablauf</Tab>
           </TabList>
 
           <TabPanel>
             <div className={classes.container}>
-              
-              <FormControl required variant="outlined" className={classes.teamauswahl}>
+              <FormControl
+                required
+                variant="outlined"
+                className={classes.teamauswahl}
+              >
                 <InputLabel id="teamauswahl">Teamauswahl</InputLabel>
                 <Select
                   label="Teamauswahl"
@@ -139,34 +159,34 @@ const TrainingTeammanagement = ( currentUser) => {
                   })}
                 </Select>
               </FormControl>
-              <TextField 
+              <TextField
                 className={classes.name}
-                value={name} 
-                onChange={(event)=>setName(event.target.value)}
+                value={name}
+                onChange={(event) => setName(event.target.value)}
                 label="Name des Trainings"
                 variant="outlined"
                 required
-                >
-              </TextField>
+              ></TextField>
             </div>
-      
-                <TextField
-                  error={false}
-                  className={classes.goal}
-                  required
-                  label="Trainingsziel"
-                  variant="outlined"
-                  value={goal}
-                  onChange={(event)=>setGoal(event.target.value)}
-                />
-        
+
+            <TextField
+              error={false}
+              className={classes.goal}
+              required
+              label="Trainingsziel"
+              variant="outlined"
+              value={goal}
+              onChange={(event) => setGoal(event.target.value)}
+            />
           </TabPanel>
           <TabPanel>
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <div className={classes.divider} />
               </Grid>
-              <Grid item xs={12}></Grid>
+              <Grid item xs={12}>
+                <ExerciseComponent />
+              </Grid>
               <CreateExercise
                 className={classes.exerciseButton}
                 Players={player}
@@ -193,17 +213,17 @@ const styles = makeStyles({
   container: {
     display: "flex",
     marginTop: "40px",
-    justifyContent:"flex-start",
-    marginBottom:"40px"
+    justifyContent: "flex-start",
+    marginBottom: "40px",
   },
   teamauswahl: {
     minWidth: 200,
   },
-  name:{
+  name: {
     marginLeft: "150px",
     minWidth: 300,
   },
-  goal:{
+  goal: {
     width: "90%",
   },
   trainingGoal: {

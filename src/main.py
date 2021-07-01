@@ -546,6 +546,17 @@ class MatchfieldPlayerTransformOperation(Resource):
         return matchfieldPlayers
 
 
+@volleyTrain.route('/exercise/<int:id>/training')
+@volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ExerciseTrainingOperation(Resource):
+
+    @volleyTrain.marshal_list_with(exercise)
+    def get(self, id):
+        adm = volleytrainAdministration()
+        exercises = adm.getExercisesByTrainingId(id)
+        return exercises
+
+
 """ @volleyTrain.route("/team/<int:id>/players")
 class PlayerTeamOperations(Resource):
 
