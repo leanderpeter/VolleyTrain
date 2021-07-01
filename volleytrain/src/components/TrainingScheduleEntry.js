@@ -6,6 +6,8 @@ import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import CreateIcon from "@material-ui/icons/Create";
+import VolleytrainAPI from "../api/VolleytrainAPI";
+import { Link } from "react-router-dom";
 
 class TrainingScheduleEntry extends React.Component {
   constructor(props) {
@@ -16,6 +18,7 @@ class TrainingScheduleEntry extends React.Component {
       trainingDate: null,
       trainingTime: null,
       trainingDatetime: null,
+      team: null
     };
     console.log(this.props.training);
   }
@@ -48,46 +51,61 @@ class TrainingScheduleEntry extends React.Component {
     });
   };
 
+  getTeam = ()=>{
+    VolleytrainAPI.getAPI().getTeamByID(this.state.training.team_id).then(team=>{
+      this.setState({
+        team: team
+      })
+    })
+  }
+
   componentDidMount = () => {
     this.getTrainingDateTime();
+    this.getTeam()
   };
 
   render() {
     const { classes } = this.props;
-    const { training, trainingDate, trainingTime } = this.state;
+    const { training, trainingDate, trainingTime, team } = this.state;
 
     return (
       <div className={classes.root}>
         <Grid container>
           <Grid item xs={10}>
-            <Card className={classes.border} align="center">
-              <CardContent>
-                <Grid container spacing={3}>
-                  <Grid item xs={3} sm={2}>
-                    <Typography align="center">
-                      {trainingDate}
-                      <br />
-                      {trainingTime}
-                    </Typography>
+            <Link to={{
+                      pathname: "/viewTraining",
+                      training: training
+                  }} 
+                  className={classes.link} 
+                  >
+              <Card className={classes.border} align="center">
+                <CardContent>
+                  <Grid container spacing={3}>
+                    <Grid item xs={3} sm={2}>
+                      <Typography align="center">
+                        {trainingDate}
+                        <br />
+                        {trainingTime}
+                      </Typography>
+                    </Grid>
+                    <Divider orientation="vertical" flexItem />
+                    <Grid item xs={3} sm={2}>
+                      <Typography align="center">
+                        {team?team.getName():null}
+                      </Typography>
+                    </Grid>
+                    <Divider orientation="vertical" flexItem />
+                    <Grid item xs={3} sm={2}>
+                      <Typography align="center">{training.getName()}</Typography>
+                    </Grid>
+                    <Divider orientation="vertical" flexItem />
+                    <Grid item xs={3} sm={5}>
+                      <Typography align="center">{training.getGoal()}</Typography>
+                    </Grid>
                   </Grid>
-                  <Divider orientation="vertical" flexItem />
-                  <Grid item xs={3} sm={2}>
-                    <Typography align="center">
-                      {/* {team.getName()} */}
-                      Teamname
-                    </Typography>
-                  </Grid>
-                  <Divider orientation="vertical" flexItem />
-                  <Grid item xs={3} sm={2}>
-                    <Typography align="center">{training.getName()}</Typography>
-                  </Grid>
-                  <Divider orientation="vertical" flexItem />
-                  <Grid item xs={3} sm={5}>
-                    <Typography align="center">{training.getGoal()}</Typography>
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </Link>
           </Grid>
           <Grid item xs={1} align="center">
             <IconButton>
@@ -111,11 +129,14 @@ const styles = (theme) => ({
     width: "100%",
   },
   border: {
-    border: "2px solid #3ECCA5",
+    border: "2px solid #0B3298",
     boxSizing: "border-box",
     boxShadow: "0px 4px 10px rgba(84, 78, 78, 0.2)",
     borderRadius: "9px",
     marginBottom: "15px",
+  },
+  link:{
+    textDecorationLine: 'none',
   },
   divider: {
     backgroundColor: "black",

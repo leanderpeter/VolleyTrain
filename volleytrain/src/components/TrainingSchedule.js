@@ -128,7 +128,7 @@ const styles = (theme) => ({
     fontSize: "21px",
     marginBottom: "20px",
     textDecorationLine: "underline",
-    textDecorationColor: "#3ECCA5",
+    textDecorationColor: "#0B3298",
   },
 });
 

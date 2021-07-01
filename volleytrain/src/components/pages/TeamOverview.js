@@ -183,7 +183,7 @@ const styles = (theme) => ({
     textDecoration: "None",
   },
   border: {
-    border: "2px solid #BFCE0D",
+    border: "2px solid #0B3298",
     boxSizing: "border-box",
     alignItems: "center",
     display: "flex",
@@ -197,7 +197,7 @@ const styles = (theme) => ({
   },
   papes: {
     background:
-      "linear-gradient(80.45deg, #071168 -35.38%, #1F9F80 -9.15%, #BFCE0D 114.78%)",
+      "linear-gradient(269.97deg, #0B3298 14.96%, #071168 178.28%)",
     borderRadius: "9px",
     display: "flex",
     color: "#ffffff",
