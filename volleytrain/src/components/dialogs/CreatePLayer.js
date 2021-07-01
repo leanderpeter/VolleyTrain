@@ -1,17 +1,10 @@
-import React, { Component } from 'react';
+import { withStyles, Button, Dialog, DialogTitle, DialogContent, Divider, Box, FormControl, InputLabel, Typography, Grid, TextField, Select, MenuItem } from '@material-ui/core';
+import React from 'react';
 import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined';
 import SaveAltIcon from '@material-ui/icons/SaveAlt';
 import AddIcon from '@material-ui/icons/Add';
 import VolleytrainAPI from '../../api/VolleytrainAPI';
-import PropTypes from 'prop-types';
 import PlayerBO from '../../api/PlayerBO';
-import { withStyles, Button, IconButton, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TextField } from '@material-ui/core';
-import { MenuItem, FormControl, InputLabel, Select, Typography, Grid, Box} from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
-import ContextErrorMessage from './ContextErrorMessage';
-import LoadingProgress from './LoadingProgress';
-import firebase from 'firebase/app';
-import 'firebase/auth';
 
 class CreatePlayer extends React.Component{
 
@@ -24,18 +17,25 @@ class CreatePlayer extends React.Component{
             team_PK_team: "",
             role: "",
             t_number: "",
+            createButtonDisabled: false,
         };
+    }
+
+    handleChange = (e) => {
+        this.setState({
+            playername: e.target.value,
+        })
     }
 
     createPlayer = () => {
 
         let newplayer = new PlayerBO;
         newplayer.setID(1);
-        newplayer.setsurname(this.state.playersurname);
-        newplayer.setname(this.state.playername);
+        newplayer.setSurname(this.state.playersurname);
+        newplayer.setName(this.state.playername);
         newplayer.setTeamId(this.state.team_PK_team)
-        newplayer.setrole(this.state.playerrole);
-        newplayer.sett_number(this.state.playert_number);
+        newplayer.setRole(this.state.playerrole);
+        newplayer.setT_number(this.state.playert_number);
         VolleytrainAPI.getAPI().addPlayer(newplayer);
     }
 
@@ -44,13 +44,14 @@ class CreatePlayer extends React.Component{
     }
 
     render() {
-        const {classes, dialogOpen, onClose } = this.props;
-        const { createButtonDisabled} = this.state;
-
+        const { classes, dialogOpen, onClose } = this.props;
+        const { surname, name, teamid, role, t_number} = this.state;
+    
+        let title = 'Neuen Spieler erstellen';
 
         return(
             <div>
-                <Dialog className={classes.root} open={dialogOpen} onClose={onClose}>
+                <Dialog className={classes.root} open={dialogOpen} onClose={onClose} fullWidth={true} >
                     
                     <DialogTitle>
                     <Grid container>
@@ -58,37 +59,83 @@ class CreatePlayer extends React.Component{
                         <Button className={classes.border} onClick={onClose}><ArrowBackOutlinedIcon /></Button>
                         </Grid>
                         <Grid item xs={8}>
-                        <Typography color="primary">Neuen Spieler hinzufügen</Typography>
+                        <Typography color="primary">Neuen Spieler anlegen</Typography>
                         </Grid>
-                        </Grid>
+                        {console.log( surname, name, role, t_number)}
+                    </Grid>
                     </DialogTitle>
-                    <DialogContent>
                         <Grid container spacing={2}>
-                            <Grid item xs={3}>
+                        <Grid item xs={12} />
+                            <Grid item xs={2}>
                                 <Typography color="primary">Name:</Typography>
                             </Grid>
                             <Grid className={classes.border} item xs={9}>
                                 <TextField color="primary" onChange={this.handleChange} fullWidth/>
                             </Grid>
-                            {createButtonDisabled ? 
-                            <Grid item xs={6}> 
-                                <Button color="extra" variant="outlined" onClick={this.saveTrainingday}><SaveAltIcon />Spieler speichern</Button>
+                         </Grid>
+                         <Grid container spacing={2}>
+                            <Grid item xs={2}>
+                                <Typography color="primary">Nachname:</Typography>
                             </Grid>
-                            :
-                            <Grid item xs={6}> 
-                                <Button color="extra" variant="outlined" onClick={this.handleTrainingTime}><AddIcon />Spieler hinzufügen</Button>
+                            <Grid className={classes.border} item xs={9}>
+                                <TextField color="primary" onChange={this.handleChange} fullWidth/>
                             </Grid>
-                            }
-                            <Grid item xs={6}>
-                                <Button disabled={createButtonDisabled} className={classes.button} fullWidth onClick={this.createTeam}>Spieler erstellen</Button>
+                         </Grid>
+                         <Grid container spacing={2}>
+                            <Grid item xs={2}>
+                                <Typography color="primary">Rolle:</Typography>
                             </Grid>
-                            <Grid item xs={6}>
-                                <Button color="extra" variant="outlined" onClick={this.handleTrainingTime}><AddIcon />Spieler löschen</Button>
+                            <Grid className={classes.border} item xs={9}>
+                                <TextField color="primary" onChange={this.handleChange} fullWidth/>
+                            </Grid>
+                         </Grid>
+                         <Grid container spacing={2}>
+                            <Grid item xs={2}>
+                                <Typography color="primary">Trikot-Nummer:</Typography>
+                            </Grid>
+                            <Grid className={classes.border} item xs={9}>
+                                <TextField color="primary" onChange={this.handleChange} fullWidth/>
                             </Grid>
                         </Grid>
-                    </DialogContent>
+                        <Button onClick={this.handleClose} color='primary'>       
+                        Speichern
+                        </Button>
+                        <Button onClick={this.handleClose} color='secondary'>
+                        Abbrechen
+                        </Button>
                 </Dialog>
             </div>
-        )
+        );
     }
 }
+
+const styles = (theme) => ({
+    root: {
+      margin: theme.spacing(2),
+      width: "100%",
+    },
+    backButton: {
+      borderRadius: "500px",
+    },
+    border: {
+      border: "1px solid #0B3298",
+      boxSizing: "border-box",
+      boxShadow: "0px 4px 10px rgba(84, 78, 78, 0.2)",
+      borderRadius: "9px",
+      marginBottom: "15px",
+      background: "#fcfcfc",
+    },
+    button: {
+      color: "#ffffff",
+      background: "linear-gradient(90.46deg, #FFD542 12.09%, #FFB676 104.14%)",
+      borderRadius: "9px",
+      fontWeight: "bold",
+      fontVariant: "normal",
+    },
+    error: {
+      color: "red",
+      fontSize: "12px",
+    },
+  });
+
+export default withStyles(styles)(CreatePlayer);

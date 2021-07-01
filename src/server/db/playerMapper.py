@@ -22,14 +22,14 @@ class PlayerMapper(Mapper):
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        for (id, surname, name, teamId, role, t_number) in tuples:
+        for (id, surname, name, teamid, role, t_number) in tuples:
             player = Player()
             player.set_id(id)
             player.set_name(name)
             player.set_surname(surname)
-            player.setTeamId(teamId)
-            player.setRole(role)
-            player.setT_number(t_number)
+            player.set_teamid(teamid)
+            player.set_role(role)
+            player.set_t_number(t_number)
 
             result.append(player)
 
@@ -49,16 +49,21 @@ class PlayerMapper(Mapper):
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        for (id, surname, name, teamId, role, t_number) in tuples:
-            player = Player()
-            player.set_id(id)
-            player.set_name(name)
-            player.set_surname(surname)
-            player.setTeamId(teamId)
-            player.setRole(role)
-            player.setT_number(t_number)
+        if len(tuples) != 0:
 
-            result.append(player)
+            for (id, surname, name, teamid, role, t_number) in tuples:
+                player = Player()
+                player.set_id(id)
+                player.set_name(name)
+                player.set_surname(surname)
+                player.set_teamid(teamid)
+                player.set_role(role)
+                player.set_t_number(t_number)
+
+                result.append(player)
+
+        else:
+            result = None
 
         self._connection.commit()
         cursor.close()
@@ -74,14 +79,14 @@ class PlayerMapper(Mapper):
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        for (id, surname, name, teamId, role, t_number) in tuples:
+        for (id, surname, name, teamid, role, t_number) in tuples:
             player = Player()
             player.set_id(id)
             player.set_name(name)
             player.set_surname(surname)
-            player.setTeamId(teamId)
-            player.setRole(role)
-            player.setT_number(t_number)
+            player.set_teamid(teamid)
+            player.set_role(role)
+            player.set_t_number(t_number)
 
             result.append(player)
 
@@ -112,8 +117,8 @@ class PlayerMapper(Mapper):
 
         command = "INSERT INTO player (PK_Player, surname, name, Team_PK_Team, role, t_number) " \
                   "VALUES (%s,%s,%s,%s,%s,%s)"
-        data = (player.get_id(), player.get_surname(), player.get_name(), player.getTeamId(),
-                player.getRole(), player.getT_number())
+        data = (player.get_id(), player.get_surname(), player.get_name(), player.get_teamid(),
+                player.get_role(), player.get_t_number())
         cursor.execute(command, data)
 
         self._connection.commit()
@@ -122,30 +127,28 @@ class PlayerMapper(Mapper):
         return player
 
     def update(self, player):
-        """Überschreiben / Aktualisieren eines player-Objekts in der DB
-        :param player -> player-Objekt
-        :return aktualisiertes player-Objekt
+        """Überschreiben / Aktualisieren eines Player-Objekts in der DB
+
+        :return aktualisiertes team-Objekt
         """
         cursor = self._connection.cursor()
 
-        command = "UPDATE player" + \
-            "SET surname=%s, name=%s, Team_PK_Team=%s, role=%s, t_number=%s WHERE PK_Player=%s"
-        data = (player.get_surname(), player.get_name(), player.getTeamId(),
-                player.getRole(), player.getT_number(), player.get_id())
+        command = "UPDATE player SET surname=%s, SET name=%s, SET Team_PK_Team=%s, " \
+            "role=%s, t_number=%s WHERE PK_Player=%s" \
+            .format(player.get_id(), player.get_surname(), player.get_name(), player.get_teamid(), player.get_role(),
+                    player.get_t_number())
 
         cursor.execute(command, data)
 
         self._connection.commit()
         cursor.close()
 
-        return player
-
     def update_by_id(self, player):
         pass
 
     def delete(self, player):
-        """Löschen der Daten einer player aus der Datenbank
-        :param player -> player-Objekt
+        """Löschen der Daten eines Player aus der Datenbank
+
         """
         cursor = self._connection.cursor()
 
@@ -155,5 +158,29 @@ class PlayerMapper(Mapper):
 
         self._connection.commit()
         cursor.close()
-
         return player
+
+
+'''Only for testing purpose'''
+
+"""
+if (__name__ == "__main__"):
+    with PlayerMapper() as mapper:
+        result = mapper.find_all()
+        for user in result:
+            print(user)
+"""
+"""
+if (__name__ == "__main__"):
+    with PlayerMapper() as mapper:
+        user = mapper.find_by_id(1)
+        for i in user:
+            print(i.getName())
+"""
+"""
+if (__name__ == "__main__"):
+    with PlayerMapper() as mapper:
+        user = mapper.find_by_id(8)
+        for i in user:
+            mapper.delete(i)
+"""
