@@ -27,7 +27,7 @@ import TrainingBO from "../../api/TrainingBO";
  *
  */
 
-const TrainingTeammanagement = () => {
+const TrainingTeammanagement = ( currentUser) => {
   // init styling
   const classes = styles();
 
@@ -46,21 +46,19 @@ const TrainingTeammanagement = () => {
   const [player, setPlayer] = useState([]);
 
   // init Trainingsablauf state
-  const [teamChosen, setChosenTeam] = useState(true);
+  const [teamChosen, setChosenTeam] = useState(false);
 
+  // init teams state
+  const [name, setName] = useState(null);
+
+  // init teams state
+  const [goal, setGoal] = useState(null);
+
+  // init nameChosen state
+  const [nameChosen, setChosenName] = useState(false);
+  
   // init Training state
   const [training, setTraining] = useState(null);
-
-  var MOCKUPTRAINING = new TrainingBO();
-  MOCKUPTRAINING.setID(1);
-  MOCKUPTRAINING.setDatetime("");
-  MOCKUPTRAINING.setName("Grossen Training");
-  MOCKUPTRAINING.setGoal("Viel erreichen");
-  if (!(team == null)) {
-    MOCKUPTRAINING.setTeamId(team.id);
-  }
-  MOCKUPTRAINING.setUserId(1);
-  MOCKUPTRAINING.setVisibility(1);
 
   const getTeams = () => {
     VolleytrainAPI.getAPI()
@@ -90,13 +88,27 @@ const TrainingTeammanagement = () => {
       });
   };
 
+  const createTraining = ()=>{
+    var training = new TrainingBO();
+    training.setName(name);
+    training.setTeamId(team.id);
+    training.setUserId(currentUser["currentUser"].getID());
+    training.setVisibility(1);
+  }
+
   //call function when team is changed
   useLayoutEffect(() => {
     if (!(team == null)) {
       getPlayersForTeam(team.id);
-      setChosenTeam(false);
+      setChosenTeam(true);
     }
-  }, [, team]);
+    if (!(name == null)) {
+      setChosenName(true);
+    }
+    if (!(name == null && team == null)) {
+      createTraining()
+    }
+  }, [, team, name]);
 
   //call function when render
   useLayoutEffect(() => {
@@ -109,12 +121,13 @@ const TrainingTeammanagement = () => {
         <Tabs>
           <TabList>
             <Tab>Teammanagement</Tab>
-            <Tab disabled={teamChosen}>Trainingsablauf</Tab>
+            <Tab disabled={!teamChosen||!nameChosen}>Trainingsablauf</Tab>
           </TabList>
 
           <TabPanel>
-            <div className={classes.selectContainer}>
-              <FormControl variant="outlined" className={classes.teamauswahl}>
+            <div className={classes.container}>
+              
+              <FormControl required variant="outlined" className={classes.teamauswahl}>
                 <InputLabel id="teamauswahl">Teamauswahl</InputLabel>
                 <Select
                   label="Teamauswahl"
@@ -126,29 +139,30 @@ const TrainingTeammanagement = () => {
                   })}
                 </Select>
               </FormControl>
+              <TextField 
+                className={classes.name}
+                value={name} 
+                onChange={(event)=>setName(event.target.value)}
+                label="Name des Trainings"
+                variant="outlined"
+                required
+                >
+              </TextField>
             </div>
+      
+                <TextField
+                  error={false}
+                  className={classes.goal}
+                  required
+                  label="Trainingsziel"
+                  variant="outlined"
+                  value={goal}
+                  onChange={(event)=>setGoal(event.target.value)}
+                />
+        
           </TabPanel>
           <TabPanel>
             <Grid container spacing={3}>
-              <Grid item xs={6}>
-                <Typography
-                  variant="h5"
-                  component="h2"
-                  className={classes.trainingGoal}
-                >
-                  Trainingsziel:
-                </Typography>
-                <TextField
-                  error={false}
-                  required
-                  id="outlined-required"
-                  placeholder="Neues Ziel..."
-                  variant="outlined"
-                  fullWidth
-                  onChange={(name) => {}}
-                />
-              </Grid>
-
               <Grid item xs={12}>
                 <div className={classes.divider} />
               </Grid>
@@ -156,7 +170,7 @@ const TrainingTeammanagement = () => {
               <CreateExercise
                 className={classes.exerciseButton}
                 Players={player}
-                Training={MOCKUPTRAINING}
+                Training={training}
               />
             </Grid>
           </TabPanel>
@@ -176,12 +190,21 @@ const styles = makeStyles({
     fontSize: "21px",
     color: "black",
   },
-  selectContainer: {
+  container: {
     display: "flex",
     marginTop: "40px",
+    justifyContent:"flex-start",
+    marginBottom:"40px"
   },
   teamauswahl: {
-    minWidth: 250,
+    minWidth: 200,
+  },
+  name:{
+    marginLeft: "150px",
+    minWidth: 300,
+  },
+  goal:{
+    width: "90%",
   },
   trainingGoal: {
     marginTop: 10,
