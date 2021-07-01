@@ -22,6 +22,10 @@ import DeleteTeam from "../dialogs/DeleteTeam";
 import UpdateTeam from "../dialogs/UpdateTeam";
 import VolleytrainAPI from "../../api/VolleytrainAPI";
 import TrainingSchedule from "../TrainingSchedule";
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import PlayerOverview from './PlayerOverview';
+import CreatePLayer from "../dialogs/CreatePLayer";
+import AddIcon from '@material-ui/icons/Add'
 import PlayerBO from "../../api/PlayerBO";
 
 class Team extends Component {
@@ -34,6 +38,8 @@ class Team extends Component {
       deleteDialogOpen: false,
       updateDialogOpen: false,
       trainingdays: [],
+      player: [],
+      openNewPlayer: false
     };
   }
 
@@ -88,6 +94,25 @@ class Team extends Component {
     );
   };
 
+  getPlayersForTeam = () => {
+    VolleytrainAPI.getAPI()
+      .getPlayerByTeam(this.state.team.getID())
+      .then((playerBOs) =>
+        this.setState({
+          player: playerBOs,
+          error: null,
+          loadingInProgress: false,
+        })
+      )
+      .catch((e) =>
+        this.setState({
+          player: [],
+          error: e,
+          loadingInProgress: false,
+        })
+        )      
+    }
+    
   updateTeam = (team) => {
     VolleytrainAPI.getAPI().updateTeam(team);
   };
@@ -135,17 +160,29 @@ class Team extends Component {
     console.log(starttime.getTime());
   };
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.getTrainingdays();
-  }
+    this.getPlayersForTeam()
+  };
+
+  openNewPlayer=()=>{
+    this.setState({
+      openNewPlayer: !this.state.openNewPlayer
+    })
+  };
 
   render() {
     const { classes } = this.props;
-    const { team, deleteDialogOpen, updateDialogOpen, trainingdays } =
-      this.state;
+    const { team, dialogOpen, trainingdays, player,deleteDialogOpen, updateDialogOpen, openNewPlayer } = this.state;
 
     return (
       <div className={classes.root}>
+        <Tabs>
+        <TabList>
+            <Tab>Übersicht</Tab>
+            <Tab>Spieler</Tab>
+          </TabList>
+        <TabPanel>
         <Grid
           spacing={3}
           container
@@ -202,6 +239,44 @@ class Team extends Component {
           updateTrainingday={this.updateTrainingday}
           onClose={this.handleUpdateClose}
         />
+        </TabPanel>
+        <TabPanel>
+        <Button onClick={this.openNewPlayer} ><AddIcon/></Button>
+        <Grid item xs={10}>
+            {player.map((playerBOs) => (
+              <Card className={classes.border}>
+              <CardContent>
+                <Grid container> 
+                  <Grid key={playerBOs.getID()} item xs={2}>
+                    <Typography>
+                      <b>{playerBOs.getSurname()}</b>
+                    </Typography>
+                  </Grid>
+                  <Divider orientation="vertical" flexItem/>
+                  <Grid key={playerBOs.getID()} item xs={2}>
+                    <Typography>
+                      <b>{playerBOs.getName()}</b>
+                    </Typography>
+                  </Grid>
+                  <Divider orientation="vertical" flexItem/>
+                  <Grid key={playerBOs.getID()} item xs={2}>
+                    <Typography>
+                      <b>{playerBOs.getT_number()}</b>
+                    </Typography>  
+                  </Grid>
+                  <Divider orientation="vertical" flexItem/>
+                  <Grid key={playerBOs.getID()} item xs={2}>
+                    <Typography>
+                      <b>{playerBOs.getRole()}</b>
+                    </Typography>  
+                  </Grid>
+                </Grid>
+              </CardContent>
+              </Card>))}
+            </Grid>
+        </TabPanel>
+        </Tabs>
+        <CreatePLayer dialogOpen={openNewPlayer} onClose={this.openNewPlayer} />
       </div>
     );
   }
