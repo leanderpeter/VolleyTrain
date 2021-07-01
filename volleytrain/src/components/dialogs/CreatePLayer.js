@@ -80,12 +80,20 @@ class CreatePlayer extends React.Component{
                                 <TextField color="primary" onChange={this.handleChange} fullWidth/>
                             </Grid>
                          </Grid>
+                         <Grid container spacing={2}>
+                            <Grid item xs={3}>
+                                <Typography color="primary">Trikot-Nummer:</Typography>
+                            </Grid>
+                            <Grid className={classes.border} item xs={9}>
+                                <TextField color="primary" onChange={this.handleChange} fullWidth/>
+                            </Grid>
+                         </Grid>
                         <Typography variant="h6">Rolle</Typography>
                             <FormControl className={classes.formControl}>
-                                <InputLabel required id="open-select-label">Bitte Rolle auswählen</InputLabel>
+                                <InputLabel required id="open-select-label">Entsprechende Rolle auswählen</InputLabel>
                                 <Select
                                 value={role}
-                                onChange={this.handleChange2}
+                                onChange={this.handleChange3}
                                 >
                                 <MenuItem value={1}>Zuspieler</MenuItem>
                                 <MenuItem value={2}>Mittelblocker</MenuItem>
@@ -94,14 +102,9 @@ class CreatePlayer extends React.Component{
                                 <MenuItem value={5}>Außenspieler</MenuItem>
                                 </Select>
                             </FormControl>
-                            <Box p={1}></Box>
-
-                             <TextField type='text' fullWidth margin='normal' id='teamId' label='Team_Id:' value={teamId} 
-                                onChange={this.textFieldValueChange} />
-
-                            <TextField type='text' fullWidth margin='normal' id='t_number' label='Trikot-Nummer:' value={t_number}
-                                onChange={this.textFieldValueChange} />
-
+                            <Button onClick={this.handleClose} color='primary'>       
+                            Speichern
+                            </Button>
                         <Button onClick={this.handleClose} color='secondary'>
                         Abbrechen
                         </Button>

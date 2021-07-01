@@ -101,7 +101,7 @@ class Team extends Component {
 
   render() {
     const { classes } = this.props;
-    const { team, dialogOpen, trainingdays, player,openNewPlayer } = this.state;
+    const { team, dialogOpen, trainingdays, player, openNewPlayer } = this.state;
 
     return (
       <div className={classes.root}>
