@@ -88,7 +88,7 @@ export default function Header(props) {
             <ListItemIcon style={{ color: "white" }}>
               <MenuBookIcon />
             </ListItemIcon>
-            Übungsverwaltung
+            Übungen
           </ListItem>
           <ListItem button component={Link} to={"/teamoverview"}>
             <ListItemIcon style={{ color: "white" }}>

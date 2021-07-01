@@ -409,7 +409,7 @@ const styles = (theme) => ({
     borderRadius: "500px",
   },
   border: {
-    border: "1px solid #3ECCA5",
+    border: "1px solid #0B3298",
     boxSizing: "border-box",
     boxShadow: "0px 4px 10px rgba(84, 78, 78, 0.2)",
     borderRadius: "9px",

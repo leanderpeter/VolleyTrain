@@ -292,7 +292,7 @@ const styles = (theme) => ({
   },
   border: {
     margin: theme.spacing(2),
-    border: "2px solid #BFCE0D",
+    border: "2px solid #0B3298",
     boxSizing: "border-box",
     alignItems: "center",
     textAlign: "left",

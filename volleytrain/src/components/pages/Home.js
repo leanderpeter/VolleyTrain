@@ -40,8 +40,8 @@ class Home extends Component {
               color="secondary"
             >
               <Button>
-                Trainingsplan erstellen
-                <FitnessCenterIcon />
+              <Typography style={{ color: "white" }}>Trainiingsplan erstellen</Typography>
+                <FitnessCenterIcon style={{ color: "white" }}/>
               </Button>
             </Paper>
           </Grid>
@@ -52,8 +52,8 @@ class Home extends Component {
               color="secondary"
             >
               <Button>
-                Trainingspläne
-                <AvTimerIcon />
+              <Typography style={{ color: "white" }}>Trainingspläne</Typography>
+                <AvTimerIcon style={{ color: "white" }}/>
               </Button>
             </Paper>
           </Grid>
@@ -64,8 +64,8 @@ class Home extends Component {
               color="secondary"
             >
               <Button>
-                Übungsverwaltung
-                <MenuBookIcon />
+              <Typography style={{ color: "white" }}>Übungen</Typography>
+                <MenuBookIcon style={{ color: "white" }}/>
               </Button>
             </Paper>
           </Grid>
@@ -76,8 +76,8 @@ class Home extends Component {
               color="secondary"
             >
               <Button>
-                Team
-                <GroupIcon />
+                <Typography style={{ color: "white" }}>Team</Typography>
+                <GroupIcon style={{ color: "white" }}/>
               </Button>
             </Paper>
           </Grid>
@@ -100,13 +100,13 @@ const styles = (theme) => ({
     textDecoration: "None",
   },
   border: {
-    boxSizing: "border-box",
-    alignItems: "center",
-    textAlign: "center",
-    boxShadow: "0px 4px 10px rgba(84, 78, 78, 0.2)",
-    borderRadius: "9px",
     background:
-      "linear-gradient(80.45deg, #071168 -35.38%, #1F9F80 -9.15%, #BFCE0D 114.78%)",
+      "linear-gradient(269.97deg, #0B3298 14.96%, #071168 178.28%)",
+    borderRadius: "9px",
+    display: "flex",
+    color: "#fcfcfc",
+    paddingLeft: theme.spacing(2),
+    alignItems: "center",
     width: theme.spacing(26),
     height: theme.spacing(18),
   },
@@ -116,7 +116,7 @@ const styles = (theme) => ({
     borderRadius: "9px",
     fontWeight: "bold",
     fontVariant: "normal",
-    color: "#ffffff",
+    color: "#FFFFFF",
     alignItems: "center",
     textAlign: "center",
     width: theme.spacing(26),

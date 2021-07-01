@@ -129,7 +129,7 @@ const styles = (theme) => ({
     width: "100%",
   },
   border: {
-    border: "2px solid #3ECCA5",
+    border: "2px solid #0B3298",
     boxSizing: "border-box",
     boxShadow: "0px 4px 10px rgba(84, 78, 78, 0.2)",
     borderRadius: "9px",
