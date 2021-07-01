@@ -88,6 +88,7 @@ exercise = api.inherit('exercise', nbo, {
     'training': fields.Integer(attribute='_training', description='training of exercise'),
     'goal': fields.String(attribute='_goal', description='goal of exercise'),
     'description': fields.String(attribute='_description', description='description of exercise'),
+    'rating': fields.Integer(attribute='_rating', description='Rating of exercise'),
 })
 
 
@@ -516,6 +517,18 @@ class MatchfieldPlayerTransformOperation(Resource):
         adm = volleytrainAdministration()
         matchfieldPlayers = adm.deletePlayerPosByMatchfieldId(tmp)
         return matchfieldPlayers
+
+
+@volleyTrain.route("/team/<int:id>/players")
+class PlayerTeamOperations(Resource):
+
+    @volleyTrain.marshal_list_with(player, code=200)
+    # @secured
+    def get(self, id):
+        """get all Player for specific team ID"""
+        adm = volleytrainAdministration()
+        players = adm.getPlayerByTeamId(id)
+        return players, 200
 
 
 if __name__ == '__main__':

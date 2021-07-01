@@ -17,12 +17,12 @@ class ExerciseMapper(Mapper):
 
         cursor = self._connection.cursor()
 
-        command = "SELECT PK_Exercise, name, Training_PK_Training, duration, notes, description, goal FROM exercise"
+        command = "SELECT PK_Exercise, name, Training_PK_Training, duration, notes, description, goal, rating FROM exercise"
 
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        for (id, name, training, duration, notes, description, goal) in tuples:
+        for (id, name, training, duration, notes, description, goal, rating) in tuples:
             exercise = Exercise()
             exercise.set_id(id)
             exercise.set_name(name)
@@ -31,6 +31,7 @@ class ExerciseMapper(Mapper):
             exercise.setNotes(notes)
             exercise.setDescription(description)
             exercise.setGoal(goal)
+            exercise.set_rating(rating)
 
             result.append(exercise)
 
@@ -51,13 +52,13 @@ class ExerciseMapper(Mapper):
         """
         result = None
         cursor = self._connection.cursor()
-        command = "SELECT PK_Exercise, name, Training_PK_Training, duration, notes, description, goal FROM exercise WHERE PK_Exercise={}".format(
+        command = "SELECT PK_Exercise, name, Training_PK_Training, duration, notes, description, goal, rating FROM exercise WHERE PK_Exercise={}".format(
             id)
         cursor.execute(command)
         tuples = cursor.fetchall()
         try:
             (id, name, training, duration, notes,
-             description, goal) = tuples[0]
+             description, goal, rating) = tuples[0]
             exercise = Exercise()
             exercise.set_id(id)
             exercise.set_name(name)
@@ -66,6 +67,7 @@ class ExerciseMapper(Mapper):
             exercise.setNotes(notes)
             exercise.setDescription(description)
             exercise.setGoal(goal)
+            exercise.set_rating(rating)
 
             result = exercise
 
@@ -100,9 +102,9 @@ class ExerciseMapper(Mapper):
                 davon aus, dass die Tabelle leer ist und wir mit der ID 1 beginnen können."""
                 exercise.set_id(1)
 
-        command = "INSERT INTO exercise (PK_Exercise, name, Training_PK_Training, duration, notes, description, goal) VALUES (%s,%s,%s,%s,%s,%s,%s)"
+        command = "INSERT INTO exercise (PK_Exercise, name, Training_PK_Training, duration, notes, description, goal, rating) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"
         data = (exercise.get_id(),  exercise.get_name(), exercise.getTraining(
-        ), exercise.getDuration(), exercise.getNotes(), exercise.getDescription(), exercise.getGoal())
+        ), exercise.getDuration(), exercise.getNotes(), exercise.getDescription(), exercise.getGoal(), exercise.get_rating())
         cursor.execute(command, data)
 
         self._connection.commit()
@@ -119,9 +121,10 @@ class ExerciseMapper(Mapper):
         cursor = self._connection.cursor()
 
         command = "UPDATE exercise set " + \
-            "name=%s, duration=%s, notes=%s, description=%s, goal=%s WHERE PK_Exercise=%s"
+            "name=%s, duration=%s, notes=%s, description=%s, goal=%s , rating=%s WHERE PK_Exercise=%s"
+
         data = (exercise.get_name(), exercise.getDuration(), exercise.getNotes(
-        ), exercise.getDescription(), exercise.getGoal(), exercise.get_id())
+        ), exercise.getDescription(), exercise.getGoal(), exercise.get_rating(), exercise.get_id())
 
         cursor.execute(command, data)
 

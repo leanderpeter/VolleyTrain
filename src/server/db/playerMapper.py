@@ -74,7 +74,8 @@ class PlayerMapper(Mapper):
 
         result = []
         cursor = self._connection.cursor()
-        command = "SELECT * FROM player WHERE teamId like '{}'".format(teamId)
+        command = "SELECT * FROM player WHERE Team_PK_Team like '{}'".format(
+            teamId)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
