@@ -29,6 +29,7 @@ class Team extends Component {
 
     this.state = {
       team: this.props.location.state.team,
+      teamid: this.props.location.state.team.id,
       deleteDialogOpen: false,
       updateDialogOpen: false,
       trainingdays: [],
@@ -51,6 +52,8 @@ class Team extends Component {
     this.setState({
       updateDialogOpen: false,
     });
+    this.getTeam();
+    this.getTrainingdays();
   };
 
   handleUpdateClick = () => {
@@ -68,18 +71,34 @@ class Team extends Component {
           player.setID(playerBO.getID());
           player.setName(playerBO.getName());
           player.setSurname(playerBO.getSurname());
-          player.setTeamId(2);
+          player.setTeamId(1);
           player.setRole(playerBO.getRole());
           player.setT_number(playerBO.getT_number());
           VolleytrainAPI.getAPI().updatePlayer(player);
         });
       });
-    VolleytrainAPI.getAPI().deleteTeam(this.state.team.getID());
+    VolleytrainAPI.getAPI().deleteTeam(this.state.teamid);
   };
 
-  updateTeam = (team) => {};
+  updateTeam = (team) => {
+    VolleytrainAPI.getAPI().updateTeam(team);
+  };
 
-  updateTrainingday = (trainingday) => {};
+  updateTrainingday = (trainingday) => {
+    trainingday.getID() === 1
+      ? VolleytrainAPI.getAPI().addTrainingday(trainingday)
+      : VolleytrainAPI.getAPI().updateTrainingday(trainingday);
+  };
+
+  getTeam = () => {
+    VolleytrainAPI.getAPI()
+      .getTeamByID(this.state.teamid)
+      .then((teamBO) =>
+        this.setState({
+          team: teamBO,
+        })
+      );
+  };
 
   getTrainingdays = () => {
     VolleytrainAPI.getAPI()
@@ -160,6 +179,7 @@ class Team extends Component {
           team={team}
           trainingdays={trainingdays}
           updateTeam={this.updateTeam}
+          updateTrainingday={this.updateTrainingday}
           onClose={this.handleUpdateClose}
         />
       </div>

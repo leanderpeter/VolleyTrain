@@ -15,13 +15,15 @@ import React from "react";
 import ArrowBackOutlinedIcon from "@material-ui/icons/ArrowBackOutlined";
 import AddIcon from "@material-ui/icons/Add";
 import CheckIcon from "@material-ui/icons/Check";
+import TeamBO from "../../api/TeamBO";
+import TrainingdayBO from "../../api/TrainingdayBO";
 
 class UpdateTeam extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      teamname: "",
+      teamname: this.props.team.getName(),
       timeDisabled: true,
       teamDisabled: false,
       teamnameError: false,
@@ -38,6 +40,7 @@ class UpdateTeam extends React.Component {
       weekday: "",
       starttime: "",
       endtime: "",
+      trainingdayBO: null,
     };
   }
 
@@ -48,6 +51,7 @@ class UpdateTeam extends React.Component {
       teamDisabled: false,
       teamnameError: false,
       trainingday: 1,
+      trainingdayId: null,
       weekday: "",
       starttime: "",
       endtime: "",
@@ -62,18 +66,23 @@ class UpdateTeam extends React.Component {
 
   handleSelectChange = (e) => {
     this.setState({
-      weekday: e.target.value,
+      trainingdayBO: e.target.value,
+      weekday: e.target.value.weekday,
       starttime: e.target.value.starttime,
       endtime: e.target.value.endtime,
     });
   };
 
   handleStarttimeChange = (e) => {
-    this.setState({});
+    this.setState({ starttime: e.target.value });
+  };
+
+  handleDayChange = (e) => {
+    this.setState({ weekday: e.target.value });
   };
 
   handleEndtimeChange = (e) => {
-    this.setState({});
+    this.setState({ endtime: e.target.value });
   };
 
   handleDeleteTime = () => {
@@ -90,18 +99,36 @@ class UpdateTeam extends React.Component {
     });
   };
 
-  createTrainingday = () => {
+  updateTrainingday = () => {
     if (
-      this.state.weekday != "" &&
-      this.state.starttime != "" &&
-      this.state.endtime != ""
+      this.state.weekday !== "" &&
+      this.state.starttime !== "" &&
+      this.state.endtime !== "" &&
+      this.state.trainingdayBO === null
     ) {
-      this.props.saveTrainingday(
-        this.state.weekday,
-        this.state.starttime,
-        this.state.endtime
-      );
-      this.handleDeleteTime();
+      let trainingday = new TrainingdayBO();
+      trainingday.setID(1);
+      trainingday.setWeekday(this.state.weekday);
+      trainingday.setStarttime(this.state.starttime);
+      trainingday.setEndtime(this.state.endtime);
+      trainingday.setTeam(this.props.team.getID());
+      this.props.updateTrainingday(trainingday);
+    } else if (
+      this.state.weekday !== "" &&
+      this.state.starttime !== "" &&
+      this.state.endtime !== "" &&
+      this.state.trainingdayBO !== null
+    ) {
+      let trainingday = new TrainingdayBO();
+      trainingday.setID(this.state.trainingdayBO.id);
+      trainingday.setCreationDate(this.state.trainingdayBO.creation_date);
+      trainingday.setWeekday(this.state.weekday);
+      trainingday.setStarttime(this.state.starttime);
+      trainingday.setEndtime(this.state.endtime);
+      trainingday.setTeam(this.props.team.getID());
+      console.log(trainingday);
+      this.props.updateTrainingday(trainingday);
+      //this.handleDeleteTime();
 
       let daycount = this.state.trainingday + 1;
       this.setState({ timeError: false, trainingday: daycount });
@@ -110,15 +137,24 @@ class UpdateTeam extends React.Component {
     }
   };
 
-  createTeam = () => {
+  updateTeam = () => {
     if (this.state.teamDisabled) {
-      this.createTrainingday();
-    } else if (this.state.teamname != "" && this.state.teamDisabled === false) {
-      this.props.createTeam(this.state.teamname);
-      if (this.state.weekday != "") {
+      this.updateTrainingday();
+    } else if (
+      this.state.teamname !== "" &&
+      this.state.teamDisabled === false
+    ) {
+      let team = new TeamBO();
+      team.setID(this.props.team.getID());
+      team.setCreationDate(this.props.team.getCreationDate());
+      team.setName(this.state.teamname);
+      team.setTrainer(this.props.team.getTrainer());
+      console.log(team);
+      this.props.updateTeam(team);
+      if (this.state.weekday !== "") {
         setTimeout(() => {
-          this.createTrainingday();
-        }, 10);
+          this.updateTrainingday();
+        }, 1000);
       }
 
       this.setState({
@@ -134,8 +170,7 @@ class UpdateTeam extends React.Component {
   };
 
   render() {
-    const { classes, updateDialogOpen, onClose, team, trainingdays } =
-      this.props;
+    const { classes, updateDialogOpen, onClose, trainingdays } = this.props;
     const {
       teamname,
       teamDisabled,
@@ -166,7 +201,7 @@ class UpdateTeam extends React.Component {
               </Grid>
               <Grid item xs={8}>
                 <Typography variant="h5" color="primary">
-                  <b>Neues Team erstellen</b>
+                  <b>{teamname + " bearbeiten"}</b>
                 </Typography>
               </Grid>
             </Grid>
@@ -184,7 +219,7 @@ class UpdateTeam extends React.Component {
                   required
                   disabled={teamDisabled}
                   color="primary"
-                  value={team.getName()}
+                  value={teamname}
                   onChange={this.handleChange}
                   fullWidth
                 />
@@ -199,7 +234,10 @@ class UpdateTeam extends React.Component {
               <Grid item xs={12} />
             </Grid>
             <Grid container spacing={2}>
-              <Grid item xs={12}>
+              <Grid item xs={3}>
+                <Typography color="primary">Trainingstag:</Typography>
+              </Grid>
+              <Grid className={classes.border} item xs={4}>
                 <Select onChange={this.handleSelectChange} fullWidth>
                   {trainingdays.map((day) => (
                     <MenuItem value={day}>
@@ -208,6 +246,7 @@ class UpdateTeam extends React.Component {
                   ))}
                 </Select>
               </Grid>
+              <Grid item xs={5} />
               <Grid item xs={3}>
                 <Typography color="primary">Wochentag:</Typography>
               </Grid>
@@ -220,7 +259,9 @@ class UpdateTeam extends React.Component {
                   fullWidth
                 >
                   {weekdays.map((day) => (
-                    <MenuItem value={day}>{day}</MenuItem>
+                    <MenuItem key={day.indexOf} value={day}>
+                      {day}
+                    </MenuItem>
                   ))}
                 </Select>
               </Grid>
@@ -285,7 +326,7 @@ class UpdateTeam extends React.Component {
                   color="primary"
                   disabled={teamDisabled}
                   variant={teamDisabled ? "text" : "contained"}
-                  onClick={this.createTeam}
+                  onClick={this.updateTeam}
                   fullWidth
                 >
                   <CheckIcon className={classes.backButton} color="secondary" />

@@ -330,6 +330,19 @@ class TeamOperations(Resource):
         else:
             return '', 500
 
+    @volleyTrain.marshal_with(team)
+    @volleyTrain.expect(team, validate=True)
+    @secured
+    def put(self):
+        adm = volleytrainAdministration()
+        team = Team.from_dict(api.payload)
+
+        if team is not None:
+            adm.save_team(team)
+            return team, 200
+        else:
+            return '', 500
+
 
 @volleyTrain.route('/team/<int:team_id>')
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -386,6 +399,19 @@ class TrainingdayOperations(Resource):
             p = adm.create_trainingday(proposal.get_weekday(
             ), proposal.get_starttime(), proposal.get_endtime(), proposal.get_team())
             return p, 200
+        else:
+            return '', 500
+
+    @volleyTrain.marshal_with(trainingday)
+    @volleyTrain.expect(trainingday, validate=True)
+    @secured
+    def put(self):
+        adm = volleytrainAdministration()
+        trainingday = Trainingday.from_dict(api.payload)
+
+        if trainingday is not None:
+            adm.save_trainingday(trainingday)
+            return trainingday, 200
         else:
             return '', 500
 
@@ -508,16 +534,16 @@ class MatchfieldPlayerTransformOperation(Resource):
         return matchfieldPlayers
 
 
-@volleyTrain.route("/team/<int:id>/players")
+""" @volleyTrain.route("/team/<int:id>/players")
 class PlayerTeamOperations(Resource):
 
     @volleyTrain.marshal_list_with(player, code=200)
     # @secured
     def get(self, id):
-        """get all Player for specific team ID"""
+        #get all Player for specific team ID
         adm = volleytrainAdministration()
         players = adm.getPlayerByTeamId(id)
-        return players, 200
+        return players, 200 """
 
 
 if __name__ == '__main__':

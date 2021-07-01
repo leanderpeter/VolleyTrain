@@ -80,6 +80,7 @@ class TeamOverview extends React.Component {
     VolleytrainAPI.getAPI()
       .getTeamByName(teamname)
       .then((teamBO) => {
+        console.log(teamBO.getID());
         this.setState({ teamid: teamBO.getID() });
       })
       .catch((e) => {

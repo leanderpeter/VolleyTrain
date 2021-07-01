@@ -120,7 +120,7 @@ class CreateTeam extends React.Component {
       if (this.state.weekday != "") {
         setTimeout(() => {
           this.createTrainingday();
-        }, 10);
+        }, 1000);
       }
 
       this.setState({
@@ -214,7 +214,9 @@ class CreateTeam extends React.Component {
                   fullWidth
                 >
                   {weekdays.map((day) => (
-                    <MenuItem value={day}>{day}</MenuItem>
+                    <MenuItem key={day.indexOf} value={day}>
+                      {day}
+                    </MenuItem>
                   ))}
                 </Select>
               </Grid>

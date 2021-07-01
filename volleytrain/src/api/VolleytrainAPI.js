@@ -45,6 +45,7 @@ export default class VolleytrainAPI {
   #getTrainingdaysByTeamIdURL = (id) =>
     `${this.#VolleyTrainServerBaseURL}/trainingday/${id}`;
   #addTrainingdayURL = () => `${this.#VolleyTrainServerBaseURL}/trainingday`;
+  #updateTrainingdayURL = () => `${this.#VolleyTrainServerBaseURL}/trainingday`;
 
   //getExercise: id
   #getExerciseByIDURL = (id) =>
@@ -70,8 +71,8 @@ export default class VolleytrainAPI {
   #addPlayerURL = () => `${this.#VolleyTrainServerBaseURL}/playerss`;
   #deletePlayerURL = (id) => `${this.#VolleyTrainServerBaseURL}/player/${id}`;
   #updatePlayerURL = () => `${this.#VolleyTrainServerBaseURL}/player`;
-  #getPlayersByTeamURL = (id) =>
-    `${this.#VolleyTrainServerBaseURL}/team/${id}/players`;
+  /*  #getPlayersByTeamURL = (id) =>
+    `${this.#VolleyTrainServerBaseURL}/team/${id}/players`; */
 
   //MatchfieldPlayerBO
   #getAllMatchfieldPlayerURL = () =>
@@ -310,9 +311,9 @@ export default class VolleytrainAPI {
     );
   }
 
-  addTrainingday(trainingdayBO) {
-    return this.#fetchAdvanced(this.#addTrainingdayURL(), {
-      method: "POST",
+  updateTrainingday(trainingdayBO) {
+    return this.#fetchAdvanced(this.#updateTrainingdayURL(), {
+      method: "PUT",
       headers: {
         Accept: "application/json, text/plain",
         "Content-type": "application/json",
@@ -326,6 +327,7 @@ export default class VolleytrainAPI {
       });
     });
   }
+
   //Übung löschen
   deleteExercise(id) {
     return this.#fetchAdvanced(this.#deleteExerciseURL(id), {

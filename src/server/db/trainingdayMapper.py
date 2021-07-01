@@ -133,8 +133,23 @@ class TrainingdayMapper(Mapper):
 
         return trainingday
 
-    def update(self):
-        pass
+    def update(self, trainingday):
+        """Überschreiben / Aktualisieren eines trainingday-Objekts in der DB
+
+        :param trainingday -> trainingday-Objekt
+        :return aktualisiertes trainingday-Objekt
+        """
+        cursor = self._connection.cursor()
+
+        command = "UPDATE trainingday " + \
+            "SET weekday=%s, starttime=%s, endtime=%s, team=%s WHERE PK_Trainingday=%s"
+        data = (trainingday.get_weekday(), trainingday.get_starttime(
+        ), trainingday.get_endtime(), trainingday.get_team(), trainingday.get_id())
+
+        cursor.execute(command, data)
+
+        self._connection.commit()
+        cursor.close()
 
     def delete(self):
         pass
