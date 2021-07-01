@@ -15,6 +15,10 @@ import React from "react";
 import VolleytrainAPI from "../../api/VolleytrainAPI";
 import Divider from "@material-ui/core/Divider";
 import ClearIcon from "@material-ui/icons/Clear";
+import PropTypes from "prop-types";
+import LoadingProgress from "../dialogs/LoadingProgress";
+import ContextErrorMessage from "../dialogs/ContextErrorMessage";
+import { withRouter } from "react-router-dom";
 
 class ExerciseOverview extends React.Component {
   constructor(props) {
@@ -24,8 +28,6 @@ class ExerciseOverview extends React.Component {
       exercises: [],
       error: null,
       loadingInProgress: false,
-      filteredExercises: [],
-      exerciseFilter: "",
     };
   }
 
@@ -36,6 +38,7 @@ class ExerciseOverview extends React.Component {
       .then((exerciseBOs) =>
         this.setState({
           exercises: exerciseBOs,
+          filteredExercises: [...exerciseBOs],
           error: null,
           loadingInProgress: false,
         })
@@ -43,64 +46,32 @@ class ExerciseOverview extends React.Component {
       .catch((e) =>
         this.setState({
           exercises: [],
+          filteredExercises: [],
           error: e,
           loadingInProgress: false,
         })
       );
+      this.setState({
+        loadingInProgress: true,
+        error: null,
+      });
   };
 
   componentDidMount() {
     this.getExercises();
   }
 
-  filterFieldValueChange = (event) => {
-    const value = event.target.value.toLowerCase();
-    this.setState({
-      filteredExercises: this.state.exercises.filter((exercise) => {
-        let nameContainsValue = exercise
-          .getName()
-          .toLowerCase()
-          .includes(value);
-        return nameContainsValue;
-      }),
-      exerciseFilter: value,
-    });
-  };
-
-  clearFilterFieldButtonClicked = () => {
-    this.setState({
-      filteredExercises: [...this.state.exercises],
-      exerciseFilter: "",
-    });
-  };
-
   render() {
     const { classes } = this.props;
-    const { exercises, exerciseFilter } = this.state;
+    const {
+      exercises,
+      loadingInProgress,
+      error,
+    } = this.state;
 
     return (
       <div className={classes.root}>
         <Typography className={classes.heading}>Übungsverwaltung</Typography>
-        <Grid className={classes.heading} item xs={3}>
-          <TextField
-            autoFocus
-            fullWidth
-            id="exerciseFilter"
-            type="text"
-            value={exerciseFilter}
-            onChange={this.filterFieldValueChange}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={this.clearFilterFieldButtonClicked}>
-                    <ClearIcon />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
-        </Grid>
-        <Grid item xs />
         <Grid>
           <Grid item xs={10}>
             {exercises.map((exerciseBOs) => (
@@ -125,6 +96,13 @@ class ExerciseOverview extends React.Component {
                       <Typography>Beschreibung:</Typography>
                       <Typography>
                         <b>{exerciseBOs.getDescription()}</b>
+                      </Typography>
+                    </Grid>
+                    <Divider className={classes.solid} />
+                    <Grid key={exerciseBOs.getID()} item>
+                      <Typography>Bewertung:</Typography>
+                      <Typography>
+                        <b>{exerciseBOs.getRating()}</b>
                       </Typography>
                     </Grid>
                   </Grid>
@@ -168,4 +146,12 @@ const styles = (theme) => ({
   },
 });
 
-export default withStyles(styles)(ExerciseOverview);
+/** PropTypes */
+ExerciseOverview.propTypes = {
+  /** @ignore */
+  classes: PropTypes.object.isRequired,
+  /** @ignore */
+  location: PropTypes.object.isRequired,
+};
+
+export default withRouter(withStyles(styles)(ExerciseOverview));
