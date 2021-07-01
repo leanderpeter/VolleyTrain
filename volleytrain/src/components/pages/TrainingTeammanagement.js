@@ -78,7 +78,7 @@ const TrainingTeammanagement = () => {
 
   const getPlayersForTeam = (id) => {
     VolleytrainAPI.getAPI()
-      .getPlayerByTeam(id)
+      .getPlayersByTeam(id)
       .then((playerBOs) => {
         setPlayer(playerBOs);
         setLoadingInProgress(false);
