@@ -165,17 +165,6 @@ class PlayerOperation(Resource):
         players = adm.getAllPlayer()
         return players
 
-    # @secured
-    def delete(self, id):
-        """Delete Player"""
-        adm = volleytrainAdministration()
-        player = adm.getPlayerById(id)
-        if player is None:
-            return 'Player konnte nicht gelöscht werden', 500
-        else:
-            adm.deletePlayer(player)
-            return 'Player wurde erfolgreich aus der DB gelöscht', 200
-
     @volleyTrain.expect(player)
     # @secured
     def put(self):
@@ -193,14 +182,30 @@ class PlayerOperation(Resource):
 
 @volleyTrain.route('/players/<int:team_id>')
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-class PlayerOperation(Resource):
-    # @secured
+class PlayerByTeamOperation(Resource):
+    @secured
     @volleyTrain.marshal_list_with(player)
     def get(self, team_id):
         """Get all Player"""
         adm = volleytrainAdministration()
         players = adm.getPlayerByTeamId(team_id)
         return players
+
+
+@volleyTrain.route('/player/<int:player_id>')
+@volleyTrain.response(500, 'server-seitiger Fehler')
+class PlayerByIdOperation(Resource):
+    @secured
+    @volleyTrain.marshal_with(player)
+    def delete(self, player_id):
+        """Delete Player"""
+        adm = volleytrainAdministration()
+        player = adm.getPlayerById(player_id)
+        if player is None:
+            return 'Player konnte nicht gelöscht werden', 500
+        else:
+            adm.deletePlayer(player)
+            return 'Player wurde erfolgreich aus der DB gelöscht', 200
 
 
 @volleyTrain.route('/userbygoogle/<string:id>')

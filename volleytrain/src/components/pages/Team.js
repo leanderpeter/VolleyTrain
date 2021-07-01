@@ -23,6 +23,7 @@ import UpdateTeam from "../dialogs/UpdateTeam";
 import VolleytrainAPI from "../../api/VolleytrainAPI";
 import TrainingSchedule from "../TrainingSchedule";
 import PlayerBO from "../../api/PlayerBO";
+import TeamBO from "../../api/TeamBO";
 
 class Team extends Component {
   constructor(props) {
@@ -81,11 +82,12 @@ class Team extends Component {
     setTimeout(() => {
       VolleytrainAPI.getAPI().deleteTeam(this.state.teamid);
     }, 5000); */
-    console.log(
-      "würde gerne das team mit der id ",
-      this.state.teamid,
-      " löschen, aber player hat fk und kann nicht updaten geschweige denn auf null setzen. einzige lösung zur jetztigen datenstruktur wäre, den player auch zu löschen.. das wäre aber unvorteilhaft."
-    );
+    let archievedTeam = new TeamBO();
+    archievedTeam.setID(this.state.teamid);
+    archievedTeam.setCreationDate(this.state.team.getCreationDate());
+    archievedTeam.setName("Archiviert - " + this.state.team.name);
+    archievedTeam.setTrainer(this.state.team.getTrainer());
+    this.updateTeam(archievedTeam);
   };
 
   updateTeam = (team) => {

@@ -49,7 +49,8 @@ class PlayerMapper(Mapper):
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        for (id, surname, name, teamId, role, t_number) in tuples:
+        try:
+            (id, surname, name, teamId, role, t_number) = tuples[0]
             player = Player()
             player.set_id(id)
             player.set_name(name)
@@ -58,11 +59,15 @@ class PlayerMapper(Mapper):
             player.setRole(role)
             player.setT_number(t_number)
 
-            result.append(player)
+            result = player
+
+        except IndexError:
+            """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
+                        keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
+            result = None
 
         self._connection.commit()
         cursor.close()
-
         return result
 
     def find_by_teamid(self, teamId):
@@ -155,5 +160,3 @@ class PlayerMapper(Mapper):
 
         self._connection.commit()
         cursor.close()
-
-        return player
