@@ -16,6 +16,7 @@ import {
   Container,
   Divider,
 } from "@material-ui/core";
+import DeleteIcon from "@material-ui/icons/Delete";
 import TeamOverview from "./TeamOverview";
 import DeleteTeam from "../dialogs/DeleteTeam";
 import UpdateTeam from "../dialogs/UpdateTeam";
@@ -71,21 +72,30 @@ class Team extends Component {
           player.setID(playerBO.getID());
           player.setName(playerBO.getName());
           player.setSurname(playerBO.getSurname());
-          player.setTeamId(1);
+          player.setTeamId(2);
           player.setRole(playerBO.getRole());
           player.setT_number(playerBO.getT_number());
           VolleytrainAPI.getAPI().updatePlayer(player);
         });
       });
-    VolleytrainAPI.getAPI().deleteTeam(this.state.teamid);
+    setTimeout(() => {
+      VolleytrainAPI.getAPI().deleteTeam(this.state.teamid);
+    }, 5000);
   };
 
   updateTeam = (team) => {
     VolleytrainAPI.getAPI().updateTeam(team);
   };
 
+  handleDeleteTrainingday = (id) => {
+    this.deleteTrainingday(id);
+  };
+
   deleteTrainingday = (trainingdayId) => {
     VolleytrainAPI.getAPI().deleteTrainingday(trainingdayId);
+    setTimeout(() => {
+      this.getTrainingdays();
+    }, 1000);
   };
 
   updateTrainingday = (trainingday) => {

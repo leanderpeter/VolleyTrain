@@ -38,9 +38,6 @@ class TrainingdayMapper(Mapper):
 
         return result
 
-    def find_by_name(self):
-        pass
-
     def find_by_team_id(self, id):
         """find all trainingday obj
 

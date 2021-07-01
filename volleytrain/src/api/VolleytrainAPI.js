@@ -72,7 +72,7 @@ export default class VolleytrainAPI {
     `${this.#VolleyTrainServerBaseURL}/players/${id}`;
   #addPlayerURL = () => `${this.#VolleyTrainServerBaseURL}/playerss`;
   #deletePlayerURL = (id) => `${this.#VolleyTrainServerBaseURL}/player/${id}`;
-  #updatePlayerURL = () => `${this.#VolleyTrainServerBaseURL}/player`;
+  #updatePlayerURL = () => `${this.#VolleyTrainServerBaseURL}/players`;
   /*  #getPlayersByTeamURL = (id) =>
     `${this.#VolleyTrainServerBaseURL}/team/${id}/players`; */
 
