@@ -12,7 +12,6 @@ from server.bo.playerBO import Player
 from server.db.playerMapper import PlayerMapper
 from server.db.matchfieldPlayerMapper import MatchfieldPlayerMapper
 
-
 class volleytrainAdministration(object):
 
     def __init__(self):
@@ -46,42 +45,54 @@ class volleytrainAdministration(object):
 
 # Player Methods
 
-    def getAllPlayer(self):
-        with PlayerMapper() as mapper:
-            return mapper.find_all()
-
     def createPlayer(self, surname, name, teamid, role, t_number):
         """ Create a Player object and inject it into the database
         """
         player = Player()
         player.set_surname(surname)
         player.set_name(name)
-        player.setTeamId(teamid)
-        player.setRole(role)
-        player.setT_number(t_number)
+        player.set_teamid(teamid)
+        player.set_role(role)
+        player.set_t_number(t_number)
 
         with PlayerMapper() as mapper:
             return mapper.insert(player)
+
+    def getAllPlayer(self):
+        with PlayerMapper() as mapper:
+            return mapper.find_all()
 
     def getPlayerById(self, id):
         with PlayerMapper() as mapper:
             return mapper.find_by_id(id)
 
-    def getPlayerByTeamId(self, teamId):
+    def getPlayerByTeamId(self, teamid):
         with PlayerMapper() as mapper:
-            return mapper.find_by_teamid(teamId)
+            return mapper.find_by_teamid(teamid)
 
     def savePlayer(self, player):
         with PlayerMapper() as mapper:
             mapper.update(player)
 
+    def deletePlayer(self, player):
+        with PlayerMapper() as mapper:
+            mapper.delete(player)
+
     def getAllMatchfieldPlayers(self):
         with MatchfieldPlayerMapper() as mapper:
             return mapper.find_all()
 
-    def deletePlayer(self, player):
-        with PlayerMapper() as mapper:
-            mapper.delete(player)
+    def getByPlayerPosByMatchfieldId(self, id):
+        with MatchfieldPlayerMapper() as mapper:
+            return mapper.find_by_Matchfield(id)
+
+    def putPlayerPosByMatchfieldId(self, MatchfieldBO):
+        with MatchfieldPlayerMapper() as mapper:
+            return mapper.update(MatchfieldBO)
+
+    def deletePlayerPosByMatchfieldId(self, MatchfieldPlayerBO):
+        with MatchfieldPlayerMapper() as mapper:
+            return mapper.delete(MatchfieldPlayerBO)
 
     """ Training """
 
@@ -196,38 +207,3 @@ class volleytrainAdministration(object):
     def deleteExercise(self, exerciseId):
         with ExerciseMapper() as mapper:
             return mapper.delete(exerciseId)
-
-    def createPlayer(self, name, role, t_number):
-        """ Create a Player object and inject it into the database
-        """
-        player = Player()
-        player.set_name(name)
-        player.setRole(role)
-        player.setT_number(t_number)
-
-        with PlayerMapper() as mapper:
-            return mapper.insert(player)
-
-    def getPlayerById(self, id):
-        with PlayerMapper() as mapper:
-            return mapper.find_by_id(id)
-
-    def savePlayer(self, player):
-        with PlayerMapper() as mapper:
-            mapper.update(player)
-
-    def getAllMatchfieldPlayers(self):
-        with MatchfieldPlayerMapper() as mapper:
-            return mapper.find_all()
-
-    def getByPlayerPosByMatchfieldId(self, id):
-        with MatchfieldPlayerMapper() as mapper:
-            return mapper.find_by_Matchfield(id)
-
-    def putPlayerPosByMatchfieldId(self, MatchfieldBO):
-        with MatchfieldPlayerMapper() as mapper:
-            return mapper.update(MatchfieldBO)
-
-    def deletePlayerPosByMatchfieldId(self, MatchfieldPlayerBO):
-        with MatchfieldPlayerMapper() as mapper:
-            return mapper.delete(MatchfieldPlayerBO)
