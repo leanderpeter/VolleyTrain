@@ -25,6 +25,7 @@ import ExerciseForm from "./components/pages/exerciseForm";
 import Exercises from "./components/Exercises";
 import CreateExercise from "./components/dialogs/CreateExercise";
 import BlankPage from "./components/pages/BlankPage";
+import ExerciseOverview from "./components/pages/ExerciseOverview";
 import TrainingPlaningPage from "./components/pages/TrainingPlaningPage";
 import TrainingTeammanagement from "./components/pages/TrainingTeammanagement";
 
@@ -170,6 +171,7 @@ class App extends React.Component {
               <Route path="/exercises" component={BlankPage}>
                 <BlankPage />
               </Route>
+              <Route path="/exerciseoverview" component={ExerciseOverview}></Route>
             </>
           ) : (
             <>
