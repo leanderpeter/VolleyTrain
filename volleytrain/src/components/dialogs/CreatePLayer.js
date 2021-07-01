@@ -1,4 +1,4 @@
-import { withStyles, Button, Dialog, DialogTitle, DialogContent, Box, FormControl, InputLabel, Typography, Grid, TextField, Select, MenuItem } from '@material-ui/core';
+import { withStyles, Button, Dialog, DialogTitle, DialogContent, Divider, Box, FormControl, InputLabel, Typography, Grid, TextField, Select, MenuItem } from '@material-ui/core';
 import React from 'react';
 import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined';
 import SaveAltIcon from '@material-ui/icons/SaveAlt';
@@ -45,7 +45,7 @@ class CreatePlayer extends React.Component{
 
     render() {
         const { classes, dialogOpen, onClose } = this.props;
-        const { surname, name, teamId, role, t_number} = this.state;
+        const { surname, name, teamid, role, t_number} = this.state;
     
         let title = 'Neuen Spieler erstellen';
 
@@ -65,7 +65,8 @@ class CreatePlayer extends React.Component{
                     </Grid>
                     </DialogTitle>
                         <Grid container spacing={2}>
-                            <Grid item xs={3}>
+                        <Grid item xs={12} />
+                            <Grid item xs={2}>
                                 <Typography color="primary">Name:</Typography>
                             </Grid>
                             <Grid className={classes.border} item xs={9}>
@@ -73,7 +74,7 @@ class CreatePlayer extends React.Component{
                             </Grid>
                          </Grid>
                          <Grid container spacing={2}>
-                            <Grid item xs={3}>
+                            <Grid item xs={2}>
                                 <Typography color="primary">Nachname:</Typography>
                             </Grid>
                             <Grid className={classes.border} item xs={9}>
@@ -81,30 +82,24 @@ class CreatePlayer extends React.Component{
                             </Grid>
                          </Grid>
                          <Grid container spacing={2}>
-                            <Grid item xs={3}>
-                                <Typography color="primary">Trikot-Nummer:</Typography>
+                            <Grid item xs={2}>
+                                <Typography color="primary">Rolle:</Typography>
                             </Grid>
                             <Grid className={classes.border} item xs={9}>
                                 <TextField color="primary" onChange={this.handleChange} fullWidth/>
                             </Grid>
                          </Grid>
-                        <Typography variant="h6">Rolle</Typography>
-                            <FormControl className={classes.formControl}>
-                                <InputLabel required id="open-select-label">Entsprechende Rolle auswählen</InputLabel>
-                                <Select
-                                value={role}
-                                onChange={this.handleChange3}
-                                >
-                                <MenuItem value={1}>Zuspieler</MenuItem>
-                                <MenuItem value={2}>Mittelblocker</MenuItem>
-                                <MenuItem value={3}>Libero</MenuItem>
-                                <MenuItem value={4}>Diagonalspieler</MenuItem>
-                                <MenuItem value={5}>Außenspieler</MenuItem>
-                                </Select>
-                            </FormControl>
-                            <Button onClick={this.handleClose} color='primary'>       
-                            Speichern
-                            </Button>
+                         <Grid container spacing={2}>
+                            <Grid item xs={2}>
+                                <Typography color="primary">Trikot-Nummer:</Typography>
+                            </Grid>
+                            <Grid className={classes.border} item xs={9}>
+                                <TextField color="primary" onChange={this.handleChange} fullWidth/>
+                            </Grid>
+                        </Grid>
+                        <Button onClick={this.handleClose} color='primary'>       
+                        Speichern
+                        </Button>
                         <Button onClick={this.handleClose} color='secondary'>
                         Abbrechen
                         </Button>
@@ -114,29 +109,33 @@ class CreatePlayer extends React.Component{
     }
 }
 
-
-/** Component specific styles */
-const styles = theme => ({
+const styles = (theme) => ({
     root: {
-        margin: theme.spacing(2),
-        width: '100%'
+      margin: theme.spacing(2),
+      width: "100%",
+    },
+    backButton: {
+      borderRadius: "500px",
     },
     border: {
-        border: '1px solid #3ECCA5',
-        boxSizing: 'border-box',
-        boxShadow: '0px 4px 10px rgba(84, 78, 78, 0.2)',
-        borderRadius: '9px',
-        marginBottom: '15px',
-        background: '#fcfcfc',
-        
+      border: "1px solid #3ECCA5",
+      boxSizing: "border-box",
+      boxShadow: "0px 4px 10px rgba(84, 78, 78, 0.2)",
+      borderRadius: "9px",
+      marginBottom: "15px",
+      background: "#fcfcfc",
     },
     button: {
-        color: '#ffffff',
-        background: 'linear-gradient(90.46deg, #FFD542 12.09%, #FFB676 104.14%)',
-        borderRadius: '9px',
-        fontWeight: 'bold',
-        fontVariant: 'normal',
+      color: "#ffffff",
+      background: "linear-gradient(90.46deg, #FFD542 12.09%, #FFB676 104.14%)",
+      borderRadius: "9px",
+      fontWeight: "bold",
+      fontVariant: "normal",
     },
-});
+    error: {
+      color: "red",
+      fontSize: "12px",
+    },
+  });
 
 export default withStyles(styles)(CreatePlayer);
