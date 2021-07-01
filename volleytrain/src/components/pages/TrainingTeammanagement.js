@@ -5,8 +5,10 @@ import {
   makeStyles,
   InputLabel,
   FormControl,
+  CardContent,
   MenuItem,
   TextField,
+  Card,
 } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
@@ -127,6 +129,39 @@ const TrainingTeammanagement = () => {
                 </Select>
               </FormControl>
             </div>
+            <Typography className={classes.heading}>Spielerübersicht</Typography>
+            <Grid item xs={10}>
+            {player.map((playerBOs) => (
+              <Card className={classes.border}>
+              <CardContent>
+                <Grid container> 
+                  <Grid key={playerBOs.getID()} item xs={2}>
+                    <Typography>
+                      <b>{playerBOs.getSurname()}</b>
+                    </Typography>
+                  </Grid>
+                  <Divider orientation="vertical" flexItem/>
+                  <Grid key={playerBOs.getID()} item xs={2}>
+                    <Typography>
+                      <b>{playerBOs.getName()}</b>
+                    </Typography>
+                  </Grid>
+                  <Divider orientation="vertical" flexItem/>
+                  <Grid key={playerBOs.getID()} item xs={2}>
+                    <Typography>
+                      <b>{playerBOs.getT_number()}</b>
+                    </Typography>  
+                  </Grid>
+                  <Divider orientation="vertical" flexItem/>
+                  <Grid key={playerBOs.getID()} item xs={2}>
+                    <Typography>
+                      <b>{playerBOs.getRole()}</b>
+                    </Typography>  
+                  </Grid>
+                </Grid>
+              </CardContent>
+              </Card>))}
+            </Grid>
           </TabPanel>
           <TabPanel>
             <Grid container spacing={3}>
@@ -191,6 +226,13 @@ const styles = makeStyles({
     borderBottom: "3px solid rgb(212, 212, 212)",
   },
   exerciseButton: {},
+  border: {
+    border: "2px solid #3ECCA5",
+    boxSizing: "border-box",
+    boxShadow: "0px 4px 10px rgba(84, 78, 78, 0.2)",
+    borderRadius: "9px",
+    marginBottom: "15px",
+  },
 });
 
 export default TrainingTeammanagement;
