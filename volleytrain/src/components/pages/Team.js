@@ -109,7 +109,10 @@ class Team extends Component {
           player: [],
           error: e,
           loadingInProgress: false,
-          
+        })
+        )      
+    }
+    
   updateTeam = (team) => {
     VolleytrainAPI.getAPI().updateTeam(team);
   };
@@ -157,7 +160,7 @@ class Team extends Component {
     console.log(starttime.getTime());
   };
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.getTrainingdays();
     this.getPlayersForTeam()
   };
