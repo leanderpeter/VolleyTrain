@@ -46,6 +46,8 @@ export default class VolleytrainAPI {
     `${this.#VolleyTrainServerBaseURL}/trainingday/${id}`;
   #addTrainingdayURL = () => `${this.#VolleyTrainServerBaseURL}/trainingday`;
   #updateTrainingdayURL = () => `${this.#VolleyTrainServerBaseURL}/trainingday`;
+  #deleteTrainingdayURL = (id) =>
+    `${this.#VolleyTrainServerBaseURL}/trainingday/${id}`;
 
   //getExercise: id
   #getExerciseByIDURL = (id) =>
@@ -277,6 +279,12 @@ export default class VolleytrainAPI {
   //Projekt löschen
   deleteTeam(id) {
     return this.#fetchAdvanced(this.#deleteTeamURL(id), { method: "DELETE" });
+  }
+
+  deleteTrainingday(id) {
+    return this.#fetchAdvanced(this.#deleteTrainingdayURL(id), {
+      method: "DELETE",
+    });
   }
 
   //gibt die Person mit der bestimmten GoogleUserID als BO zurück

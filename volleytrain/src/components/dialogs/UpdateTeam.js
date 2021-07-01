@@ -10,10 +10,14 @@ import {
   Select,
   MenuItem,
   Divider,
+  RadioGroup,
+  Radio,
+  FormControl,
+  FormLabel,
+  FormControlLabel,
 } from "@material-ui/core";
 import React from "react";
 import ArrowBackOutlinedIcon from "@material-ui/icons/ArrowBackOutlined";
-import AddIcon from "@material-ui/icons/Add";
 import CheckIcon from "@material-ui/icons/Check";
 import TeamBO from "../../api/TeamBO";
 import TrainingdayBO from "../../api/TrainingdayBO";
@@ -24,8 +28,6 @@ class UpdateTeam extends React.Component {
 
     this.state = {
       teamname: this.props.team.getName(),
-      timeDisabled: true,
-      teamDisabled: false,
       teamnameError: false,
       trainingday: 1,
       weekdays: [
@@ -41,14 +43,14 @@ class UpdateTeam extends React.Component {
       starttime: "",
       endtime: "",
       trainingdayBO: null,
+      addTrainingday: true,
+      deleteTrainingday: false,
     };
   }
 
   resetState = () => {
     this.setState({
       teamname: "",
-      timeDisabled: true,
-      teamDisabled: false,
       teamnameError: false,
       trainingday: 1,
       trainingdayId: null,
@@ -56,6 +58,15 @@ class UpdateTeam extends React.Component {
       starttime: "",
       endtime: "",
     });
+  };
+
+  handleRadioChange = (e) => {
+    e.target.value == "add"
+      ? this.setState({ addTrainingday: true })
+      : this.setState({ addTrainingday: false });
+    e.target.value == "delete"
+      ? this.setState({ deleteTrainingday: true })
+      : this.setState({ deleteTrainingday: false });
   };
 
   handleChange = (e) => {
@@ -87,19 +98,14 @@ class UpdateTeam extends React.Component {
 
   handleDeleteTime = () => {
     this.setState({
+      trainingdayBO: null,
       weekday: "",
       starttime: "",
       endtime: "",
     });
   };
 
-  clearTeamname = () => {
-    this.setState({
-      teamname: "",
-    });
-  };
-
-  updateTrainingday = () => {
+  addTrainingday = () => {
     if (
       this.state.weekday !== "" &&
       this.state.starttime !== "" &&
@@ -113,7 +119,30 @@ class UpdateTeam extends React.Component {
       trainingday.setEndtime(this.state.endtime);
       trainingday.setTeam(this.props.team.getID());
       this.props.updateTrainingday(trainingday);
-    } else if (
+      this.handleDeleteTime();
+
+      this.setState({ timeError: false });
+    } else {
+      this.setState({ timeError: true });
+    }
+  };
+
+  deleteTrainingday = () => {
+    this.updateTeam();
+    this.props.deleteTrainingday(this.state.trainingdayBO.getID());
+  };
+
+  trainingdayHandler = () => {
+    this.updateTeam();
+    setTimeout(() => {
+      this.state.addTrainingday
+        ? this.addTrainingday()
+        : this.updateTrainingday();
+    }, 1000);
+  };
+
+  updateTrainingday = () => {
+    if (
       this.state.weekday !== "" &&
       this.state.starttime !== "" &&
       this.state.endtime !== "" &&
@@ -126,39 +155,25 @@ class UpdateTeam extends React.Component {
       trainingday.setStarttime(this.state.starttime);
       trainingday.setEndtime(this.state.endtime);
       trainingday.setTeam(this.props.team.getID());
-      console.log(trainingday);
       this.props.updateTrainingday(trainingday);
-      //this.handleDeleteTime();
+      this.handleDeleteTime();
 
-      let daycount = this.state.trainingday + 1;
-      this.setState({ timeError: false, trainingday: daycount });
+      this.setState({ timeError: false });
     } else {
       this.setState({ timeError: true });
     }
   };
 
   updateTeam = () => {
-    if (this.state.teamDisabled) {
-      this.updateTrainingday();
-    } else if (
-      this.state.teamname !== "" &&
-      this.state.teamDisabled === false
-    ) {
+    if (this.state.teamname !== "") {
       let team = new TeamBO();
       team.setID(this.props.team.getID());
       team.setCreationDate(this.props.team.getCreationDate());
       team.setName(this.state.teamname);
       team.setTrainer(this.props.team.getTrainer());
-      console.log(team);
       this.props.updateTeam(team);
-      if (this.state.weekday !== "") {
-        setTimeout(() => {
-          this.updateTrainingday();
-        }, 1000);
-      }
 
       this.setState({
-        teamDisabled: true,
         teamnameError: false,
         timeError: false,
       });
@@ -170,16 +185,19 @@ class UpdateTeam extends React.Component {
   };
 
   render() {
-    const { classes, updateDialogOpen, onClose, trainingdays } = this.props;
+    const { classes, updateDialogOpen, onClose, trainingdays, team } =
+      this.props;
     const {
       teamname,
-      teamDisabled,
       timeError,
       teamnameError,
       weekday,
       starttime,
       endtime,
       weekdays,
+      addTrainingday,
+      deleteTrainingday,
+      trainingdayBO,
     } = this.state;
 
     return (
@@ -217,7 +235,6 @@ class UpdateTeam extends React.Component {
                 <TextField
                   error={teamnameError}
                   required
-                  disabled={teamDisabled}
                   color="primary"
                   value={teamname}
                   onChange={this.handleChange}
@@ -226,19 +243,53 @@ class UpdateTeam extends React.Component {
               </Grid>
               <Grid item xs={5}>
                 <Typography className={classes.error}>
-                  {teamnameError
-                    ? "Du musst deinem Team einen Namen geben."
-                    : ""}
+                  Vorher: {team.getName()}
                 </Typography>
               </Grid>
               <Grid item xs={12} />
             </Grid>
             <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <FormControl>
+                  <FormLabel color="primary">
+                    Was möchtest du mit den Trainingstagen machen?
+                  </FormLabel>
+                  <RadioGroup
+                    row
+                    defaultValue="add"
+                    onChange={this.handleRadioChange}
+                    aria-label="position"
+                  >
+                    <FormControlLabel
+                      control={<Radio color="primary" />}
+                      value="add"
+                      label="hinzufügen"
+                      labelPlacement="right"
+                    />
+                    <FormControlLabel
+                      control={<Radio color="primary" />}
+                      value="update"
+                      label="aktualisieren"
+                      labelPlaycement="right"
+                    />
+                    <FormControlLabel
+                      control={<Radio color="primary" />}
+                      value="delete"
+                      label="löschen"
+                      labelPlaycement="right"
+                    />
+                  </RadioGroup>
+                </FormControl>
+              </Grid>
               <Grid item xs={3}>
                 <Typography color="primary">Trainingstag:</Typography>
               </Grid>
               <Grid className={classes.border} item xs={4}>
-                <Select onChange={this.handleSelectChange} fullWidth>
+                <Select
+                  onChange={this.handleSelectChange}
+                  fullWidth
+                  disabled={addTrainingday}
+                >
                   {trainingdays.map((day) => (
                     <MenuItem value={day}>
                       {day.weekday + ", Start: " + day.starttime + "Uhr"}
@@ -267,7 +318,7 @@ class UpdateTeam extends React.Component {
               </Grid>
               <Grid item xs={5}>
                 <Typography className={classes.error}>
-                  {timeError ? "Du musst einen Tag auswählen." : ""}
+                  {trainingdayBO ? "Vorher: " + trainingdayBO.getWeekday() : ""}
                 </Typography>
               </Grid>
               <Grid item xs={3} />
@@ -286,7 +337,9 @@ class UpdateTeam extends React.Component {
               </Grid>
               <Grid item xs={5}>
                 <Typography className={classes.error}>
-                  {timeError ? "Du musst eine Uhrzeit auswählen." : ""}
+                  {trainingdayBO
+                    ? "Vorher: " + trainingdayBO.getStarttime()
+                    : ""}
                 </Typography>
               </Grid>
               <Grid item xs={3} />
@@ -305,32 +358,37 @@ class UpdateTeam extends React.Component {
               </Grid>
               <Grid item xs={5}>
                 <Typography className={classes.error}>
-                  {timeError ? "Du musst eine Uhrzeit auswählen." : ""}
+                  {trainingdayBO ? "Vorher: " + trainingdayBO.getEndtime() : ""}
                 </Typography>
               </Grid>
               <Grid item xs={12} />
               <Grid item xs={6}>
                 <Button
-                  color="secondary"
-                  disabled={!teamDisabled}
-                  variant={teamDisabled ? "contained" : "text"}
-                  onClick={this.createTrainingday}
+                  color="primary"
+                  variant="contained"
+                  onClick={
+                    deleteTrainingday
+                      ? this.deleteTrainingday
+                      : this.trainingdayHandler
+                  }
                   fullWidth
                 >
-                  <AddIcon className={classes.backButton} color="primary" />
-                  Trainingszeit hinzufügen
+                  <CheckIcon className={classes.backButton} color="primary" />
+                  {deleteTrainingday ? "Trainingstag löschen" : "Aktualisieren"}
                 </Button>
               </Grid>
               <Grid item xs={6}>
                 <Button
-                  color="primary"
-                  disabled={teamDisabled}
-                  variant={teamDisabled ? "text" : "contained"}
-                  onClick={this.updateTeam}
+                  color="secondary"
+                  variant="outlined"
+                  onClick={onClose}
                   fullWidth
                 >
-                  <CheckIcon className={classes.backButton} color="secondary" />
-                  {teamDisabled ? "Team erstellt" : "Team erstellen"}
+                  <ArrowBackOutlinedIcon
+                    className={classes.backButton}
+                    color="secondary"
+                  />
+                  Zurück zum Team
                 </Button>
               </Grid>
             </Grid>

@@ -416,15 +416,27 @@ class TrainingdayOperations(Resource):
             return '', 500
 
 
-@volleyTrain.route('/trainingday/<int:id>')
+@volleyTrain.route('/trainingday/<int:trainingday_id>')
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class TrainingdayByTeamIDOperation(Resource):
     @secured
     @volleyTrain.marshal_list_with(trainingday)
-    def get(self, id):
+    def get(self, trainingday_id):
         adm = volleytrainAdministration()
-        trainingday = adm.get_trainingdays_by_team_id(id)
+        trainingday = adm.get_trainingdays_by_team_id(trainingday_id)
         return trainingday
+
+    @secured
+    @volleyTrain.marshal_with(trainingday)
+    def delete(self, trainingday_id):
+        adm = volleytrainAdministration()
+        trainingday = adm.get_trainingday_by_id(trainingday_id)
+
+        if trainingday is not None:
+            adm.delete_trainingday(trainingday)
+            return 'Successfully deleted', 200
+        else:
+            return 'Deleting failed', 500
 
 
 @volleyTrain.route('/exercise/<int:id>')

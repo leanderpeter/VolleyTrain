@@ -163,9 +163,17 @@ class volleytrainAdministration(object):
         with TrainingdayMapper() as mapper:
             return mapper.find_by_team_id(id)
 
+    def get_trainingday_by_id(self, id):
+        with TrainingdayMapper() as mapper:
+            return mapper.find_by_id(id)
+
     def save_trainingday(self, trainingday):
-        with TrainingdayMapper as mapper:
-            return mapper.update(trainingday)
+        with TrainingdayMapper() as mapper:
+            mapper.update(trainingday)
+
+    def delete_trainingday(self, trainingday):
+        with TrainingdayMapper() as mapper:
+            mapper.delete(trainingday)
 
     def createExercise(self, exercise):
         """ Create a Exercise object and inject it into the database """

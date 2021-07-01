@@ -84,12 +84,13 @@ class TrainingdayMapper(Mapper):
         cursor.execute(command)
         tuples = cursor.fetchall()
         try:
-            (id, weekday, starttime, endtime) = tuples[0]
+            (id, weekday, starttime, endtime, team) = tuples[0]
             trainingday = Trainingday()
             trainingday.set_id(id)
             trainingday.set_weekday(weekday)
             trainingday.set_starttime(starttime)
             trainingday.set_endtime(endtime)
+            trainingday.set_team(team)
             result = trainingday
 
         except IndexError:
@@ -151,8 +152,19 @@ class TrainingdayMapper(Mapper):
         self._connection.commit()
         cursor.close()
 
-    def delete(self):
-        pass
+    def delete(self, trainingday):
+        """Löschen der Daten einer trainingday aus der Datenbank
+
+        :param trainingday -> trainingday-Objekt
+        """
+        cursor = self._connection.cursor()
+
+        command = "DELETE FROM trainingday WHERE PK_Trainingday={}".format(
+            trainingday.get_id())
+        cursor.execute(command)
+
+        self._connection.commit()
+        cursor.close()
 
 
 '''Only for testing purpose'''

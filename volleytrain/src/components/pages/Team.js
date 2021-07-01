@@ -84,6 +84,10 @@ class Team extends Component {
     VolleytrainAPI.getAPI().updateTeam(team);
   };
 
+  deleteTrainingday = (trainingdayId) => {
+    VolleytrainAPI.getAPI().deleteTrainingday(trainingdayId);
+  };
+
   updateTrainingday = (trainingday) => {
     trainingday.getID() === 1
       ? VolleytrainAPI.getAPI().addTrainingday(trainingday)
@@ -178,6 +182,7 @@ class Team extends Component {
           updateDialogOpen={updateDialogOpen}
           team={team}
           trainingdays={trainingdays}
+          deleteTrainingday={this.deleteTrainingday}
           updateTeam={this.updateTeam}
           updateTrainingday={this.updateTrainingday}
           onClose={this.handleUpdateClose}
