@@ -34,7 +34,6 @@ class Mapper(AbstractContextManager, ABC):
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-
         """In order to close the connection we use the following statement. For example we quit working with the mapper class for now"""
         self._connection.close()
 
@@ -46,21 +45,21 @@ class Mapper(AbstractContextManager, ABC):
         pass
 
     @abstractmethod
-    def find_by_id(self):
+    def find_by_id(self, id):
         """Reads a tuple with a given ID"""
         pass
 
     @abstractmethod
-    def insert(self):
+    def insert(self, object):
         """Add the given object to the database"""
         pass
 
     @abstractmethod
-    def update(self):
+    def update(self, object):
         """Update an already given object in the DB"""
         pass
 
     @abstractmethod
-    def delete(self):
+    def delete(self, object):
         """Delete an object from the DB"""
         pass

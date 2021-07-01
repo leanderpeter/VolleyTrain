@@ -1,95 +1,103 @@
-import NamedBusinessObject from './NamedBusinessObject';
+import NamedBusinessObject from "./NamedBusinessObject";
 
-export default class ExerciseBO extends NamedBusinessObject{
-
-    constructor(){
+export default class ExerciseBO extends NamedBusinessObject {
+  constructor() {
     super();
     this.duration = null;
-	this.training = null;
-	this.description= null;
-	this.notes = null;
-	this.goal = null;
-    }
-  
-    /*
-	erhalte
-	*/
-	getDuration(){
-        return this.duration;
-    }
-    /*
-	setze
-	*/
-    setDuration(aduration){
-        this.duration = aduration;
-    }
-	  /*
-	erhalte
-	*/
-	getTraining(){
-        return this.training;
-    }
-    /*
-	setze
-	*/
-    setTraining(training){
-        this.training = training;
-    }
+    this.training = null;
+    this.description = null;
+    this.notes = null;
+    this.goal = null;
+    this.rating = null;
+  }
 
-	  /*
+  /*
 	erhalte
 	*/
-	getDescription(){
-        return this.description;
-    }
-    /*
+  getDuration() {
+    return this.duration;
+  }
+  /*
 	setze
 	*/
-    setDescription(description){
-        this.description = description;
-    }
-	  /*
+  setDuration(aduration) {
+    this.duration = aduration;
+  }
+  /*
 	erhalte
 	*/
-	getNotes(){
-        return this.notes;
-    }
-    /*
+  getTraining() {
+    return this.training;
+  }
+  /*
 	setze
 	*/
-    setNotes(notes){
-        this.notes = notes;
-    }
-	  /*
-	erhalte
-	*/
-	getGoal(){
-        return this.goal;
-    }
-    /*
-	setze
-	*/
-    setGoal(goal){
-        this.goal = goal;
-    }
+  setTraining(training) {
+    this.training = training;
+  }
 
-   /**
+  /*
+	erhalte
+	*/
+  getDescription() {
+    return this.description;
+  }
+  /*
+	setze
+	*/
+  setDescription(description) {
+    this.description = description;
+  }
+  /*
+	erhalte
+	*/
+  getNotes() {
+    return this.notes;
+  }
+  /*
+	setze
+	*/
+  setNotes(notes) {
+    this.notes = notes;
+  }
+  /*
+	erhalte
+	*/
+  getGoal() {
+    return this.goal;
+  }
+  /*
+	setze
+	*/
+  setGoal(goal) {
+    this.goal = goal;
+  }
+
+  getRating() {
+    return this.rating;
+  }
+
+  setRating(arating) {
+    this.rating = arating;
+  }
+
+  /**
    * Returns an Array of ExerciseBOs from a given JSON structure
    */
-    static fromJSON(exercise) {
-		let results = null;
-		if (Array.isArray(exercise)) {
-			results = [];
-			exercise.forEach((c) => {
-				Object.setPrototypeOf(c, ExerciseBO.prototype);
-				results.push(c);
-			})
-		} else {
-			// Es gibt wohl nur ein Objekt
-			let c = exercise;
-			Object.setPrototypeOf(c, ExerciseBO.prototype);
-			results = c;
-		}
-		return results;
-	}
+  static fromJSON(exercise) {
+    let results = null;
+    if (Array.isArray(exercise)) {
+      results = [];
+      exercise.forEach((c) => {
+        Object.setPrototypeOf(c, ExerciseBO.prototype);
+        results.push(c);
+      });
+    } else {
+      // Es gibt wohl nur ein Objekt
+      let c = exercise;
+      Object.setPrototypeOf(c, ExerciseBO.prototype);
+      results = c;
+    }
+    return results;
+  }
 }
