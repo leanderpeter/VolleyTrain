@@ -106,7 +106,7 @@ const TrainingTeammanagement = ({currentUser}) => {
       <div>
         <Tabs>
           <TabList>
-            <Tab>Teammanagement</Tab>
+            <Tab >Teammanagement</Tab>
             <Tab disabled={team==null||name==''||goal==''} onClick={createTraining}>Trainingsablauf</Tab>
           </TabList>
           <TabPanel>
