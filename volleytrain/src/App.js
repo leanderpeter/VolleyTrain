@@ -162,12 +162,6 @@ class App extends React.Component {
                   <TeamOverview {...props} currentUser={currentUser} />
                 )}
               />
-              <Route
-                path="/players"
-                render={(props) => (
-                  <PlayerOverview {...props} currentUser={currentUser} />
-                )}
-              />
               <Route path="/team" render={(props) => <Team {...props} />} />
               <Route path="/teammanagement" component={TrainingTeammanagement}>
                 <TrainingTeammanagement />
