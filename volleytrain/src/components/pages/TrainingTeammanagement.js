@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from "react";
+import React, { useState, useLayoutEffect, useReducer } from "react";
 import {
   Select,
   makeStyles,
@@ -9,7 +9,7 @@ import {
   TextField,
   Card,
   Typography,
-  Divider
+  Divider,
 } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import CreateExercise from "../dialogs/CreateExercise";
@@ -17,8 +17,10 @@ import VolleytrainAPI from "../../api/VolleytrainAPI";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "../layout/TabStyling.css";
 import TrainingBO from "../../api/TrainingBO";
-import ContextErrorMessage from '../dialogs/ContextErrorMessage';
-import LoadingProgress from '../dialogs/LoadingProgress';
+import ExerciseComponent from "../ExerciseComponent";
+import ExerciseBO from "../../api/ExerciseBO";
+import ContextErrorMessage from "../dialogs/ContextErrorMessage";
+import LoadingProgress from "../dialogs/LoadingProgress";
 /**
  *
  * @returns
@@ -27,7 +29,10 @@ import LoadingProgress from '../dialogs/LoadingProgress';
  *
  */
 
-const TrainingTeammanagement = ({currentUser}) => {
+const TrainingTeammanagement = ({ currentUser }) => {
+  // force update handler
+  const [ignored, forceUpdate] = useReducer((x) => x + 1, 0);
+
   // init styling
   const classes = styles();
 
@@ -46,13 +51,16 @@ const TrainingTeammanagement = ({currentUser}) => {
   const [player, setPlayer] = useState([]);
 
   // init teams state
-  const [name, setName] = useState('');
+  const [name, setName] = useState("");
 
   // init teams state
-  const [goal, setGoal] = useState('');
+  const [goal, setGoal] = useState("");
 
   // init Training state
   const [training, setTraining] = useState(null);
+
+  // init exercises state
+  const [exercises, setExercises] = useState(null);
 
   const getTeams = () => {
     VolleytrainAPI.getAPI()
@@ -66,7 +74,7 @@ const TrainingTeammanagement = ({currentUser}) => {
         setError(e);
         setLoadingInProgress(false);
       });
-      setLoadingInProgress(true);
+    setLoadingInProgress(true);
   };
 
   const getPlayersForTeam = (id) => {
@@ -81,41 +89,80 @@ const TrainingTeammanagement = ({currentUser}) => {
         setError(e);
         setLoadingInProgress(false);
       });
-      setLoadingInProgress(true);
+    setLoadingInProgress(true);
   };
 
-  const createTraining = ()=>{
-    if(!team==null&!name==''&!goal==''){
+  const createTraining = () => {
+    if (!(team == null) && !(name == "") && !(goal == "")) {
       let training = new TrainingBO();
       training.setName(name);
       training.setTeamId(team.id);
       training.setUserId(currentUser.getID());
       training.setVisibility(1);
-      setTraining(training)
+      training.setDatetime("2021-07-28 13:45:54");
+      training.setCreationDate("123");
+      training.setID(1);
+      training.setGoal(goal);
+      addTrainingBO(training);
     }
-  }
+  };
 
-  const handleTeamChange = (event) =>{
-    setTeam(event.target.value)
+  const handleTeamChange = (event) => {
+    setTeam(event.target.value);
     getPlayersForTeam(event.target.value.id);
-  }
+  };
 
   //call function when render
   useLayoutEffect(() => {
     getTeams();
   }, []);
 
+  const getExercisesByTeamId = (id) => {
+    VolleytrainAPI.getAPI()
+      .getExercisesByTeam(id)
+      .then((exercise) => {
+        setExercises(exercise);
+      })
+      .catch((e) => {
+        setExercises(null);
+      });
+  };
+
+  const addTrainingBO = (trainingBO) => {
+    VolleytrainAPI.getAPI()
+      .addTraining(trainingBO)
+      .then((trainingBO) => {
+        setTraining(trainingBO);
+        console.log(trainingBO);
+        getExercisesByTeamId(training.id);
+      })
+      .catch((e) => {
+        setTraining(null);
+      });
+  };
+
+  console.log(training);
+
   return (
     <div className={classes.root}>
       <div>
         <Tabs>
           <TabList>
-            <Tab >Teammanagement</Tab>
-            <Tab disabled={team==null||name==''||goal==''} onClick={createTraining}>Trainingsablauf</Tab>
+            <Tab>Teammanagement</Tab>
+            <Tab
+              disabled={team == null || name == "" || goal == ""}
+              onClick={createTraining}
+            >
+              Trainingsablauf
+            </Tab>
           </TabList>
           <TabPanel>
             <div className={classes.container}>
-              <FormControl required variant="outlined" className={classes.teamauswahl}>
+              <FormControl
+                required
+                variant="outlined"
+                className={classes.teamauswahl}
+              >
                 <InputLabel id="teamauswahl">Teamauswahl</InputLabel>
                 <Select
                   label="Teamauswahl"
@@ -128,65 +175,73 @@ const TrainingTeammanagement = ({currentUser}) => {
                 </Select>
               </FormControl>
 
-              <TextField 
+              <TextField
                 className={classes.name}
-                value={name} 
-                onChange={(event)=>setName(event.target.value)}
+                value={name}
+                onChange={(event) => setName(event.target.value)}
                 label="Name des Trainings"
                 variant="outlined"
                 required
-                >
-              </TextField>
+              ></TextField>
             </div>
-            <Typography className={classes.heading}>Spielerübersicht</Typography>
+            <TextField
+              error={false}
+              className={classes.goal}
+              required
+              label="Trainingsziel"
+              variant="outlined"
+              value={goal}
+              onChange={(event) => setGoal(event.target.value)}
+            />
+            <Typography className={classes.heading}>
+              Spielerübersicht
+            </Typography>
             <Grid item xs={10}>
-            {player.map((playerBOs) => (
-              <Card className={classes.border}>
-              <CardContent>
-                <Grid container> 
-                  <Grid key={playerBOs.getID()} item xs={2}>
-                    <Typography>
-                      <b>{playerBOs.getSurname()}</b>
-                    </Typography>
-                  </Grid>
-                  <Divider orientation="vertical" flexItem/>
-                  <Grid key={playerBOs.getID()} item xs={2}>
-                    <Typography>
-                      <b>{playerBOs.getName()}</b>
-                    </Typography>
-                  </Grid>
-                  <Divider orientation="vertical" flexItem/>
-                  <Grid key={playerBOs.getID()} item xs={2}>
-                    <Typography>
-                      <b>{playerBOs.getT_number()}</b>
-                    </Typography>  
-                  </Grid>
-                  <Divider orientation="vertical" flexItem/>
-                  <Grid key={playerBOs.getID()} item xs={2}>
-                    <Typography>
-                      <b>{playerBOs.getRole()}</b>
-                    </Typography>  
-                  </Grid>
-                </Grid>
-              </CardContent>
-              </Card>))}
+              {player.map((playerBOs) => (
+                <Card className={classes.border}>
+                  <CardContent>
+                    <Grid container>
+                      <Grid key={playerBOs.getID()} item xs={2}>
+                        <Typography>
+                          <b>{playerBOs.getSurname()}</b>
+                        </Typography>
+                      </Grid>
+                      <Divider orientation="vertical" flexItem />
+                      <Grid key={playerBOs.getID()} item xs={2}>
+                        <Typography>
+                          <b>{playerBOs.getName()}</b>
+                        </Typography>
+                      </Grid>
+                      <Divider orientation="vertical" flexItem />
+                      <Grid key={playerBOs.getID()} item xs={2}>
+                        <Typography>
+                          <b>{playerBOs.getT_number()}</b>
+                        </Typography>
+                      </Grid>
+                      <Divider orientation="vertical" flexItem />
+                      <Grid key={playerBOs.getID()} item xs={2}>
+                        <Typography>
+                          <b>{playerBOs.getRole()}</b>
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </CardContent>
+                </Card>
+              ))}
             </Grid>
-              <TextField
-                error={false}
-                className={classes.goal}
-                required
-                label="Trainingsziel"
-                variant="outlined"
-                value={goal}
-                onChange={(event)=>setGoal(event.target.value)}
-              />
           </TabPanel>
           <TabPanel>
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <div className={classes.divider} />
               </Grid>
-              <Grid item xs={12}></Grid>
+              <Grid item xs={12}>
+                {exercises
+                  ? exercises.map((exerciseBO) => (
+                      <ExerciseComponent exerciseBO={exerciseBO} />
+                    ))
+                  : null}
+              </Grid>
               <CreateExercise
                 className={classes.exerciseButton}
                 Players={player}
@@ -197,10 +252,10 @@ const TrainingTeammanagement = ({currentUser}) => {
         </Tabs>
       </div>
       <LoadingProgress show={loadingInProgress} />
-      <ContextErrorMessage 
-          error={error} 
-          contextErrorMsg = {'Ein Fehler ist aufgetreten'} 
-          /> 
+      <ContextErrorMessage
+        error={error}
+        contextErrorMsg={"Ein Fehler ist aufgetreten"}
+      />
     </div>
   );
 };
@@ -214,18 +269,19 @@ const styles = makeStyles({
   container: {
     display: "flex",
     marginTop: "40px",
-    justifyContent:"flex-start",
-    marginBottom:"50px"
+    justifyContent: "flex-start",
+    marginBottom: "50px",
   },
   teamauswahl: {
     minWidth: 200,
   },
-  name:{
+  name: {
     marginLeft: "150px",
     minWidth: 300,
   },
-  goal:{
+  goal: {
     width: "80%",
+    marginBottom: 50,
   },
   divider: {
     borderBottom: "3px solid rgb(212, 212, 212)",

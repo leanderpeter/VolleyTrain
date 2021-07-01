@@ -52,24 +52,24 @@ class ExerciseMapper(Mapper):
         """
         result = None
         cursor = self._connection.cursor()
-        command = "SELECT PK_Exercise, name, Training_PK_Training, duration, notes, description, goal, rating FROM exercise WHERE PK_Exercise={}".format(
+        command = "SELECT PK_Exercise, name, duration, goal, notes, description, Training_PK_Training, rating FROM exercise WHERE PK_Exercise={}".format(
             id)
         cursor.execute(command)
         tuples = cursor.fetchall()
         try:
-            (id, name, training, duration, notes,
-             description, goal, rating) = tuples[0]
-            exercise = Exercise()
-            exercise.set_id(id)
-            exercise.set_name(name)
-            exercise.setTraining(training)
-            exercise.setDuration(duration)
-            exercise.setNotes(notes)
-            exercise.setDescription(description)
-            exercise.setGoal(goal)
-            exercise.set_rating(rating)
-
-            result = exercise
+            result = []
+            for (id, name, training, duration, notes,
+                 description, goal, rating) in tuples:
+                exercise = Exercise()
+                exercise.set_id(id)
+                exercise.set_name(name)
+                exercise.setTraining(training)
+                exercise.setDuration(duration)
+                exercise.setNotes(notes)
+                exercise.setDescription(description)
+                exercise.setGoal(goal)
+                exercise.set_rating(rating)
+                result.append(exercise)
 
         except IndexError:
             """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
@@ -147,6 +147,38 @@ class ExerciseMapper(Mapper):
         self._connection.commit()
         cursor.close()
         return exerciseId
+
+    def get_by_training_id(self, id):
+
+        cursor = self._connection.cursor()
+        command = f"SELECT PK_Exercise, name, Training_PK_Training, duration, notes, description, goal, rating FROM exercise WHERE Training_PK_Training={id}"
+
+        cursor.execute(command)
+
+        tuples = cursor.fetchall()
+        try:
+            result = []
+            for (id, name, training, duration, notes,
+                 description, goal, rating) in tuples:
+                exercise = Exercise()
+                exercise.set_id(id)
+                exercise.set_name(name)
+                exercise.setTraining(training)
+                exercise.setDuration(duration)
+                exercise.setNotes(notes)
+                exercise.setDescription(description)
+                exercise.setGoal(goal)
+                exercise.set_rating(rating)
+                result.append(exercise)
+
+        except IndexError:
+            """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
+                        keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
+            result = None
+
+        self._connection.commit()
+        cursor.close()
+        return result
 
 
 '''Only for testing purpose'''

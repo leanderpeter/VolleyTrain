@@ -58,6 +58,8 @@ export default class VolleytrainAPI {
   #addExerciseURL = () => `${this.#VolleyTrainServerBaseURL}/exercise`;
   #getExercisesURL = () => `${this.#VolleyTrainServerBaseURL}/exercise`;
   #updateExerciseURL = () => `${this.#VolleyTrainServerBaseURL}/exercise`;
+  #getExercisesByTeamURL = (id) =>
+    `${this.#VolleyTrainServerBaseURL}/exercise/${id}/training`;
 
   //Training
   #getAllTrainings = () => `${this.#VolleyTrainServerBaseURL}/trainings`;
@@ -65,6 +67,7 @@ export default class VolleytrainAPI {
     `${this.#VolleyTrainServerBaseURL}/visible_trainings`;
   #getArchivedTrainings = () =>
     `${this.#VolleyTrainServerBaseURL}/archived_trainings`;
+  #addTrainingURL = () => `${this.#VolleyTrainServerBaseURL}/trainings`;
 
   //getPlayers: all
   #getPlayersURL = () => `${this.#VolleyTrainServerBaseURL}/players`;
@@ -949,6 +952,34 @@ export default class VolleytrainAPI {
       let playerBOs = PlayerBO.fromJSON(responseJSON);
       return new Promise(function (resolve) {
         resolve(playerBOs);
+      });
+    });
+  }
+
+  getExercisesByTeam(id) {
+    return this.#fetchAdvanced(this.#getExercisesByTeamURL(id)).then(
+      (responseJSON) => {
+        let exerciseBOs = ExerciseBO.fromJSON(responseJSON);
+        return new Promise(function (resolve) {
+          resolve(exerciseBOs);
+        });
+      }
+    );
+  }
+
+  addTraining(trainingBO) {
+    return this.#fetchAdvanced(this.#addTrainingURL(), {
+      method: "POST",
+      headers: {
+        Accept: "application/json, text/plain",
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(trainingBO),
+    }).then((responseJSON) => {
+      // zuruck kommt ein array, wir benoetigen aber nur ein Objekt aus dem array
+      let responseTrainingBO = TeamBO.fromJSON(responseJSON);
+      return new Promise(function (resolve) {
+        resolve(responseTrainingBO);
       });
     });
   }

@@ -12,6 +12,7 @@ from server.bo.playerBO import Player
 from server.db.playerMapper import PlayerMapper
 from server.db.matchfieldPlayerMapper import MatchfieldPlayerMapper
 
+
 class volleytrainAdministration(object):
 
     def __init__(self):

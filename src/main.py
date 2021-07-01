@@ -65,10 +65,10 @@ player = api.inherit('nbo', nbo, {
     't_number': fields.Integer(attribute='_t_number', description='t_number of PLayer')
 })
 training = api.inherit('training', nbo, {
-    'datetime': fields.DateTime(attribute='_datetime', description='Datum und Zeitpunkt des Trainings'),
+    'datetime': fields.String(attribute='_datetime', description='Datum und Zeitpunkt des Trainings'),
     'goal': fields.String(attribute='_goal', description='Ziel des Trainings'),
-    'team_id': fields.Integer(attribute='_team_id', description='ID des beteiligten Team'),
-    'user_id': fields.Integer(attribute='_user_id', description='ID des User/Trainer'),
+    'team_id': fields.Integer(attribute='teamId', description='ID des beteiligten Team'),
+    'user_id': fields.Integer(attribute='userId', description='ID des User/Trainer'),
     'visibility': fields.Boolean(attribute='_visibility', description='Sichtbarkeit für archivierte und aktuelle Trainings')
 })
 
@@ -281,7 +281,6 @@ class TrainingListOperations(Resource):
         proposal = Training.from_dict(api.payload)
         print(api.payload)
 
-        print(proposal)
         if proposal is not None:
             training = adm.create_training(proposal)
             return training, 200
@@ -514,7 +513,6 @@ class ExerciseOperation(Resource):
 
         adm = volleytrainAdministration()
         exercise = Exercise.from_dict(api.payload)
-        print(exercise)
 
         if exercise is not None:
             created_exercise = adm.createExercise(exercise)
@@ -590,6 +588,17 @@ class MatchfieldPlayerTransformOperation(Resource):
         adm = volleytrainAdministration()
         matchfieldPlayers = adm.deletePlayerPosByMatchfieldId(tmp)
         return matchfieldPlayers
+
+
+@volleyTrain.route('/exercise/<int:id>/training')
+@volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ExerciseTrainingOperation(Resource):
+
+    @volleyTrain.marshal_list_with(exercise)
+    def get(self, id):
+        adm = volleytrainAdministration()
+        exercises = adm.getExercisesByTrainingId(id)
+        return exercises
 
 
 """ @volleyTrain.route("/team/<int:id>/players")
