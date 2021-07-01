@@ -84,7 +84,7 @@ export default function Header(props) {
             </ListItemIcon>
             Trainingspläne
           </ListItem>
-          <ListItem button component={Link} to={"/exercises"}>
+          <ListItem button component={Link} to={'/exerciseoverview'}>
             <ListItemIcon style={{ color: "white" }}>
               <MenuBookIcon />
             </ListItemIcon>
