@@ -28,6 +28,7 @@ import BlankPage from "./components/pages/BlankPage";
 import ExerciseOverview from "./components/pages/ExerciseOverview";
 import TrainingPlaningPage from "./components/pages/TrainingPlaningPage";
 import TrainingTeammanagement from "./components/pages/TrainingTeammanagement";
+import ViewTraining from "./components/pages/ViewTraining"
 
 /*
 Main page of the volleytrain. First firebase to verify users. Then routing to the pages via react-router-dom
@@ -151,6 +152,9 @@ class App extends React.Component {
               <Redirect from="/" to="home" />
               <Route path="/home" component={Home}>
                 <Home />
+              </Route>
+              <Route path="/viewTraining" component={ViewTraining}>
+                <ViewTraining />
               </Route>
               <Route path="/training" component={Home}>
                 <TrainingSchedule />
