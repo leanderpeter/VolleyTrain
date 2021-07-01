@@ -34,7 +34,7 @@ class volleytrainAdministration(object):
 
     def getUserById(self, id):
         with UserMapper() as mapper:
-            return mapper.find_byp_id(id)
+            return mapper.find_by_id(id)
 
     def getPersonByGoogleUserId(self, gId):
         with UserMapper() as mapper:

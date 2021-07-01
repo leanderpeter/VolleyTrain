@@ -23,9 +23,9 @@ import UpdateTeam from "../dialogs/UpdateTeam";
 import VolleytrainAPI from "../../api/VolleytrainAPI";
 import TrainingSchedule from "../TrainingSchedule";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-import PlayerOverview from './PlayerOverview';
-import CreatePLayer from "../dialogs/CreatePLayer";
-import AddIcon from '@material-ui/icons/Add'
+import PlayerOverview from "./PlayerOverview";
+import CreatePlayer from "../dialogs/CreatePlayer";
+import AddIcon from "@material-ui/icons/Add";
 import PlayerBO from "../../api/PlayerBO";
 import TeamBO from "../../api/TeamBO";
 
@@ -40,7 +40,7 @@ class Team extends Component {
       updateDialogOpen: false,
       trainingdays: [],
       player: [],
-      openNewPlayer: false
+      openNewPlayer: false,
     };
   }
 
@@ -112,9 +112,13 @@ class Team extends Component {
           error: e,
           loadingInProgress: false,
         })
-        )      
-    }
-    
+      );
+  };
+
+  createPlayer = (player) => {
+    VolleytrainAPI.getAPI().addPlayer(player);
+  };
+
   updateTeam = (team) => {
     VolleytrainAPI.getAPI().updateTeam(team);
   };
@@ -164,121 +168,144 @@ class Team extends Component {
 
   componentDidMount = () => {
     this.getTrainingdays();
-    this.getPlayersForTeam()
+    this.getPlayersForTeam();
   };
 
-  openNewPlayer=()=>{
+  openNewPlayer = () => {
     this.setState({
-      openNewPlayer: !this.state.openNewPlayer
-    })
+      openNewPlayer: !this.state.openNewPlayer,
+    });
+    this.getPlayersForTeam();
   };
 
   render() {
     const { classes } = this.props;
-    const { team, dialogOpen, trainingdays, player,deleteDialogOpen, updateDialogOpen, openNewPlayer } = this.state;
+    const {
+      team,
+      trainingdays,
+      player,
+      deleteDialogOpen,
+      updateDialogOpen,
+      openNewPlayer,
+    } = this.state;
 
     return (
-      <div className={classes.root}>
+      <div>
         <Tabs>
-        <TabList>
-            <Tab>Übersicht</Tab>
-            <Tab>Spieler</Tab>
-          </TabList>
-        <TabPanel>
-        <Grid
-          spacing={3}
-          container
-          direction="row"
-          justify="center"
-          className={classes.border}
-        >
-          <Grid item xs={7}>
-            <Typography variant="h5">{team.getName()}</Typography>
-          </Grid>
-          <Divider orientation="vertical" flexItem />
-          <Grid item xs={4} />
-          <Grid item xs={4}>
-            <Typography variant="h6">Trainingszeiten</Typography>
-            {trainingdays.map((day) => (
-              <Typography key={day.getID()}>
-                {day.getWeekday()} {day.getStarttime()} - {day.getEndtime()} Uhr
-              </Typography>
-            ))}
-          </Grid>
-          <Grid item xs={3}>
-            <Typography variant="h6">Trainingsdauer</Typography>
-            {trainingdays.map((day) => (
-              <Typography key={day.getID()}>
-                {day.getStarttime()} Stunde(n)
-              </Typography>
-            ))}
-          </Grid>
-          <Divider orientation="vertical" flexItem />
-          <Grid item xs={1} />
-          <Grid item xs={3}>
-            <Typography variant="h6">Verwalten</Typography>
-            <Typography onClick={this.handleUpdateClick}>
-              ... aktuelles Team bearbeiten
-            </Typography>
-            <Typography onClick={this.handleDeleteClick}>
-              ... aktuelles Team löschen
-            </Typography>
-          </Grid>
-        </Grid>
-        <TrainingSchedule />
-        <DeleteTeam
-          deleteDialogOpen={deleteDialogOpen}
-          team={team}
-          deleteTeam={this.deleteTeam}
-          onClose={this.handleDeleteClose}
-        />
-        <UpdateTeam
-          updateDialogOpen={updateDialogOpen}
-          team={team}
-          trainingdays={trainingdays}
-          deleteTrainingday={this.deleteTrainingday}
-          updateTeam={this.updateTeam}
-          updateTrainingday={this.updateTrainingday}
-          onClose={this.handleUpdateClose}
-        />
-        </TabPanel>
-        <TabPanel>
-        <Button onClick={this.openNewPlayer} ><AddIcon/></Button>
-        <Grid item xs={10}>
-            {player.map((playerBOs) => (
-              <Card className={classes.border}>
-              <CardContent>
-                <Grid container> 
-                  <Grid key={playerBOs.getID()} item xs={2}>
-                    <Typography>
-                      <b>{playerBOs.getSurname()}</b>
-                    </Typography>
-                  </Grid>
-                  <Divider orientation="vertical" flexItem/>
-                  <Grid key={playerBOs.getID()} item xs={2}>
-                    <Typography>
-                      <b>{playerBOs.getName()}</b>
-                    </Typography>
-                  </Grid>
-                  <Divider orientation="vertical" flexItem/>
-                  <Grid key={playerBOs.getID()} item xs={2}>
-                    <Typography>
-                      <b>{playerBOs.getT_number()}</b>
-                    </Typography>  
-                  </Grid>
-                  <Divider orientation="vertical" flexItem/>
-                  <Grid key={playerBOs.getID()} item xs={2}>
-                    <Typography>
-                      <b>{playerBOs.getRole()}</b>
-                    </Typography>  
-                  </Grid>
+          <div className={classes.root}>
+            <TabList>
+              <Tab>Übersicht</Tab>
+              <Tab>Spieler</Tab>
+            </TabList>
+          </div>
+          <TabPanel>
+            <div className={classes.root}>
+              <Grid
+                spacing={3}
+                container
+                direction="row"
+                justify="center"
+                className={classes.border}
+              >
+                <Grid item xs={7}>
+                  <Typography variant="h5">{team.getName()}</Typography>
                 </Grid>
-              </CardContent>
-              </Card>))}
-            </Grid>
-        </TabPanel>
+                <Divider orientation="vertical" flexItem />
+                <Grid item xs={4} />
+                <Grid item xs={4}>
+                  <Typography variant="h6">Trainingszeiten</Typography>
+                  {trainingdays.map((day) => (
+                    <Typography key={day.getID()}>
+                      {day.getWeekday()} {day.getStarttime()} -{" "}
+                      {day.getEndtime()} Uhr
+                    </Typography>
+                  ))}
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="h6">Trainingsdauer</Typography>
+                  {trainingdays.map((day) => (
+                    <Typography key={day.getID()}>
+                      {day.getStarttime()} Stunde(n)
+                    </Typography>
+                  ))}
+                </Grid>
+                <Divider orientation="vertical" flexItem />
+                <Grid item xs={1} />
+                <Grid item xs={3}>
+                  <Typography variant="h6">Verwalten</Typography>
+                  <Typography onClick={this.handleUpdateClick}>
+                    ... aktuelles Team bearbeiten
+                  </Typography>
+                  <Typography onClick={this.handleDeleteClick}>
+                    ... aktuelles Team löschen
+                  </Typography>
+                </Grid>
+              </Grid>
+            </div>
+            <TrainingSchedule />
+            <DeleteTeam
+              deleteDialogOpen={deleteDialogOpen}
+              team={team}
+              deleteTeam={this.deleteTeam}
+              onClose={this.handleDeleteClose}
+            />
+            <UpdateTeam
+              updateDialogOpen={updateDialogOpen}
+              team={team}
+              trainingdays={trainingdays}
+              deleteTrainingday={this.deleteTrainingday}
+              updateTeam={this.updateTeam}
+              updateTrainingday={this.updateTrainingday}
+              onClose={this.handleUpdateClose}
+            />
+          </TabPanel>
+          <TabPanel>
+            <div className={classes.root}>
+              <Button onClick={this.openNewPlayer}>
+                <AddIcon />
+              </Button>
+              <Grid item xs={10}>
+                {player.map((playerBOs) => (
+                  <Card className={classes.border}>
+                    <CardContent>
+                      <Grid container>
+                        <Grid key={playerBOs.getID()} item xs={2}>
+                          <Typography>
+                            <b>{playerBOs.getSurname()}</b>
+                          </Typography>
+                        </Grid>
+                        <Divider orientation="vertical" flexItem />
+                        <Grid key={playerBOs.getID()} item xs={2}>
+                          <Typography>
+                            <b>{playerBOs.getName()}</b>
+                          </Typography>
+                        </Grid>
+                        <Divider orientation="vertical" flexItem />
+                        <Grid key={playerBOs.getID()} item xs={2}>
+                          <Typography>
+                            <b>{playerBOs.getT_number()}</b>
+                          </Typography>
+                        </Grid>
+                        <Divider orientation="vertical" flexItem />
+                        <Grid key={playerBOs.getID()} item xs={2}>
+                          <Typography>
+                            <b>{playerBOs.getRole()}</b>
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </CardContent>
+                  </Card>
+                ))}
+              </Grid>
+            </div>
+          </TabPanel>
         </Tabs>
-        <CreatePLayer dialogOpen={openNewPlayer} onClose={this.openNewPlayer} />
+        <CreatePlayer
+          dialogOpen={openNewPlayer}
+          onClose={this.openNewPlayer}
+          team={team}
+          createPlayer={this.createPlayer}
+        />
       </div>
     );
   }

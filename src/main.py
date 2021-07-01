@@ -140,26 +140,29 @@ class UserOperation(Resource):
 @volleyTrain.route("/playerss")
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class PlayerOperations(Resource):
-    @volleyTrain.marshal_list_with(player, code=200)
+    @volleyTrain.marshal_with(player, code=200)
     @volleyTrain.expect(player)
-    # @secured
+    @secured
     def post(self):
         """Create Player"""
+        print(api.payload)
         adm = volleytrainAdministration()
-        player = Player.from_dict(api.payload)
-        if player is not None:
-            c = adm.createPlayer(player.get_surname(), player.get_name(), player.get_teamid(),
-                                 player.get_role(), player.get_t_number())
-            return c, 200
+        proposal = Player.from_dict(api.payload)
+
+        if proposal is not None:
+            player = adm.createPlayer(proposal.get_surname(
+            ), proposal.get_name(), proposal.get_teamid(), proposal.get_role(), proposal.get_t_number())
+            return player, 200
         else:
             return '', 500
+
 
 @volleyTrain.route("/player/<int:id>")
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @volleyTrain.param('id', 'Die ID des Player-Objekts')
-class PlayerOperations(Resource):
+class PlayerByIdOperations(Resource):
     @volleyTrain.marshal_list_with(player)
-    #@secured
+    # @secured
     def get(self, id):
         """Player by ID"""
         adm = volleytrainAdministration()
@@ -185,7 +188,7 @@ class PlayerOperations(Resource):
         return player
 
     @volleyTrain.marshal_with(player)
-    #@secured
+    # @secured
     def delete(self):
         """Delte Player"""
         adm = volleytrainAdministration()
@@ -198,7 +201,9 @@ class PlayerOperations(Resource):
 #        else:
 #            return 'Deleting failed', 500
 
+
 """All PLayer API"""
+
 
 @volleyTrain.route('/players')
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
