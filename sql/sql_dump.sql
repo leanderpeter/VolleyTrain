@@ -85,7 +85,7 @@ CREATE TABLE `exercise` (
 
 LOCK TABLES `exercise` WRITE;
 /*!40000 ALTER TABLE `exercise` DISABLE KEYS */;
-INSERT INTO `exercise` VALUES (1,'Training - 1',20,'Aufwärmen','lief gut','öldskföaoeirgoabgroöaeg',1,3),(2,'Training - 2',15,'Spielvorbereitung','bla','dföaoiegjoiaejrgoiahgr',2,3),(3,'Training - 3',10,'Nachbereitung','blabla','aöofighoaihgoiaehrg',3,3),(4,'Training - 4',20,'Aufwärmen','lief gut','öldskföaoeirgoabgroöaeg',1,3);
+INSERT INTO `exercise` VALUES (1,'Training - 1',20,'Aufwärmen','lief gut','Hilfsmittel verwenden',1,4),(2,'Training - 2',15,'Spielvorbereitung','bla','Mehr Einsatz zeigen!',2,1),(3,'Training - 3',10,'Nachbereitung','blabla','Neue App verwenden',3,3),(4,'Training - 4',20,'Aufwärmen','lief gut','Kasten Bier kaufen ;)',4,5);
 /*!40000 ALTER TABLE `exercise` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -111,7 +111,7 @@ CREATE TABLE `matchfield` (
 
 LOCK TABLES `matchfield` WRITE;
 /*!40000 ALTER TABLE `matchfield` DISABLE KEYS */;
-INSERT INTO `matchfield` VALUES (1,1),(2,2),(3,3);
+INSERT INTO `matchfield` VALUES (1,1),(2,2),(3,3),(4,3);
 /*!40000 ALTER TABLE `matchfield` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -337,7 +337,7 @@ CREATE TABLE `training` (
 
 LOCK TABLES `training` WRITE;
 /*!40000 ALTER TABLE `training` DISABLE KEYS */;
-INSERT INTO `training` VALUES (1,'Training1','2021-07-28 13:45:54','Ausdauer verbessern',1,1,1),(2,'Training2','2021-05-27 13:45:54','Strategie planen',2,1,0),(3,'Training3','2020-06-27 13:45:54','Beweglichkeit verbessern',3,1,1);
+INSERT INTO `training` VALUES (1,'Training1','2021-07-28 13:45:54','Ausdauer verbessern',1,1,1),(2,'Training2','2021-05-27 13:45:54','Strategie planen',2,1,0),(3,'Training3','2020-06-27 13:45:54','Beweglichkeit verbessern',3,1,1),(3,'Training 4','2020-06-27 13:45:54','Meisterschaftstraining',3,1,1);
 /*!40000 ALTER TABLE `training` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -364,7 +364,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,NULL,NULL,'william.zhang2610@gmail.com','ikrAmmMAmtQij7QWQ98GO5PvEhr1');
+INSERT INTO `user` VALUES (2,NULL,NULL,'william.zhang2610@gmail.com','ikrAmmMAmtQij7QWQ98GO5PvEhr1');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

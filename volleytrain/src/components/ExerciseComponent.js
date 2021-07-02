@@ -54,7 +54,7 @@ const styles = makeStyles({
     textDecoration: "None",
   },
   border: {
-    border: "2px solid #3ECCA5",
+    border: "2px solid #0B3298",
     boxSizing: "border-box",
     boxShadow: "0px 4px 10px rgba(84, 78, 78, 0.2)",
     borderRadius: "9px",
@@ -64,7 +64,7 @@ const styles = makeStyles({
     fontSize: "21px",
     marginBottom: "20px",
     textDecorationLine: "underline",
-    textDecorationColor: "#3ECCA5",
+    textDecorationColor: "#0B3298",
   },
   solid: {
     border: "1px solid #bbb",

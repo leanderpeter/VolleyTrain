@@ -50,7 +50,7 @@ class TrainingScheduleEntry extends React.Component {
 
   getTeam = () => {
     VolleytrainAPI.getAPI()
-      .getTeamByID(this.state.training.team_id)
+      .getTeamByID(this.state.training.getTeamId())
       .then((team) => {
         this.setState({
           team: team,
