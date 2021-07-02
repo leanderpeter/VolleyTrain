@@ -573,7 +573,7 @@ class MatchfieldPlayerTransformOperation(Resource):
 @volleyTrain.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ExerciseTrainingOperation(Resource):
 
-    @volleyTrain.marshal_list_with(exercise)
+    @volleyTrain.marshal_list_with(training)
     def get(self, id):
         adm = volleytrainAdministration()
         exercises = adm.getExercisesByTrainingId(id)

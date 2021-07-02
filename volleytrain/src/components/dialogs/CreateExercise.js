@@ -16,7 +16,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function CreateExercise({ Players, Training }) {
+export default function CreateExercise({ Players, Training, Trigger }) {
   const [open, setOpen] = React.useState(false);
 
   //show or hide Exercise Component state
@@ -48,6 +48,7 @@ export default function CreateExercise({ Players, Training }) {
   const closeOpenHandler = () => {
     setShowComp(false);
     setShowButton(true);
+    Trigger(exercise);
   };
 
   // const init Exercise State
@@ -59,15 +60,17 @@ export default function CreateExercise({ Players, Training }) {
 
     VolleytrainAPI.getAPI()
       .addExercise(exercise)
-      .then((exercise) => {
-        setExercise(exercise);
+      .then((exerciseBO) => {
+        setExercise(exerciseBO);
       })
       .catch((e) => {
         setExercise(null);
       });
   };
 
-  const MatchfieldIDMock = 1;
+  console.log(exercise);
+
+  const MatchfieldIDMock = 4;
 
   return (
     <div>

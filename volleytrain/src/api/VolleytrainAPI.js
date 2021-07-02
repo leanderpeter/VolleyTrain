@@ -5,6 +5,7 @@ import TeamBO from "./TeamBO";
 import TrainingdayBO from "./TrainingdayBO";
 import ExerciseBO from "./ExerciseBO";
 import MatchfieldPlayerBO from "./MatchfieldPlayerBO";
+import PositionBO from "./PositionBO";
 
 /*
 Singleton Abstarktion des backend REST interfaces. Es handelt sich um eine access methode
@@ -446,7 +447,7 @@ export default class VolleytrainAPI {
       body: JSON.stringify(positionBO),
     }).then((responseJSON) => {
       // zuruck kommt ein array, wir benoetigen aber nur ein Objekt aus dem array
-      let responsePositionBO = positionBO.fromJSON(responseJSON);
+      let responsePositionBO = PositionBO.fromJSON(responseJSON);
       return new Promise(function (resolve) {
         resolve(responsePositionBO);
       });
@@ -463,7 +464,7 @@ export default class VolleytrainAPI {
       body: JSON.stringify(positionBO),
     }).then((responseJSON) => {
       // zuruck kommt ein array, wir benoetigen aber nur ein Objekt aus dem array
-      let responsePositionBO = positionBO.fromJSON(responseJSON);
+      let responsePositionBO = PositionBO.fromJSON(responseJSON);
       return new Promise(function (resolve) {
         resolve(responsePositionBO);
       });

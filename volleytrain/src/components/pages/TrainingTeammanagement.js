@@ -62,6 +62,23 @@ const TrainingTeammanagement = ({ currentUser }) => {
   // init exercises state
   const [exercises, setExercises] = useState(null);
 
+  //exercise added
+  const [exercisesAdded, triggerExerciseAdded] = useState(null);
+
+  //call function when render
+  useLayoutEffect(() => {
+    if (!(training == null)) {
+      getExercisesByTrainingId(training.id);
+    }
+
+    forceUpdate();
+  }, [exercisesAdded]);
+
+  //call function when render
+  useLayoutEffect(() => {
+    forceUpdate();
+  }, [, exercises]);
+
   const getTeams = () => {
     VolleytrainAPI.getAPI()
       .getAllTeams()
@@ -117,6 +134,8 @@ const TrainingTeammanagement = ({ currentUser }) => {
     getTeams();
   }, []);
 
+  console.log(exercises);
+
   const getExercisesByTrainingId = (id) => {
     VolleytrainAPI.getAPI()
       .getExercisesByTraining(id)
@@ -133,7 +152,8 @@ const TrainingTeammanagement = ({ currentUser }) => {
       .addTraining(trainingBO)
       .then((trainingBO) => {
         setTraining(trainingBO);
-        getExercisesByTrainingId(training.id);
+        console.log(trainingBO);
+        getExercisesByTrainingId(trainingBO.id);
       })
       .catch((e) => {
         setTraining(null);
@@ -243,6 +263,7 @@ const TrainingTeammanagement = ({ currentUser }) => {
                 className={classes.exerciseButton}
                 Players={player}
                 Training={training}
+                Trigger={triggerExerciseAdded}
               />
             </Grid>
           </TabPanel>
