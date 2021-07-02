@@ -38,9 +38,6 @@ class PlayerMapper(Mapper):
 
         return result
 
-    def find_by_name(self):
-        pass
-
     def find_by_id(self, id):
 
         result = []
@@ -49,25 +46,25 @@ class PlayerMapper(Mapper):
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        if len(tuples) != 0:
+        try:
+            (id, surname, name, teamId, role, t_number) = tuples[0]
+            player = Player()
+            player.set_id(id)
+            player.set_name(name)
+            player.set_surname(surname)
+            player.setTeamId(teamId)
+            player.setRole(role)
+            player.setT_number(t_number)
 
-            for (id, surname, name, teamid, role, t_number) in tuples:
-                player = Player()
-                player.set_id(id)
-                player.set_name(name)
-                player.set_surname(surname)
-                player.set_teamid(teamid)
-                player.set_role(role)
-                player.set_t_number(t_number)
+            result = player
 
-                result.append(player)
-
-        else:
+        except IndexError:
+            """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
+                        keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
             result = None
 
         self._connection.commit()
         cursor.close()
-
         return result
 
     def find_by_teamid(self, teamId):
@@ -138,13 +135,10 @@ class PlayerMapper(Mapper):
             .format(player.get_id(), player.get_surname(), player.get_name(), player.get_teamid(), player.get_role(),
                     player.get_t_number())
 
-        cursor.execute(command, data)
+        cursor.execute(command)
 
         self._connection.commit()
         cursor.close()
-
-    def update_by_id(self, player):
-        pass
 
     def delete(self, player):
         """Löschen der Daten eines Player aus der Datenbank
@@ -158,29 +152,3 @@ class PlayerMapper(Mapper):
 
         self._connection.commit()
         cursor.close()
-        return player
-
-
-'''Only for testing purpose'''
-
-"""
-if (__name__ == "__main__"):
-    with PlayerMapper() as mapper:
-        result = mapper.find_all()
-        for user in result:
-            print(user)
-"""
-"""
-if (__name__ == "__main__"):
-    with PlayerMapper() as mapper:
-        user = mapper.find_by_id(1)
-        for i in user:
-            print(i.getName())
-"""
-"""
-if (__name__ == "__main__"):
-    with PlayerMapper() as mapper:
-        user = mapper.find_by_id(8)
-        for i in user:
-            mapper.delete(i)
-"""

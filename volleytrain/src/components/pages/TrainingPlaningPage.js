@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { Button, Typography, makeStyles, Grid } from "@material-ui/core";
+import React from "react";
+import { Typography, makeStyles, Grid } from "@material-ui/core";
 import { Link } from "react-router-dom";
 
 import newTrainingIcon from "../../assets/newTrainingIcon.svg";
@@ -49,7 +49,6 @@ const styles = makeStyles({
     boxSizing: "border-box",
     boxShadow: "0px 4px 10px rgba(84, 78, 78, 0.2)",
     borderRadius: "9px",
-    marginBottom: "15px",
     height: "200px",
     display: "flex",
     marginBottom: "30px",

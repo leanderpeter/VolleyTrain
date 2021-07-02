@@ -27,7 +27,6 @@ export function PositionHandler(MatchfieldPlayers, Players, dimensions) {
         if (Players[i].id == MatchfieldPlayers[j]._player_pk) {
           //"Here we concat given players with given positions"
           // create a player object with matchfield positions and push it into the player array
-          //console.log(MatchfieldPlayers[j].top)
           const obj = {
             id: Players[i].id,
             surname: Players[i].surname,
@@ -37,7 +36,6 @@ export function PositionHandler(MatchfieldPlayers, Players, dimensions) {
             left: parseFloat(MatchfieldPlayers[j].left) * dimensions.width,
             visibleOnSelection: false,
           };
-          //console.log(obj)
           posPlayer.push(obj);
         } else if (!player_key_array.includes(Players[i].id)) {
           //"Here we check if theres a Player id without a position"

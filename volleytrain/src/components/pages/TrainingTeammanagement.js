@@ -141,8 +141,6 @@ const TrainingTeammanagement = ({ currentUser }) => {
       });
   };
 
-  console.log(training);
-
   return (
     <div className={classes.root}>
       <div>
