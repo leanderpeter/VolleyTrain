@@ -236,7 +236,7 @@ CREATE TABLE `player` (
 
 LOCK TABLES `player` WRITE;
 /*!40000 ALTER TABLE `player` DISABLE KEYS */;
-INSERT INTO `player` VALUES (1,'Max','Musterspieler',1,'Zuspieler',1),(2,'Clara','Klarheit',1,'Zuspieler',2),(3,'Jürgen','Diesdas',1,'Diagonalspieler',3),(4,'Johannes','Steil',1,'Diagonalspieler',4),(5,'Sebastian','Puff',1,'Libero',5),(6,'Sophia','Müller',1,'Libero',6);
+INSERT INTO `player` VALUES (1,'Max','Musterspieler',1,'Zuspieler',1),(2,'Clara','Klarheit',1,'Zuspieler',2),(3,'Jürgen','Diesdas',1,'Diagonalspieler',3),(4,'Johannes','Steil',1,'Diagonalspieler',4),(5,'Sebastian','Puff',1,'Libero',5),(6,'Sophia','Müller',1,'Libero',6),(7,'Maxi','Muster',2,'Zuspieler',1),(8,'Carla','Klar',2,'Zuspieler',2),(9,'Jürgen','Derda',2,'Diagonalspieler',3),(10,'Johannes','Steil',3,'Diagonalspieler',4),(11,'Sebi','Paffi',3,'Libero',5),(12,'Sophy','Miller',3,'Libero',6);
 /*!40000 ALTER TABLE `player` ENABLE KEYS */;
 UNLOCK TABLES;
 
