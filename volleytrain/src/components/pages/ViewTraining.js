@@ -72,11 +72,14 @@ const TrainingTeammanagement = () => {
       <div className={classes.root}>
           {exercises
                   ? exercises.map((exercise) => (
-                    <ExerciseComp
-                    Players={player}
-                    MatchfieldID={MatchfieldIDMock}
-                    exerciseToChange={exercise}
-                  />
+                    <div className={classes.exercise}>
+                      <ExerciseComp
+                      key={exercise.getID()}
+                      Players={player}
+                      MatchfieldID={MatchfieldIDMock}
+                      exerciseToChange={exercise}
+                      />
+                    </div>
                     ))
                   : null}
         <LoadingProgress show={loadingInProgress} />
@@ -94,6 +97,9 @@ const TrainingTeammanagement = () => {
       margin: "auto",
       marginLeft: "280px",
       marginRight: "50px",
+    },
+    exercise:{
+      marginBottom: "100px"
     }
   });
   
@@ -110,6 +116,7 @@ const TrainingTeammanagement = () => {
           MatchfieldID={MatchfieldID}
           setShowCompState={setShowCompState}
           exercise={exerciseToChange}
+          viewOnly={true}
         />
       </DndProvider>
     </div>

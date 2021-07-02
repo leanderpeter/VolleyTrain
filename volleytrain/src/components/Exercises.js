@@ -31,7 +31,7 @@ import field from "./media/field.png";
 import LoadingComp from "./dialogs/LoadingComp";
 import { deepOrange, deepPurple } from "@material-ui/core/colors";
 
-const Exercises = ({ Players, MatchfieldID, setShowCompState, exercise }) => {
+const Exercises = ({ Players, MatchfieldID, setShowCompState, exercise, viewOnly}) => {
   // force update handler
   const [ignored, forceUpdate] = useReducer((x) => x + 1, 0);
 
@@ -304,6 +304,13 @@ const Exercises = ({ Players, MatchfieldID, setShowCompState, exercise }) => {
     exerciseGoalValidation(exerciseGoal);
   }, [, exerciseName, exerciseGoal]);
 
+  useEffect(() => {
+    if(exercise){
+      setExerciseGoal(exercise.getGoal())
+      setExerciseName(exercise.getName())
+    }
+  }, [, exercise]);
+
   return (
     <div>
       <div className={classes.root}>
@@ -346,6 +353,7 @@ const Exercises = ({ Players, MatchfieldID, setShowCompState, exercise }) => {
                 <TextField
                   error={exerciseNameValdiation}
                   required
+                  value={exerciseName}
                   id="outlined-required"
                   placeholder="Neue Übung..."
                   variant="outlined"
@@ -373,6 +381,7 @@ const Exercises = ({ Players, MatchfieldID, setShowCompState, exercise }) => {
               >
                 <TextField
                   error={exerciseGoalValdiation}
+                  value={exerciseGoal}
                   required
                   id="outlined-required"
                   placeholder="Ziel..."
@@ -428,21 +437,23 @@ const Exercises = ({ Players, MatchfieldID, setShowCompState, exercise }) => {
                 </div>
               </div>
             </div>
-            <Grid
+            {!viewOnly ?
+              <Grid
               container
               direction="row"
               justify="flex-start"
               alignItems="flex-end"
-            >
-              <Button
-                variant="outlined"
-                color="primary"
-                onClick={saveExercise}
-                style={{ marginTop: 10 }}
               >
-                Zum Training hinzufügen
-              </Button>
-            </Grid>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={saveExercise}
+                  style={{ marginTop: 10 }}
+                >
+                  Zum Training hinzufügen
+                </Button>
+              </Grid>
+            :null}
           </Grid>
           <Grid
             item

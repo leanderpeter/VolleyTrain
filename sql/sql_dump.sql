@@ -337,7 +337,7 @@ CREATE TABLE `training` (
 
 LOCK TABLES `training` WRITE;
 /*!40000 ALTER TABLE `training` DISABLE KEYS */;
-INSERT INTO `training` VALUES (1,'Training1','2021-07-28 13:45:54','Ausdauer verbessern',1,1,1),(2,'Training2','2021-05-27 13:45:54','Strategie planen',2,1,0),(3,'Training3','2020-06-27 13:45:54','Beweglichkeit verbessern',3,1,1),(3,'Training 4','2020-06-27 13:45:54','Meisterschaftstraining',3,1,1);
+INSERT INTO `training` VALUES (1,'Training1','2021-07-28 13:45:54','Ausdauer verbessern',1,1,1),(2,'Training2','2021-05-27 13:45:54','Strategie planen',2,1,0),(3,'Training3','2020-06-27 13:45:54','Beweglichkeit verbessern',3,1,1),(4,'Training 4','2020-06-27 13:45:54','Meisterschaftstraining',3,1,1);
 /*!40000 ALTER TABLE `training` ENABLE KEYS */;
 UNLOCK TABLES;
 
