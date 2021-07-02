@@ -208,3 +208,7 @@ class volleytrainAdministration(object):
     def delete_exercise(self, exercise_id):
         with ExerciseMapper() as mapper:
             return mapper.delete(exercise_id)
+            
+    def getExercisesByTrainingId(self, id):
+        with ExerciseMapper() as mapper:
+            return mapper.get_by_training_id(id)

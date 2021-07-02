@@ -60,15 +60,15 @@ user = api.inherit('user', nbo, {
 
 player = api.inherit('nbo', nbo, {
     'surname': fields.String(attribute='_surname', description='Surname of Player'),
-    'teamid': fields.Integer(attribute='_teamid', description='Team ID of Player'),
+    'teamId': fields.Integer(attribute='_teamid', description='Team ID of Player'),
     'role': fields.String(attribute='_role', description='Role of Player'),
     't_number': fields.Integer(attribute='_t_number', description='t_number of PLayer')
 })
 training = api.inherit('training', nbo, {
     'datetime': fields.String(attribute='_datetime', description='Datum und Zeitpunkt des Trainings'),
     'goal': fields.String(attribute='_goal', description='Ziel des Trainings'),
-    'team_id': fields.Integer(attribute='teamId', description='ID des beteiligten Team'),
-    'user_id': fields.Integer(attribute='userId', description='ID des User/Trainer'),
+    'teamId': fields.Integer(attribute='_team_id', description='ID des beteiligten Team'),
+    'userId': fields.Integer(attribute='_user_id', description='ID des User/Trainer'),
     'visibility': fields.Boolean(attribute='_visibility', description='Sichtbarkeit für archivierte und aktuelle Trainings')
 })
 

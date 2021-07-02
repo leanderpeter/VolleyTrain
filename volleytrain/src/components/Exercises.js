@@ -185,7 +185,7 @@ const Exercises = ({ Players, MatchfieldID, setShowCompState, exercise }) => {
     if (dimensions.width > 5) {
       getMatchfieldPlayers(MatchfieldID);
     }
-  }, [, dimensions]);
+  }, [, dimensions,Players]);
 
   useEffect(() => {
     if (dimensions.width < 5) {

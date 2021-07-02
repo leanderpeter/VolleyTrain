@@ -117,9 +117,9 @@ const TrainingTeammanagement = ({ currentUser }) => {
     getTeams();
   }, []);
 
-  const getExercisesByTeamId = (id) => {
+  const getExercisesByTrainingId = (id) => {
     VolleytrainAPI.getAPI()
-      .getExercisesByTeam(id)
+      .getExercisesByTraining(id)
       .then((exercise) => {
         setExercises(exercise);
       })
@@ -133,7 +133,7 @@ const TrainingTeammanagement = ({ currentUser }) => {
       .addTraining(trainingBO)
       .then((trainingBO) => {
         setTraining(trainingBO);
-        getExercisesByTeamId(training.id);
+        getExercisesByTrainingId(training.id);
       })
       .catch((e) => {
         setTraining(null);

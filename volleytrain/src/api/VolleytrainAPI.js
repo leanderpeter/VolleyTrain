@@ -36,7 +36,7 @@ export default class VolleytrainAPI {
 
   //POSTE eine neue Übung
   #ExerciseURL = () => `${this.#VolleyTrainServerBaseURL}/exercise`;
-  #getExercisesByTeamURL = (id) =>
+  #getExercisesByTrainingURL = (id) =>
     `${this.#VolleyTrainServerBaseURL}/exercise/${id}/training`;
 
   //Training
@@ -482,8 +482,8 @@ export default class VolleytrainAPI {
     });
   }
 
-  getExercisesByTeam(id) {
-    return this.#fetchAdvanced(this.#getExercisesByTeamURL(id)).then(
+  getExercisesByTraining(id) {
+    return this.#fetchAdvanced(this.#getExercisesByTrainingURL(id)).then(
       (responseJSON) => {
         let exerciseBOs = ExerciseBO.fromJSON(responseJSON);
         return new Promise(function (resolve) {
