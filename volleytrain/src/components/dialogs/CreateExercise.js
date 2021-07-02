@@ -57,7 +57,7 @@ export default function CreateExercise({ Players, Training }) {
 
   const createExerciseObj = () => {
     let exercise = new ExerciseBO();
-    exercise.setTraining(Training.id);
+    exercise.setTraining(36);
 
     VolleytrainAPI.getAPI()
       .addExercise(exercise)

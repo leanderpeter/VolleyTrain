@@ -134,7 +134,7 @@ const TrainingTeammanagement = ({ currentUser }) => {
       .then((trainingBO) => {
         setTraining(trainingBO);
         console.log(trainingBO);
-        getExercisesByTeamId(training.id);
+        getExercisesByTeamId(trainingBO.id);
       })
       .catch((e) => {
         setTraining(null);
