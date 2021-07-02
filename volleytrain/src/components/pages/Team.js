@@ -14,7 +14,7 @@ import UpdateTeam from "../dialogs/UpdateTeam";
 import VolleytrainAPI from "../../api/VolleytrainAPI";
 import TrainingSchedule from "../TrainingSchedule";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-import CreatePlayer from "../dialogs/CreatePlayer";
+import CreatePlayer from "../dialogs/CreatePLayer";
 import AddIcon from "@material-ui/icons/Add";
 import TeamBO from "../../api/TeamBO";
 
