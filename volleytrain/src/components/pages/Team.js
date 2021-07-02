@@ -7,19 +7,16 @@ import {
   Grid,
   Typography,
   withStyles,
-  Paper,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  TextField,
-  Container,
   Divider,
 } from "@material-ui/core";
-import TeamOverview from "./TeamOverview";
 import DeleteTeam from "../dialogs/DeleteTeam";
+import UpdateTeam from "../dialogs/UpdateTeam";
 import VolleytrainAPI from "../../api/VolleytrainAPI";
 import TrainingSchedule from "../TrainingSchedule";
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import CreatePlayer from "../dialogs/CreatePLayer";
+import AddIcon from "@material-ui/icons/Add";
+import TeamBO from "../../api/TeamBO";
 
 class Team extends Component {
   constructor(props) {
@@ -27,28 +24,103 @@ class Team extends Component {
 
     this.state = {
       team: this.props.location.state.team,
-      dialogOpen: false,
+      teamid: this.props.location.state.team.id,
+      deleteDialogOpen: false,
+      updateDialogOpen: false,
       trainingdays: [],
+      player: [],
+      openNewPlayer: false,
     };
   }
 
-  handleClick = () => {
+  handleDeleteClick = () => {
     this.setState({
-      dialogOpen: true,
+      deleteDialogOpen: true,
     });
   };
 
-  handleClose = () => {
+  handleDeleteClose = () => {
     this.setState({
-      dialogOpen: false,
+      deleteDialogOpen: false,
+    });
+  };
+
+  handleUpdateClose = () => {
+    this.setState({
+      updateDialogOpen: false,
+    });
+    this.getTeam();
+    this.getTrainingdays();
+  };
+
+  handleUpdateClick = () => {
+    this.setState({
+      updateDialogOpen: true,
     });
   };
 
   deleteTeam = () => {
-    VolleytrainAPI.getAPI().deleteTeam(this.state.team.getID());
+    let archievedTeam = new TeamBO();
+    archievedTeam.setID(this.state.teamid);
+    archievedTeam.setCreationDate(this.state.team.getCreationDate());
+    archievedTeam.setName("Archiviert - " + this.state.team.name);
+    archievedTeam.setTrainer(this.state.team.getTrainer());
+    this.updateTeam(archievedTeam);
   };
 
-  getPlayerByTeam = () => {};
+  getPlayersForTeam = () => {
+    VolleytrainAPI.getAPI()
+      .getPlayerByTeam(this.state.team.getID())
+      .then((playerBOs) =>
+        this.setState({
+          player: playerBOs,
+          error: null,
+          loadingInProgress: false,
+        })
+      )
+      .catch((e) =>
+        this.setState({
+          player: [],
+          error: e,
+          loadingInProgress: false,
+        })
+      );
+  };
+
+  createPlayer = (player) => {
+    VolleytrainAPI.getAPI().addPlayer(player);
+  };
+
+  updateTeam = (team) => {
+    VolleytrainAPI.getAPI().updateTeam(team);
+  };
+
+  handleDeleteTrainingday = (id) => {
+    this.deleteTrainingday(id);
+  };
+
+  deleteTrainingday = (trainingdayId) => {
+    VolleytrainAPI.getAPI().deleteTrainingday(trainingdayId);
+    setTimeout(() => {
+      this.getTrainingdays();
+    }, 1000);
+  };
+
+  updateTrainingday = (trainingday) => {
+    trainingday.getID() === 1
+      ? VolleytrainAPI.getAPI().addTrainingday(trainingday)
+      : VolleytrainAPI.getAPI().updateTrainingday(trainingday);
+  };
+
+  getTeam = () => {
+    VolleytrainAPI.getAPI()
+      .getTeamByID(this.state.teamid)
+      .then((teamBO) =>
+        this.setState({
+          team: teamBO,
+        })
+      );
+  };
 
   getTrainingdays = () => {
     VolleytrainAPI.getAPI()
@@ -60,69 +132,145 @@ class Team extends Component {
       });
   };
 
-  calculateHours = (start) => {
-    let starttime = new Date();
-    starttime = start;
-    console.log(starttime.getTime());
+  openNewPlayer = () => {
+    this.setState({
+      openNewPlayer: !this.state.openNewPlayer,
+    });
+    this.getPlayersForTeam();
   };
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.getTrainingdays();
-  }
+    this.getPlayersForTeam();
+  };
 
   render() {
     const { classes } = this.props;
-    const { team, dialogOpen, trainingdays } = this.state;
+    const {
+      team,
+      trainingdays,
+      player,
+      deleteDialogOpen,
+      updateDialogOpen,
+      openNewPlayer,
+    } = this.state;
 
     return (
-      <div className={classes.root}>
-        <Grid
-          spacing={3}
-          container
-          direction="row"
-          justify="center"
-          className={classes.border}
-        >
-          {console.log(trainingdays)}
-          <Grid item xs={7}>
-            <Typography variant="h5">{team.getName()}</Typography>
-          </Grid>
-          <Divider orientation="vertical" flexItem />
-          <Grid item xs={4} />
-          <Grid item xs={4}>
-            <Typography variant="h6">Trainingszeiten</Typography>
-            {trainingdays.map((day) => (
-              <Typography key={day.getID()}>
-                {day.getWeekday()} {day.getStarttime()} - {day.getEndtime()} Uhr
-              </Typography>
-            ))}
-          </Grid>
-          <Grid item xs={3}>
-            <Typography variant="h6">Trainingsdauer</Typography>
-            {trainingdays.map((day) => (
-              <Typography key={day.getID()}>
-                {day.getStarttime()} Stunde(n)
-              </Typography>
-            ))}
-          </Grid>
-          <Divider orientation="vertical" flexItem />
-          <Grid item xs={1} />
-          <Grid item xs={3}>
-            <Typography variant="h6">Verwalten</Typography>
-            <Typography onClick={this.handleClick}>
-              ... aktuelles Team bearbeiten
-            </Typography>
-            <Typography onClick={this.handleClick}>
-              ... aktuelles Team löschen
-            </Typography>
-          </Grid>
-        </Grid>
-        <TrainingSchedule />
-        <DeleteTeam
-          dialogOpen={dialogOpen}
+      <div>
+        <Tabs>
+          <div className={classes.root}>
+            <TabList>
+              <Tab>Übersicht</Tab>
+              <Tab>Spieler</Tab>
+            </TabList>
+          </div>
+          <TabPanel>
+            <div className={classes.root}>
+              <Grid
+                spacing={3}
+                container
+                direction="row"
+                justify="center"
+                className={classes.border}
+              >
+                <Grid item xs={7}>
+                  <Typography variant="h5">{team.getName()}</Typography>
+                </Grid>
+                <Divider orientation="vertical" flexItem />
+                <Grid item xs={4} />
+                <Grid item xs={4}>
+                  <Typography variant="h6">Trainingszeiten</Typography>
+                  {trainingdays.map((day) => (
+                    <Typography key={day.getID()}>
+                      {day.getWeekday()} {day.getStarttime()} -{" "}
+                      {day.getEndtime()} Uhr
+                    </Typography>
+                  ))}
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="h6">Trainingsdauer</Typography>
+                  {trainingdays.map((day) => (
+                    <Typography key={day.getID()}>
+                      {day.getStarttime()} Stunde(n)
+                    </Typography>
+                  ))}
+                </Grid>
+                <Divider orientation="vertical" flexItem />
+                <Grid item xs={1} />
+                <Grid item xs={3}>
+                  <Typography variant="h6">Verwalten</Typography>
+                  <Typography onClick={this.handleUpdateClick}>
+                    ... aktuelles Team bearbeiten
+                  </Typography>
+                  <Typography onClick={this.handleDeleteClick}>
+                    ... aktuelles Team löschen
+                  </Typography>
+                </Grid>
+              </Grid>
+            </div>
+            <TrainingSchedule />
+            <DeleteTeam
+              deleteDialogOpen={deleteDialogOpen}
+              team={team}
+              deleteTeam={this.deleteTeam}
+              onClose={this.handleDeleteClose}
+            />
+            <UpdateTeam
+              updateDialogOpen={updateDialogOpen}
+              team={team}
+              trainingdays={trainingdays}
+              deleteTrainingday={this.deleteTrainingday}
+              updateTeam={this.updateTeam}
+              updateTrainingday={this.updateTrainingday}
+              onClose={this.handleUpdateClose}
+            />
+          </TabPanel>
+          <TabPanel>
+            <div className={classes.root}>
+              <Button onClick={this.openNewPlayer}>
+                <AddIcon />
+              </Button>
+              <Grid item xs={10}>
+                {player.map((playerBOs) => (
+                  <Card className={classes.border}>
+                    <CardContent>
+                      <Grid container>
+                        <Grid key={playerBOs.getID()} item xs={2}>
+                          <Typography>
+                            <b>{playerBOs.getSurname()}</b>
+                          </Typography>
+                        </Grid>
+                        <Divider orientation="vertical" flexItem />
+                        <Grid key={playerBOs.getID()} item xs={2}>
+                          <Typography>
+                            <b>{playerBOs.getName()}</b>
+                          </Typography>
+                        </Grid>
+                        <Divider orientation="vertical" flexItem />
+                        <Grid key={playerBOs.getID()} item xs={2}>
+                          <Typography>
+                            <b>{playerBOs.getT_number()}</b>
+                          </Typography>
+                        </Grid>
+                        <Divider orientation="vertical" flexItem />
+                        <Grid key={playerBOs.getID()} item xs={2}>
+                          <Typography>
+                            <b>{playerBOs.getRole()}</b>
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </CardContent>
+                  </Card>
+                ))}
+              </Grid>
+            </div>
+          </TabPanel>
+        </Tabs>
+        <CreatePlayer
+          dialogOpen={openNewPlayer}
+          onClose={this.openNewPlayer}
           team={team}
-          deleteTeam={this.deleteTeam}
-          onClose={this.handleClose}
+          createPlayer={this.createPlayer}
         />
       </div>
     );
@@ -139,7 +287,7 @@ const styles = (theme) => ({
   },
   border: {
     margin: theme.spacing(2),
-    border: "2px solid #BFCE0D",
+    border: "2px solid #0B3298",
     boxSizing: "border-box",
     alignItems: "center",
     textAlign: "left",

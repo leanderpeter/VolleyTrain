@@ -38,7 +38,7 @@ class Trainingday(BusinessObject):
 
     @staticmethod
     def from_dict(dictionary=dict()):
-        ''' turn a python dict into a team object
+        ''' turn a python dict into a trainingday object
         '''
 
         obj = Trainingday()

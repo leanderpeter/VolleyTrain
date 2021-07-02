@@ -1,3 +1,4 @@
+from contextlib import nullcontext
 from server.bo.NamedBusinessObject import NamedBusinessObject
 
 
@@ -11,37 +12,37 @@ class Player(NamedBusinessObject):
 
     def __init__(self):
         super().__init__()
-        self._surname = None
-        self._teamId = None
-        self._role = None
-        self._t_number = 0
+        self._surname = ""
+        self._teamid = None
+        self._role = ""
+        self._t_number = None
 
-    def setTeamId(self, new_teamId):
-        self._teamId = new_teamId
+    def set_teamid(self, teamid):
+        self._teamid = teamid
 
-    def getTeamId(self):
-        return self._teamId
+    def get_teamid(self):
+        return self._teamid
 
-    def set_surname(self, sname):
-        self._surname = sname
+    def set_surname(self, surname):
+        self._surname = surname
 
-    def getSurname(self):
+    def get_surname(self):
         return self._surname
 
-    def setRole(self, new_role):
-        self._role = new_role
+    def set_role(self, role):
+        self._role = role
 
-    def getRole(self):
+    def get_role(self):
         return self._role
 
-    def setT_number(self, new_t_number):
-        self._t_number = new_t_number
+    def set_t_number(self, shirtnumber):
+        self._t_number = shirtnumber
 
-    def getT_number(self):
+    def get_t_number(self):
         return self._t_number
 
     def __str__(self):
-        return "Player: {}, {}, {}, {}, {}, {}".format(self.get_id(), self._surname, self._name, self._teamId,
+        return "Player: {}, {}, {}, {}, {}, {}".format(self.get_id(), self._surname, self._name, self._teamid,
                                                        self._role, self._t_number)
 
     @staticmethod
@@ -54,7 +55,7 @@ class Player(NamedBusinessObject):
         player.set_id(dictionary["id"])
         player.set_surname(dictionary["surname"])
         player.set_name(dictionary["name"])
-        player.setTeamId(dictionary["teamId"])
-        player.setRole(dictionary["role"])
-        player.setT_number(dictionary["t_number"])
+        player.set_teamid(dictionary["teamId"])
+        player.set_role(dictionary["role"])
+        player.set_t_number(dictionary["t_number"])
         return player

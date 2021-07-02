@@ -3,12 +3,13 @@ import NamedBusinessObject from './NamedBusinessObject';
 
 export default class TrainingBO extends NamedBusinessObject{
 
-	constructor(aDatetime, aGoal, aTeamId, aUserId){
+	constructor(aDatetime, aGoal, aTeamId, aUserId, aVisibility){
         super();
         this.datetime = aDatetime
         this.goal = aGoal;
         this.teamId = aTeamId;
         this.userId = aUserId;
+        this.visibility = aVisibility
     }
 
     getDatetime(){
@@ -41,6 +42,14 @@ export default class TrainingBO extends NamedBusinessObject{
     
     setUserId(aUserId){
         this.userId = aUserId;
+    }
+
+    getVisibility(){
+        return this.visibility;
+    }
+
+    setVisibility(aVisibility){
+        this.visibility = aVisibility;
     }
     
     static fromJSON(training) {

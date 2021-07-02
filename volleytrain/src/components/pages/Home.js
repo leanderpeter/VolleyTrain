@@ -1,82 +1,97 @@
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import Exercises from '../Exercises';
-import TeamOverview from './TeamOverview';
-import Box from "@material-ui/core/Box";
-import { Button, Grid, withStyles, Paper, GridList, Typography } from "@material-ui/core";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { Button, Grid, withStyles, Paper, Typography } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import FitnessCenterIcon from "@material-ui/icons/FitnessCenter";
 import AvTimerIcon from "@material-ui/icons/AvTimer";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import GroupIcon from "@material-ui/icons/Group";
 import Divider from "@material-ui/core/Divider";
-import TrainingSchedule from '../TrainingSchedule';
-
+import TrainingSchedule from "../TrainingSchedule";
 
 class Home extends Component {
   render() {
     const { classes } = this.props;
 
     return (
-        <div>
-      <Grid
-        spacing={3}
-        container
-        direction="row"
-        justify="center"
-        className={classes.root}
-      >
-        <Grid item component={Link} to={"/exerciseForm"}>
-          <Paper
-            className={classes.border}
-            variant="outlined"
-            color="secondary"
+      <div>
+        <Grid
+          spacing={3}
+          container
+          direction="row"
+          justify="center"
+          className={classes.root}
+        >
+          <Grid
+            item
+            component={Link}
+            to={"/createTraining"}
+            className={classes.link}
           >
-            <Button>
-              Trainingsplan erstellen
-              <FitnessCenterIcon />
-            </Button>
-          </Paper>
-        </Grid>
-        <Grid item component={Link} to={"/training"}>
-          <Paper
-            className={classes.border}
-            variant="outlined"
-            color="secondary"
+            <Paper
+              className={classes.border}
+              variant="outlined"
+              color="secondary"
+            >
+              <Button>
+                <Typography style={{ color: "white" }}>
+                  Trainingsplan erstellen
+                </Typography>
+                <FitnessCenterIcon style={{ color: "white" }} />
+              </Button>
+            </Paper>
+          </Grid>
+          <Grid item component={Link} to={"/training"} className={classes.link}>
+            <Paper
+              className={classes.border}
+              variant="outlined"
+              color="secondary"
+            >
+              <Button>
+                <Typography style={{ color: "white" }}>
+                  Trainingspläne
+                </Typography>
+                <AvTimerIcon style={{ color: "white" }} />
+              </Button>
+            </Paper>
+          </Grid>
+          <Grid
+            item
+            component={Link}
+            to={"/exerciseoverview"}
+            className={classes.link}
           >
-            <Button>
-              Trainingspläne
-              <AvTimerIcon />
-            </Button>
-          </Paper>
-        </Grid>
-        <Grid item component={Link} to={"/exercises"}>
-          <Paper
-            className={classes.border}
-            variant="outlined"
-            color="secondary"
+            <Paper
+              className={classes.border}
+              variant="outlined"
+              color="secondary"
+            >
+              <Button>
+                <Typography style={{ color: "white" }}>Übungen</Typography>
+                <MenuBookIcon style={{ color: "white" }} />
+              </Button>
+            </Paper>
+          </Grid>
+          <Grid
+            item
+            component={Link}
+            to={"/teamoverview"}
+            className={classes.link}
           >
-            <Button>
-              Übungsverwaltung
-              <MenuBookIcon />
-            </Button>
-          </Paper>
+            <Paper
+              className={classes.border}
+              variant="outlined"
+              color="secondary"
+            >
+              <Button>
+                <Typography style={{ color: "white" }}>Team</Typography>
+                <GroupIcon style={{ color: "white" }} />
+              </Button>
+            </Paper>
+          </Grid>
         </Grid>
-        <Grid item component={Link} to={"/teamoverview"}>
-          <Paper
-            className={classes.border}
-            variant="outlined"
-            color="secondary"
-          >
-            <Button>
-              Team
-              <GroupIcon />
-            </Button>
-          </Paper>
-        </Grid>
-      </Grid>
-      <Divider className={classes.solid}/>
-      <TrainingSchedule/>
+        <Divider className={classes.solid} />
+        <TrainingSchedule />
       </div>
     );
   }
@@ -93,12 +108,12 @@ const styles = (theme) => ({
     textDecoration: "None",
   },
   border: {
-    boxSizing: "border-box",
-    alignItems: "center",
-    textAlign: "center",
-    boxShadow: "0px 4px 10px rgba(84, 78, 78, 0.2)",
+    background: "linear-gradient(269.97deg, #0B3298 14.96%, #071168 178.28%)",
     borderRadius: "9px",
-    background: "linear-gradient(80.45deg, #071168 -35.38%, #1F9F80 -9.15%, #BFCE0D 114.78%)",
+    display: "flex",
+    color: "#fcfcfc",
+    paddingLeft: theme.spacing(2),
+    alignItems: "center",
     width: theme.spacing(26),
     height: theme.spacing(18),
   },
@@ -108,7 +123,7 @@ const styles = (theme) => ({
     borderRadius: "9px",
     fontWeight: "bold",
     fontVariant: "normal",
-    color: "#ffffff",
+    color: "#FFFFFF",
     alignItems: "center",
     textAlign: "center",
     width: theme.spacing(26),
@@ -125,7 +140,7 @@ const styles = (theme) => ({
     border: "1px solid #bbb",
     marginLeft: "280px",
     marginRight: "50px",
-  }
+  },
 });
 
 /** PropTypes */

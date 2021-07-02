@@ -20,7 +20,7 @@ class volleytrainAdministration(object):
 
     """ User / Trainer """
 
-    def createUser(self, surname, name, email, googleId):
+    def create_user(self, surname, name, email, googleId):
         """ Create a person object and inject it into the database
         """
         user = User()
@@ -32,82 +32,100 @@ class volleytrainAdministration(object):
         with UserMapper() as mapper:
             return mapper.insert(user)
 
-    def getUserById(self, id):
+    def get_user_by_id(self, id):
         with UserMapper() as mapper:
-            return mapper.find_byp_id(id)
+            return mapper.find_by_id(id)
 
-    def getPersonByGoogleUserId(self, gId):
+    def get_person_by_google_user_id(self, google_id):
         with UserMapper() as mapper:
-            return mapper.find_by_google_user_id(gId)
+            return mapper.find_by_google_user_id(google_id)
 
-    def saveUser(self, user):
+    def save_user(self, user):
         with UserMapper() as mapper:
             return mapper.update(user)
 
 # Player Methods
 
-    def getAllPlayer(self):
-        with PlayerMapper() as mapper:
-            return mapper.find_all()
-
-    def createPlayer(self, surname, name, teamid, role, t_number):
+    def create_player(self, surname, name, teamid, role, t_number):
         """ Create a Player object and inject it into the database
         """
         player = Player()
         player.set_surname(surname)
         player.set_name(name)
-        player.setTeamId(teamid)
-        player.setRole(role)
-        player.setT_number(t_number)
+        player.set_teamid(teamid)
+        player.set_role(role)
+        player.set_t_number(t_number)
 
         with PlayerMapper() as mapper:
             return mapper.insert(player)
 
-    def getPlayerById(self, id):
+    def get_all_player(self):
+        with PlayerMapper() as mapper:
+            return mapper.find_all()
+
+    def get_player_by_id(self, id):
         with PlayerMapper() as mapper:
             return mapper.find_by_id(id)
 
-    def getPlayerByTeamId(self, teamId):
+    def get_player_by_team_id(self, teamid):
         with PlayerMapper() as mapper:
-            return mapper.find_by_teamid(teamId)
+            return mapper.find_by_teamid(teamid)
 
-    def savePlayer(self, player):
+    def save_player(self, player):
         with PlayerMapper() as mapper:
             mapper.update(player)
 
-    def getAllPositions(self):
-        with PositionMapper() as mapper:
-            return mapper.find_all()
+    def delete_player(self, player):
+        with PlayerMapper() as mapper:
+            mapper.delete(player)
 
     def getAllMatchfieldPlayers(self):
         with MatchfieldPlayerMapper() as mapper:
             return mapper.find_all()
 
-    def deletePlayer(self, player):
-        with PlayerMapper() as mapper:
-            mapper.delete(player)
+    def getByPlayerPosByMatchfieldId(self, id):
+        with MatchfieldPlayerMapper() as mapper:
+            return mapper.find_by_Matchfield(id)
+
+    def putPlayerPosByMatchfieldId(self, MatchfieldBO):
+        with MatchfieldPlayerMapper() as mapper:
+            return mapper.update(MatchfieldBO)
+
+    def deletePlayerPosByMatchfieldId(self, MatchfieldPlayerBO):
+        with MatchfieldPlayerMapper() as mapper:
+            return mapper.delete(MatchfieldPlayerBO)
 
     """ Training """
 
-    def createTraining(self, training):
+    def create_training(self, training):
         with TrainingMapper() as mapper:
             return mapper.insert(training)
 
-    def getAllTrainings(self):
+    def get_all_trainings(self):
         with TrainingMapper() as mapper:
             return mapper.find_all()
 
-    def getTrainingById(self, id):
+    def get_visible_trainings(self):
+        with TrainingMapper() as mapper:
+            return mapper.find_visible_trainings()
+
+    def get_archived_trainings(self):
+        with TrainingMapper() as mapper:
+            return mapper.find_archived_trainings()
+
+    def get_training_by_id(self, id):
         with TrainingMapper() as mapper:
             return mapper.find_by_id(id)
 
-    def saveTraining(self, training):
+    def save_training(self, training):
         with TrainingMapper() as mapper:
             return mapper.update(training)
 
-    def deleteTraining(self, training):
+    def delete_training(self, training):
         with TrainingMapper() as mapper:
             return mapper.delete(training)
+
+    """ Team """
 
     def create_team(self, name, trainer):
 
@@ -157,51 +175,40 @@ class volleytrainAdministration(object):
         with TrainingdayMapper() as mapper:
             return mapper.find_by_team_id(id)
 
-    def createExercise(self, exercise):
+    def get_trainingday_by_id(self, id):
+        with TrainingdayMapper() as mapper:
+            return mapper.find_by_id(id)
+
+    def save_trainingday(self, trainingday):
+        with TrainingdayMapper() as mapper:
+            mapper.update(trainingday)
+
+    def delete_trainingday(self, trainingday):
+        with TrainingdayMapper() as mapper:
+            mapper.delete(trainingday)
+
+    def create_exercise(self, exercise):
         """ Create a Exercise object and inject it into the database """
 
         with ExerciseMapper() as mapper:
             return mapper.insert(exercise)
 
-    def getExerciseById(self, id):
+    def get_exercise_by_id(self, id):
         with ExerciseMapper() as mapper:
             return mapper.find_by_id(id)
 
-    def saveExercise(self, exercise):
+    def save_exercise(self, exercise):
         with ExerciseMapper() as mapper:
             return mapper.update(exercise)
 
-    def getAllExercises(self):
+    def get_all_exercises(self):
         with ExerciseMapper() as mapper:
             return mapper.find_all()
 
-    def deleteExercise(self, exerciseId):
+    def delete_exercise(self, exercise_id):
         with ExerciseMapper() as mapper:
-            return mapper.delete(exerciseId)
-
-    def createPlayer(self, name, role, t_number):
-        """ Create a Player object and inject it into the database
-        """
-        player = Player()
-        player.set_name(name)
-        player.setRole(role)
-        player.setT_number(t_number)
-
-        with PlayerMapper() as mapper:
-            return mapper.insert(player)
-
-    def getPlayerById(self, id):
-        with PlayerMapper() as mapper:
-            return mapper.find_by_id(id)
-
-    def savePlayer(self, player):
-        with PlayerMapper() as mapper:
-            mapper.update(player)
-
-    def getAllMatchfieldPlayers(self):
-        with MatchfieldPlayerMapper() as mapper:
-            return mapper.find_all()
-
-    def getByPlayerPosByMatchfieldId(self, id):
-        with MatchfieldPlayerMapper() as mapper:
-            return mapper.find_by_Matchfield(id)
+            return mapper.delete(exercise_id)
+            
+    def getExercisesByTrainingId(self, id):
+        with ExerciseMapper() as mapper:
+            return mapper.get_by_training_id(id)

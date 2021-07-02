@@ -16,9 +16,9 @@ class TrainingSchedule extends React.Component {
     };
   }
 
-  getAllTrainings = () => {
+  getVisibleTrainings = () => {
     VolleytrainAPI.getAPI()
-      .getAllTrainings()
+      .getVisibleTrainings()
       .then((trainingBOs) => {
         this.setState({
           trainings: trainingBOs,
@@ -53,7 +53,6 @@ class TrainingSchedule extends React.Component {
       "." +
       today.getMilliseconds();
     var datetime = date + " " + time;
-    console.log(typeof datetime);
     this.setState({
       currentDate: date,
       currentTime: time,
@@ -62,14 +61,13 @@ class TrainingSchedule extends React.Component {
   };
 
   componentDidMount() {
-    this.getAllTrainings();
+    this.getVisibleTrainings();
     this.getCurrentDateTime();
   }
 
   render() {
     const { classes } = this.props;
     const { trainings, currentDate, currentTime, currentDatetime } = this.state;
-    console.log(currentDatetime);
     return (
       <div className={classes.root}>
         <Grid>
@@ -128,7 +126,7 @@ const styles = (theme) => ({
     fontSize: "21px",
     marginBottom: "20px",
     textDecorationLine: "underline",
-    textDecorationColor: "#3ECCA5",
+    textDecorationColor: "#0B3298",
   },
 });
 

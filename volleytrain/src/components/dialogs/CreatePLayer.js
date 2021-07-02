@@ -1,94 +1,196 @@
-import React, { Component } from 'react';
-import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined';
-import SaveAltIcon from '@material-ui/icons/SaveAlt';
-import AddIcon from '@material-ui/icons/Add';
-import VolleytrainAPI from '../../api/VolleytrainAPI';
-import PropTypes from 'prop-types';
-import PlayerBO from '../../api/PlayerBO';
-import { withStyles, Button, IconButton, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TextField } from '@material-ui/core';
-import { MenuItem, FormControl, InputLabel, Select, Typography, Grid, Box} from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
-import ContextErrorMessage from './ContextErrorMessage';
-import LoadingProgress from './LoadingProgress';
-import firebase from 'firebase/app';
-import 'firebase/auth';
+import {
+  withStyles,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  Divider,
+  Typography,
+  Grid,
+  TextField,
+} from "@material-ui/core";
+import React from "react";
+import ArrowBackOutlinedIcon from "@material-ui/icons/ArrowBackOutlined";
+import SaveAltIcon from "@material-ui/icons/SaveAlt";
+import AddIcon from "@material-ui/icons/Add";
+import VolleytrainAPI from "../../api/VolleytrainAPI";
+import PlayerBO from "../../api/PlayerBO";
 
-class CreatePlayer extends React.Component{
+class CreatePlayer extends React.Component {
+  constructor(props) {
+    super(props);
 
-    constructor(props){
-        super(props);
+    this.state = {
+      surname: "",
+      name: "",
+      role: "",
+      shirtnumber: "",
+    };
+  }
 
-        this.state = {
-            surname: "",
-            name: "",
-            team_PK_team: "",
-            role: "",
-            t_number: "",
-        };
-    }
+  handleSurnameChange = (e) => {
+    this.setState({
+      surname: e.target.value,
+    });
+  };
 
-    createPlayer = () => {
+  handleNameChange = (e) => {
+    this.setState({
+      name: e.target.value,
+    });
+  };
 
-        let newplayer = new PlayerBO;
-        newplayer.setID(1);
-        newplayer.setsurname(this.state.playersurname);
-        newplayer.setname(this.state.playername);
-        newplayer.setTeamId(this.state.team_PK_team)
-        newplayer.setrole(this.state.playerrole);
-        newplayer.sett_number(this.state.playert_number);
-        VolleytrainAPI.getAPI().addPlayer(newplayer);
-    }
+  handleRoleChange = (e) => {
+    this.setState({
+      role: e.target.value,
+    });
+  };
 
-    handleClick = () => {
-        VolleytrainAPI.getAPI().getAllPlayer()
-    }
+  handleShirtnumberChange = (e) => {
+    this.setState({
+      shirtnumber: e.target.value,
+    });
+  };
 
-    render() {
-        const {classes, dialogOpen, onClose } = this.props;
-        const { createButtonDisabled} = this.state;
+  createPlayer = () => {
+    let player = new PlayerBO();
+    player.setID(1);
+    player.setSurname(this.state.surname);
+    player.setName(this.state.name);
+    player.setTeamId(this.props.team.getID());
+    player.setRole(this.state.role);
+    player.setT_number(this.state.shirtnumber);
+    this.props.createPlayer(player);
+  };
 
+  render() {
+    const { classes, dialogOpen, onClose } = this.props;
+    const { surname, name, role, shirtnumber } = this.state;
 
-        return(
-            <div>
-                <Dialog className={classes.root} open={dialogOpen} onClose={onClose}>
-                    
-                    <DialogTitle>
-                    <Grid container>
-                        <Grid item xs={4}>
-                        <Button className={classes.border} onClick={onClose}><ArrowBackOutlinedIcon /></Button>
-                        </Grid>
-                        <Grid item xs={8}>
-                        <Typography color="primary">Neuen Spieler hinzufügen</Typography>
-                        </Grid>
-                        </Grid>
-                    </DialogTitle>
-                    <DialogContent>
-                        <Grid container spacing={2}>
-                            <Grid item xs={3}>
-                                <Typography color="primary">Name:</Typography>
-                            </Grid>
-                            <Grid className={classes.border} item xs={9}>
-                                <TextField color="primary" onChange={this.handleChange} fullWidth/>
-                            </Grid>
-                            {createButtonDisabled ? 
-                            <Grid item xs={6}> 
-                                <Button color="extra" variant="outlined" onClick={this.saveTrainingday}><SaveAltIcon />Spieler speichern</Button>
-                            </Grid>
-                            :
-                            <Grid item xs={6}> 
-                                <Button color="extra" variant="outlined" onClick={this.handleTrainingTime}><AddIcon />Spieler hinzufügen</Button>
-                            </Grid>
-                            }
-                            <Grid item xs={6}>
-                                <Button disabled={createButtonDisabled} className={classes.button} fullWidth onClick={this.createTeam}>Spieler erstellen</Button>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <Button color="extra" variant="outlined" onClick={this.handleTrainingTime}><AddIcon />Spieler löschen</Button>
-                            </Grid>
-                        </Grid>
-                    </DialogContent>
-                </Dialog>
-            </div>
-        )
-    }
+    return (
+      <div>
+        <Dialog className={classes.root} open={dialogOpen} onClose={onClose}>
+          <DialogTitle>
+            <Grid container>
+              <Grid item xs={4}>
+                <Button className={classes.border} onClick={onClose}>
+                  <ArrowBackOutlinedIcon />
+                </Button>
+              </Grid>
+              <Grid item xs={8}>
+                <Typography color="primary" variant="h5">
+                  <b>Neuen Spieler anlegen</b>
+                </Typography>
+              </Grid>
+            </Grid>
+          </DialogTitle>
+          <Divider />
+          <DialogContent>
+            <Grid container spacing={2}>
+              <Grid item xs={12} />
+              <Grid item xs={4}>
+                <Typography color="primary">Vorname:</Typography>
+              </Grid>
+              <Grid className={classes.border} item xs={6}>
+                <TextField
+                  color="primary"
+                  onChange={this.handleNameChange}
+                  fullWidth
+                  value={name}
+                />
+              </Grid>
+              <Grid item xs={2} />
+              <Grid item xs={4}>
+                <Typography color="primary">Nachname:</Typography>
+              </Grid>
+              <Grid className={classes.border} item xs={6}>
+                <TextField
+                  color="primary"
+                  onChange={this.handleSurnameChange}
+                  fullWidth
+                  value={surname}
+                />
+              </Grid>
+              <Grid item xs={2} />
+              <Grid item xs={4}>
+                <Typography color="primary">Rolle:</Typography>
+              </Grid>
+              <Grid className={classes.border} item xs={6}>
+                <TextField
+                  color="primary"
+                  onChange={this.handleRoleChange}
+                  fullWidth
+                  value={role}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <Typography color="primary">Trikot-Nummer:</Typography>
+              </Grid>
+              <Grid className={classes.border} item xs={6}>
+                <TextField
+                  color="primary"
+                  onChange={this.handleShirtnumberChange}
+                  fullWidth
+                  value={shirtnumber}
+                />
+              </Grid>
+              <Grid item xs={2} />
+              <Grid item xs={6}>
+                <Button
+                  onClick={this.createPlayer}
+                  color="primary"
+                  variant="contained"
+                  fullWidth
+                >
+                  <SaveAltIcon />
+                  Speichern
+                </Button>
+              </Grid>
+              <Grid item xs={6}>
+                <Button
+                  onClick={onClose}
+                  color="secondary"
+                  variant="outlined"
+                  fullWidth
+                >
+                  Abbrechen
+                </Button>
+              </Grid>
+            </Grid>
+          </DialogContent>
+        </Dialog>
+      </div>
+    );
+  }
 }
+
+const styles = (theme) => ({
+  root: {
+    margin: theme.spacing(2),
+    width: "100%",
+  },
+  backButton: {
+    borderRadius: "500px",
+  },
+  border: {
+    border: "1px solid #0B3298",
+    boxSizing: "border-box",
+    boxShadow: "0px 4px 10px rgba(84, 78, 78, 0.2)",
+    borderRadius: "9px",
+    marginBottom: "15px",
+    background: "#fcfcfc",
+  },
+  button: {
+    color: "#ffffff",
+    background: "linear-gradient(90.46deg, #FFD542 12.09%, #FFB676 104.14%)",
+    borderRadius: "9px",
+    fontWeight: "bold",
+    fontVariant: "normal",
+  },
+  error: {
+    color: "red",
+    fontSize: "12px",
+  },
+});
+
+export default withStyles(styles)(CreatePlayer);
