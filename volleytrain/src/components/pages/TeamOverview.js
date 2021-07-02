@@ -80,7 +80,6 @@ class TeamOverview extends React.Component {
     VolleytrainAPI.getAPI()
       .getTeamByName(teamname)
       .then((teamBO) => {
-        console.log(teamBO.getID());
         this.setState({ teamid: teamBO.getID() });
       })
       .catch((e) => {
@@ -196,8 +195,7 @@ const styles = (theme) => ({
     height: theme.spacing(18),
   },
   papes: {
-    background:
-      "linear-gradient(269.97deg, #0B3298 14.96%, #071168 178.28%)",
+    background: "linear-gradient(269.97deg, #0B3298 14.96%, #071168 178.28%)",
     borderRadius: "9px",
     display: "flex",
     color: "#ffffff",

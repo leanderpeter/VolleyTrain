@@ -38,9 +38,6 @@ class PlayerMapper(Mapper):
 
         return result
 
-    def find_by_name(self):
-        pass
-
     def find_by_id(self, id):
 
         result = []
@@ -138,13 +135,10 @@ class PlayerMapper(Mapper):
             .format(player.get_id(), player.get_surname(), player.get_name(), player.get_teamid(), player.get_role(),
                     player.get_t_number())
 
-        cursor.execute(command, data)
+        cursor.execute(command)
 
         self._connection.commit()
         cursor.close()
-
-    def update_by_id(self, player):
-        pass
 
     def delete(self, player):
         """Löschen der Daten eines Player aus der Datenbank

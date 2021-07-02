@@ -53,8 +53,6 @@ export default function CreateExercise({ Players, Training }) {
   // const init Exercise State
   const [exercise, setExercise] = React.useState(null);
 
-  console.log(Training);
-
   const createExerciseObj = () => {
     let exercise = new ExerciseBO();
     exercise.setTraining(Training.id);

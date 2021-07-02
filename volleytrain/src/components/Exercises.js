@@ -132,34 +132,17 @@ const Exercises = ({ Players, MatchfieldID, setShowCompState, exercise }) => {
 
   // API Anbindung um MatchfieldPlayerPos über das Backend in die Datenbank upzudaten
   const updateMatchfieldPlayer = (matchfieldPlayer) => {
-    VolleytrainAPI.getAPI()
-      .updatePlayerPositions(matchfieldPlayer)
-      .then((matchfieldPlayer) => {
-        console.log(matchfieldPlayer);
-      })
-      .catch((e) => console.log(e));
+    VolleytrainAPI.getAPI().updatePlayerPositions(matchfieldPlayer);
   };
 
   // API Anbindung um das MatchfieldPlayerPos über das Backend in der Datenbank zu löschen
   const deletePlayerPosition = (pos) => {
-    VolleytrainAPI.getAPI()
-      .deletePlayerPositions(pos)
-      .then(() => {
-        console.log("delete");
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+    VolleytrainAPI.getAPI().deletePlayerPositions(pos);
   };
 
   // API Anbindung um MatchfieldPlayerPos über das Backend in die Datenbank upzudaten
   const updateExercise = (exerciseObj) => {
-    VolleytrainAPI.getAPI()
-      .updateExercise(exerciseObj)
-      .then((exerciseObj) => {
-        console.log(exerciseObj);
-      })
-      .catch((e) => console.log(e));
+    VolleytrainAPI.getAPI().updateExercise(exerciseObj);
   };
 
   const saveExercise = () => {
@@ -169,7 +152,6 @@ const Exercises = ({ Players, MatchfieldID, setShowCompState, exercise }) => {
       exerciseGoalValdiation == false
     ) {
       var toBackend;
-      //console.log(players);
       toBackend = PostPutHandler(
         MatchfieldPlayers,
         players,

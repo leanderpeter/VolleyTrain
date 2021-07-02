@@ -7,26 +7,15 @@ import {
   Grid,
   Typography,
   withStyles,
-  Paper,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  TextField,
-  Container,
   Divider,
 } from "@material-ui/core";
-import DeleteIcon from "@material-ui/icons/Delete";
-import TeamOverview from "./TeamOverview";
 import DeleteTeam from "../dialogs/DeleteTeam";
 import UpdateTeam from "../dialogs/UpdateTeam";
 import VolleytrainAPI from "../../api/VolleytrainAPI";
 import TrainingSchedule from "../TrainingSchedule";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-import PlayerOverview from "./PlayerOverview";
 import CreatePlayer from "../dialogs/CreatePlayer";
 import AddIcon from "@material-ui/icons/Add";
-import PlayerBO from "../../api/PlayerBO";
 import TeamBO from "../../api/TeamBO";
 
 class Team extends Component {
@@ -71,23 +60,6 @@ class Team extends Component {
   };
 
   deleteTeam = () => {
-    /* VolleytrainAPI.getAPI()
-      .getPlayersByTeam(this.state.team.getID())
-      .then((playerBOs) => {
-        playerBOs.forEach((playerBO) => {
-          let player = new PlayerBO();
-          player.setID(playerBO.getID());
-          player.setName(playerBO.getName());
-          player.setSurname(playerBO.getSurname());
-          player.setTeamId(2);
-          player.setRole(playerBO.getRole());
-          player.setT_number(playerBO.getT_number());
-          VolleytrainAPI.getAPI().updatePlayer(player);
-        });
-      });
-    setTimeout(() => {
-      VolleytrainAPI.getAPI().deleteTeam(this.state.teamid);
-    }, 5000); */
     let archievedTeam = new TeamBO();
     archievedTeam.setID(this.state.teamid);
     archievedTeam.setCreationDate(this.state.team.getCreationDate());
@@ -160,21 +132,15 @@ class Team extends Component {
       });
   };
 
-  calculateHours = (start) => {
-    let starttime = new Date();
-    starttime = start;
-    console.log(starttime.getTime());
-  };
-
-  componentDidMount = () => {
-    this.getTrainingdays();
-    this.getPlayersForTeam();
-  };
-
   openNewPlayer = () => {
     this.setState({
       openNewPlayer: !this.state.openNewPlayer,
     });
+    this.getPlayersForTeam();
+  };
+
+  componentDidMount = () => {
+    this.getTrainingdays();
     this.getPlayersForTeam();
   };
 

@@ -133,15 +133,12 @@ const TrainingTeammanagement = ({ currentUser }) => {
       .addTraining(trainingBO)
       .then((trainingBO) => {
         setTraining(trainingBO);
-        console.log(trainingBO);
         getExercisesByTeamId(training.id);
       })
       .catch((e) => {
         setTraining(null);
       });
   };
-
-  console.log(training);
 
   return (
     <div className={classes.root}>

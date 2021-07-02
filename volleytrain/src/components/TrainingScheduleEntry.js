@@ -18,14 +18,12 @@ class TrainingScheduleEntry extends React.Component {
       trainingDate: null,
       trainingTime: null,
       trainingDatetime: null,
-      team: null
+      team: null,
     };
-    console.log(this.props.training);
   }
 
   getTrainingDateTime = () => {
     var trainingDateTime = new Date(this.props.training.getDatetime());
-    console.log(this.props.training.getDatetime());
 
     var date =
       trainingDateTime.getDate() +
@@ -42,7 +40,6 @@ class TrainingScheduleEntry extends React.Component {
       trainingDateTime.getSeconds();
 
     var datetime = date + " " + time;
-    console.log(typeof datetime);
 
     this.setState({
       trainingDate: date,
@@ -51,17 +48,19 @@ class TrainingScheduleEntry extends React.Component {
     });
   };
 
-  getTeam = ()=>{
-    VolleytrainAPI.getAPI().getTeamByID(this.state.training.team_id).then(team=>{
-      this.setState({
-        team: team
-      })
-    })
-  }
+  getTeam = () => {
+    VolleytrainAPI.getAPI()
+      .getTeamByID(this.state.training.team_id)
+      .then((team) => {
+        this.setState({
+          team: team,
+        });
+      });
+  };
 
   componentDidMount = () => {
     this.getTrainingDateTime();
-    this.getTeam()
+    this.getTeam();
   };
 
   render() {
@@ -72,12 +71,13 @@ class TrainingScheduleEntry extends React.Component {
       <div className={classes.root}>
         <Grid container>
           <Grid item xs={10}>
-            <Link to={{
-                      pathname: "/viewTraining",
-                      training: training
-                  }} 
-                  className={classes.link} 
-                  >
+            <Link
+              to={{
+                pathname: "/viewTraining",
+                training: training,
+              }}
+              className={classes.link}
+            >
               <Card className={classes.border} align="center">
                 <CardContent>
                   <Grid container spacing={3}>
@@ -91,16 +91,20 @@ class TrainingScheduleEntry extends React.Component {
                     <Divider orientation="vertical" flexItem />
                     <Grid item xs={3} sm={2}>
                       <Typography align="center">
-                        {team?team.getName():null}
+                        {team ? team.getName() : null}
                       </Typography>
                     </Grid>
                     <Divider orientation="vertical" flexItem />
                     <Grid item xs={3} sm={2}>
-                      <Typography align="center">{training.getName()}</Typography>
+                      <Typography align="center">
+                        {training.getName()}
+                      </Typography>
                     </Grid>
                     <Divider orientation="vertical" flexItem />
                     <Grid item xs={3} sm={5}>
-                      <Typography align="center">{training.getGoal()}</Typography>
+                      <Typography align="center">
+                        {training.getGoal()}
+                      </Typography>
                     </Grid>
                   </Grid>
                 </CardContent>
@@ -135,8 +139,8 @@ const styles = (theme) => ({
     borderRadius: "9px",
     marginBottom: "15px",
   },
-  link:{
-    textDecorationLine: 'none',
+  link: {
+    textDecorationLine: "none",
   },
   divider: {
     backgroundColor: "black",
