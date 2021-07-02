@@ -20,7 +20,7 @@ class volleytrainAdministration(object):
 
     """ User / Trainer """
 
-    def createUser(self, surname, name, email, googleId):
+    def create_user(self, surname, name, email, googleId):
         """ Create a person object and inject it into the database
         """
         user = User()
@@ -32,21 +32,21 @@ class volleytrainAdministration(object):
         with UserMapper() as mapper:
             return mapper.insert(user)
 
-    def getUserById(self, id):
+    def get_user_by_id(self, id):
         with UserMapper() as mapper:
-            return mapper.find_byp_id(id)
+            return mapper.find_by_id(id)
 
-    def getPersonByGoogleUserId(self, gId):
+    def get_person_by_google_user_id(self, google_id):
         with UserMapper() as mapper:
-            return mapper.find_by_google_user_id(gId)
+            return mapper.find_by_google_user_id(google_id)
 
-    def saveUser(self, user):
+    def save_user(self, user):
         with UserMapper() as mapper:
             return mapper.update(user)
 
 # Player Methods
 
-    def createPlayer(self, surname, name, teamid, role, t_number):
+    def create_player(self, surname, name, teamid, role, t_number):
         """ Create a Player object and inject it into the database
         """
         player = Player()
@@ -59,23 +59,23 @@ class volleytrainAdministration(object):
         with PlayerMapper() as mapper:
             return mapper.insert(player)
 
-    def getAllPlayer(self):
+    def get_all_player(self):
         with PlayerMapper() as mapper:
             return mapper.find_all()
 
-    def getPlayerById(self, id):
+    def get_player_by_id(self, id):
         with PlayerMapper() as mapper:
             return mapper.find_by_id(id)
 
-    def getPlayerByTeamId(self, teamid):
+    def get_player_by_team_id(self, teamid):
         with PlayerMapper() as mapper:
             return mapper.find_by_teamid(teamid)
 
-    def savePlayer(self, player):
+    def save_player(self, player):
         with PlayerMapper() as mapper:
             mapper.update(player)
 
-    def deletePlayer(self, player):
+    def delete_player(self, player):
         with PlayerMapper() as mapper:
             mapper.delete(player)
 
@@ -187,24 +187,24 @@ class volleytrainAdministration(object):
         with TrainingdayMapper() as mapper:
             mapper.delete(trainingday)
 
-    def createExercise(self, exercise):
+    def create_exercise(self, exercise):
         """ Create a Exercise object and inject it into the database """
 
         with ExerciseMapper() as mapper:
             return mapper.insert(exercise)
 
-    def getExerciseById(self, id):
+    def get_exercise_by_id(self, id):
         with ExerciseMapper() as mapper:
             return mapper.find_by_id(id)
 
-    def saveExercise(self, exercise):
+    def save_exercise(self, exercise):
         with ExerciseMapper() as mapper:
             return mapper.update(exercise)
 
-    def getAllExercises(self):
+    def get_all_exercises(self):
         with ExerciseMapper() as mapper:
             return mapper.find_all()
 
-    def deleteExercise(self, exerciseId):
+    def delete_exercise(self, exercise_id):
         with ExerciseMapper() as mapper:
-            return mapper.delete(exerciseId)
+            return mapper.delete(exercise_id)

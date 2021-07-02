@@ -1,16 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import Exercises from "../Exercises";
-import TeamOverview from "./TeamOverview";
-import Box from "@material-ui/core/Box";
-import {
-  Button,
-  Grid,
-  withStyles,
-  Paper,
-  GridList,
-  Typography,
-} from "@material-ui/core";
+import { Button, Grid, withStyles, Paper, Typography } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import FitnessCenterIcon from "@material-ui/icons/FitnessCenter";
 import AvTimerIcon from "@material-ui/icons/AvTimer";
@@ -18,7 +8,6 @@ import MenuBookIcon from "@material-ui/icons/MenuBook";
 import GroupIcon from "@material-ui/icons/Group";
 import Divider from "@material-ui/core/Divider";
 import TrainingSchedule from "../TrainingSchedule";
-import ExerciseOverview from "./ExerciseOverview";
 
 class Home extends Component {
   render() {
@@ -33,43 +22,62 @@ class Home extends Component {
           justify="center"
           className={classes.root}
         >
-          <Grid item component={Link} to={"/createTraining"}>
+          <Grid
+            item
+            component={Link}
+            to={"/createTraining"}
+            className={classes.link}
+          >
             <Paper
               className={classes.border}
               variant="outlined"
               color="secondary"
             >
               <Button>
-              <Typography style={{ color: "white" }}>Trainiingsplan erstellen</Typography>
-                <FitnessCenterIcon style={{ color: "white" }}/>
+                <Typography style={{ color: "white" }}>
+                  Trainingsplan erstellen
+                </Typography>
+                <FitnessCenterIcon style={{ color: "white" }} />
               </Button>
             </Paper>
           </Grid>
-          <Grid item component={Link} to={"/training"}>
+          <Grid item component={Link} to={"/training"} className={classes.link}>
             <Paper
               className={classes.border}
               variant="outlined"
               color="secondary"
             >
               <Button>
-              <Typography style={{ color: "white" }}>Trainingspläne</Typography>
-                <AvTimerIcon style={{ color: "white" }}/>
+                <Typography style={{ color: "white" }}>
+                  Trainingspläne
+                </Typography>
+                <AvTimerIcon style={{ color: "white" }} />
               </Button>
             </Paper>
           </Grid>
-          <Grid item component={Link} to={"/exerciseoverview"}>
+          <Grid
+            item
+            component={Link}
+            to={"/exerciseoverview"}
+            className={classes.link}
+          >
             <Paper
               className={classes.border}
               variant="outlined"
               color="secondary"
             >
               <Button>
-              <Typography style={{ color: "white" }}>Übungen</Typography>
-                <MenuBookIcon style={{ color: "white" }}/>
+                <Typography style={{ color: "white" }}>Übungen</Typography>
+                <MenuBookIcon style={{ color: "white" }} />
               </Button>
             </Paper>
           </Grid>
-          <Grid item component={Link} to={"/teamoverview"}>
+          <Grid
+            item
+            component={Link}
+            to={"/teamoverview"}
+            className={classes.link}
+          >
             <Paper
               className={classes.border}
               variant="outlined"
@@ -77,7 +85,7 @@ class Home extends Component {
             >
               <Button>
                 <Typography style={{ color: "white" }}>Team</Typography>
-                <GroupIcon style={{ color: "white" }}/>
+                <GroupIcon style={{ color: "white" }} />
               </Button>
             </Paper>
           </Grid>
@@ -100,8 +108,7 @@ const styles = (theme) => ({
     textDecoration: "None",
   },
   border: {
-    background:
-      "linear-gradient(269.97deg, #0B3298 14.96%, #071168 178.28%)",
+    background: "linear-gradient(269.97deg, #0B3298 14.96%, #071168 178.28%)",
     borderRadius: "9px",
     display: "flex",
     color: "#fcfcfc",

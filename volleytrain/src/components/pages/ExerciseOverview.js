@@ -1,23 +1,14 @@
 import {
   withStyles,
   Card,
-  Paper,
   CardContent,
-  Button,
   Typography,
   Grid,
-  FormHelperText,
-  TextField,
-  IconButton,
-  InputAdornment,
 } from "@material-ui/core";
 import React from "react";
 import VolleytrainAPI from "../../api/VolleytrainAPI";
 import Divider from "@material-ui/core/Divider";
-import ClearIcon from "@material-ui/icons/Clear";
 import PropTypes from "prop-types";
-import LoadingProgress from "../dialogs/LoadingProgress";
-import ContextErrorMessage from "../dialogs/ContextErrorMessage";
 import { withRouter } from "react-router-dom";
 
 class ExerciseOverview extends React.Component {
@@ -51,10 +42,10 @@ class ExerciseOverview extends React.Component {
           loadingInProgress: false,
         })
       );
-      this.setState({
-        loadingInProgress: true,
-        error: null,
-      });
+    this.setState({
+      loadingInProgress: true,
+      error: null,
+    });
   };
 
   componentDidMount() {
@@ -63,11 +54,7 @@ class ExerciseOverview extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const {
-      exercises,
-      loadingInProgress,
-      error,
-    } = this.state;
+    const { exercises } = this.state;
 
     return (
       <div className={classes.root}>

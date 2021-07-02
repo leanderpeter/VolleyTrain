@@ -1,12 +1,10 @@
 import React, { useState, useLayoutEffect } from "react";
 import {
-  Select,
   Typography,
   makeStyles,
   Card,
   CardContent,
   Grid,
-  TextField,
 } from "@material-ui/core";
 import Divider from "@material-ui/core/Divider";
 
@@ -14,7 +12,6 @@ const ExerciseComponent = ({ exerciseBO }) => {
   // init styling
   const classes = styles();
 
-  console.log(exerciseBO);
   return (
     <div>
       <Grid item xs={10}>

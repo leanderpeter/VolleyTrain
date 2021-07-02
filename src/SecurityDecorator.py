@@ -31,7 +31,7 @@ def secured(function):
                     google_user_id = claims.get("user_id")
                     email = claims.get("email")
 
-                    user = adm.getPersonByGoogleUserId(google_user_id)
+                    user = adm.get_person_by_google_user_id(google_user_id)
                     if user is not None:
                         ''' 
                         Die Person befindet sich bereits in der Datenbank.
@@ -40,13 +40,13 @@ def secured(function):
                         user.setEmail(email)
                         user.set_name(name)
                         user.setSurname(surname)
-                        adm.saveUser(user)
+                        adm.save_user(user)
                     else:
                         '''
                         Das System kennt die Person nicht.
                         Es wird eine neue Person angelegt
                         '''
-                        user = adm.createUser(
+                        user = adm.create_user(
                             surname, name, email, google_user_id)
 
                     print(request.method, request.path, 'asked by:', email)

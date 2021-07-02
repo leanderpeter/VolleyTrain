@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { Grid, makeStyles } from "@material-ui/core";
 import { deepOrange, deepPurple } from "@material-ui/core/colors";
@@ -6,7 +6,6 @@ import Avatar from "@material-ui/core/Avatar";
 import { useDrag } from "react-dnd";
 import { ItemTypes } from "./ItemTypes";
 import Badge from "@material-ui/core/Badge";
-import DeleteIcon from "@material-ui/icons/Delete";
 import IconButton from "@material-ui/core/IconButton";
 import ClearIcon from "@material-ui/icons/Clear";
 
